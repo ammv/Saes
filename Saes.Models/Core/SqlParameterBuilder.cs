@@ -102,6 +102,18 @@ namespace Saes.Models.Extensions
             });
             return this;
         }
+        public SqlParameterBuilder AddOutput(string paramName, SqlDbType type, int size)
+        {
+            EnsureParamNameIsValid(paramName);
+            _params.Add(new SqlParameter
+            {
+                ParameterName = AddParamName(paramName),
+                SqlDbType = type,
+                Size = size,
+                Direction = ParameterDirection.Output
+            });
+            return this;
+        }
         public SqlParameterBuilderResult Build()
         {
             StringBuilder sb = new StringBuilder();
