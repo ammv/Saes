@@ -553,7 +553,8 @@ CREATE TABLE [Audit].[LogAuthentication]
 	-- Ответ сервиса аутенфикации
 	[AuthServiceResponse] NVARCHAR(1024) NOT NULL,
 	-- Ид пользователя найденного по введнному логину
-	[UserIDFoundByEnteredLogin] AS [Authentication].[udfGetExistingUserIDByLogin]([EnteredLogin]),
+	-- Впадлу тратить время на то, чтобы EF Core работал с ним
+	-- [UserIDFoundByEnteredLogin] AS [Authentication].[udfGetExistingUserIDByLogin]([EnteredLogin]),
 	-- MAC-адрес устройства
 	[MAC] NVARCHAR(12) NULL,
 	--IP адрес-устройства
@@ -1434,7 +1435,7 @@ BEGIN
 		DECLARE @LogAuthenticationID INT = (
 			SELECT TOP 1 [LogAuthenticationID]
 			FROM [Audit].[LogAuthentication]
-			WHERE [UserIDFoundByEnteredLogin] = @UserID AND
+			WHERE [Authentication].[udfGetExistingUserIDByLogin]([EnteredLogin]) = @UserID AND
 			([FirstFactorResult] = 1 AND [SecondFactorResult] = 1)
 			ORDER BY [LogAuthenticationID] DESC )
 
