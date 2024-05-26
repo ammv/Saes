@@ -44,5 +44,39 @@ namespace Saes.Models.Schemas
 
             return result;
         }
+
+        private static IQueryable<bool> udfVerifyUser_Query(SaesContext ctx, string userLogin, string userPassword)
+        {
+            SqlParameterBuilder sqlParameterBuilder = new SqlParameterBuilder();
+
+            var sqlParameterBuilderResult = sqlParameterBuilder
+                .AddInput(userLogin)
+                .AddInput(userPassword)
+                .Build();
+
+            var sql = string.Format(SchemaBase.FunctionTemplate, _schemaName, SchemaBase.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
+            //var sql = $"SELECT [{_schemaName}].[{SchemaBase.GetFunctionName()}]({sqlParameterBuilderResult.SqlParametersString}) as [Value]";
+
+            var query = ctx.Database.SqlQueryRaw<bool>(sql, sqlParameterBuilderResult.SqlParametersObject);
+
+            return query;
+        }
+
+        public static bool udfVerifyUser(this SaesContext ctx, string userLogin, string userPassword)
+        {
+            var query = udfVerifyUser_Query(ctx, userLogin, userPassword);
+            var result = query.Single();
+
+
+            return result;
+        }
+
+        public static async Task<bool> udfVerifyUserAsync(this SaesContext ctx, string userLogin, string userPassword)
+        {
+            var query = udfVerifyUser_Query(ctx, userLogin, userPassword);
+            var result = await query.SingleAsync();
+
+            return result;
+        }
     }
 }
