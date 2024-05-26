@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 namespace Saes.Models;
@@ -9,13 +8,11 @@ public partial class SaesContext : DbContext
 {
     public SaesContext()
     {
-        
     }
 
     public SaesContext(DbContextOptions<SaesContext> options)
         : base(options)
     {
-        
     }
 
     public virtual DbSet<Address> Addresses { get; set; }
@@ -88,11 +85,10 @@ public partial class SaesContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(Saes.Configuration.Cofiguration.ConnectionString);
+        => optionsBuilder.UseSqlServer("Data Source=KOMPUTER\\SQLEXPRESS;Initial Catalog=SAES;Integrated Security=True;Connect Timeout=300;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         modelBuilder.Entity<Address>(entity =>
         {
             entity.HasKey(e => e.AddressId).HasName("PK_Address_AddressID");
@@ -432,7 +428,6 @@ public partial class SaesContext : DbContext
             entity.HasKey(e => e.LogAuthenticationId).HasName("PK_LogAuthentication_LogAuthenticationID");
 
             entity.Property(e => e.Date).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.UserIdfoundByEnteredLogin).HasComputedColumnSql("([Authentication].[udfGetExistingUserIDByLogin]([EnteredLogin]))", false);
         });
 
         modelBuilder.Entity<LogChange>(entity =>
@@ -589,4 +584,6 @@ public partial class SaesContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

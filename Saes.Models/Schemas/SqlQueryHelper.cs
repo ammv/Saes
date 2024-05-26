@@ -7,13 +7,23 @@ using System.Threading.Tasks;
 
 namespace Saes.Models.Schemas
 {
-    public static class SchemaBase
+    public static class SqlQueryHelper
     {
         public static string FunctionTemplate => "SELECT [{0}].[{1}]({2}) As [Value]";
-        public static string ProcedureTemplate => "SELECT [{0}].[{1}]({2}) As [Value]";
+        public static string ProcedureTemplate => "[{0}].[{1}] {2}";
         public static string GetFunctionName([CallerMemberName] string name = null)
         {
             return name.Replace("_Query", string.Empty);
+        }
+
+        public static string SqlProc(string schemaName,  string functionName, string sqlParams)
+        {
+            return string.Format(ProcedureTemplate, schemaName, functionName, sqlParams);
+        }
+
+        public static string SqlFunc(string schemaName, string functionName, string sqlParams)
+        {
+            return string.Format(FunctionTemplate, schemaName, functionName, sqlParams);
         }
 
         //protected string _schemaName => this.GetType().Name.Replace("Schema", "");

@@ -21,7 +21,7 @@ namespace Saes.Models.Schemas
                 .AddInput(userLogin)
                 .Build();
 
-            var sql = $"SELECT [{_schemaName}].[{SchemaBase.GetFunctionName()}]({sqlParameterBuilderResult.SqlParametersString}) as [Value]";
+            var sql = $"SELECT [{_schemaName}].[{SqlQueryHelper.GetFunctionName()}]({sqlParameterBuilderResult.SqlParametersString}) as [Value]";
 
             var query = ctx.Database.SqlQueryRaw<int>(sql, sqlParameterBuilderResult.SqlParametersObject);
 
@@ -54,7 +54,7 @@ namespace Saes.Models.Schemas
                 .AddInput(userPassword)
                 .Build();
 
-            var sql = string.Format(SchemaBase.FunctionTemplate, _schemaName, SchemaBase.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
+            var sql = string.Format(SqlQueryHelper.FunctionTemplate, _schemaName, SqlQueryHelper.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
             //var sql = $"SELECT [{_schemaName}].[{SchemaBase.GetFunctionName()}]({sqlParameterBuilderResult.SqlParametersString}) as [Value]";
 
             var query = ctx.Database.SqlQueryRaw<bool>(sql, sqlParameterBuilderResult.SqlParametersObject);

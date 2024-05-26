@@ -1042,10 +1042,11 @@ AS
 BEGIN
 	DECLARE @PasswordHash VARBINARY(32)
 	DECLARE @PasswordSalt VARBINARY(16)
+	DECLARE @Find BIT = 0
 
-	SELECT TOP 1 @PasswordHash = [PasswordHash], @PasswordSalt = [PasswordSalt] FROM [Authentication].[User] WHERE [Login] = @UserLogin
+	SELECT TOP 1 @Find = 1, @PasswordHash = [PasswordHash], @PasswordSalt = [PasswordSalt] FROM [Authentication].[User] WHERE [Login] = @UserLogin
 
-	IF @@ROWCOUNT = 0
+	IF @Find = 0
 	RETURN 0
 
 	DECLARE @Result BIT

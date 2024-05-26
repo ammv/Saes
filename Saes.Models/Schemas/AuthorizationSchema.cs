@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Saes.Models.Core;
 using Saes.Models.Extensions;
 using System;
 using System.Collections.Generic;
@@ -18,21 +19,19 @@ namespace Saes.Models.Schemas
 //	@ExpiredAt datetime,
 //    @SessionKey uniqueidentifier OUTPUT
 //)
-        private static IQueryable<string> uspCreateSession_Query(SaesContext ctx, int userId, DateTime expiredAt)
+        private static SqlQueryData uspCreateSession_Query(int userId, DateTime expiredAt)
         {
             SqlParameterBuilder sqlParameterBuilder = new SqlParameterBuilder();
 
             var sqlParameterBuilderResult = sqlParameterBuilder
                 .AddInput(userId)
                 .AddInput(expiredAt)
-                .AddOutput("@sessionKey", System.Data.SqlDbType.NVarChar)
+                .AddOutput("@sessionKey", System.Data.SqlDbType.NVarChar, 128)
                 .Build();
 
-            var sql = string.Format(SchemaBase.ProcedureTemplate, _schemaName, SchemaBase.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
+            var sql = SqlQueryHelper.SqlProc(_schemaName, SqlQueryHelper.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
 
-            var query = ctx.Database.SqlQueryRaw<string>(sql, sqlParameterBuilderResult.SqlParametersObject);
-
-            return query;
+            return new SqlQueryData(sql, sqlParameterBuilderResult.SqlParameters.ToArray());
         }
 
         /// <summary>
@@ -44,19 +43,18 @@ namespace Saes.Models.Schemas
         /// <returns>Session key</returns>
         public static string uspCreateSession(this SaesContext ctx, int userId, DateTime expiredAt)
         {
-            var query = uspCreateSession_Query(ctx, userId, expiredAt);
-            var result = query.Single();
+            var sqlQueryData = uspCreateSession_Query(userId, expiredAt);
+            var result = ctx.Database.ExecuteSqlRaw(sqlQueryData.Sql, sqlQueryData.SqlParameters);
 
-
-            return result;
+            return (string)sqlQueryData.SqlParameters.Last().Value;
         }
 
         public static async Task<string> uspCreateSessionAsync(this SaesContext ctx, int userId, DateTime expiredAt)
         {
-            var query = uspCreateSession_Query(ctx, userId, expiredAt);
-            var result = await query.SingleAsync();
+            var sqlQueryData = uspCreateSession_Query(userId, expiredAt);
+            var result = await ctx.Database.ExecuteSqlRawAsync(sqlQueryData.Sql, sqlQueryData.SqlParameters);
 
-            return result;
+            return (string)sqlQueryData.SqlParameters.Last().Value;
         }
 
 

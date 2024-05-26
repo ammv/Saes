@@ -22,7 +22,7 @@ namespace Saes.Models.Schemas
                 .AddInput(salt)
                 .Build();
 
-            var sql = $"SELECT [{_schemaName}].[{SchemaBase.GetFunctionName()}]({sqlParameterBuilderResult.SqlParametersString}) as [Value]";
+            var sql = $"SELECT [{_schemaName}].[{SqlQueryHelper.GetFunctionName()}]({sqlParameterBuilderResult.SqlParametersString}) as [Value]";
 
             var query = ctx.Database.SqlQueryRaw<byte[]>(sql, sqlParameterBuilderResult.SqlParametersObject);
 

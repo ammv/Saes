@@ -23,9 +23,6 @@ public partial class LogAuthentication
     [StringLength(1024)]
     public string AuthServiceResponse { get; set; } = null!;
 
-    [Column("UserIDFoundByEnteredLogin")]
-    public int? UserIdfoundByEnteredLogin { get; set; }
-
     [Column("MAC")]
     [StringLength(12)]
     public string? Mac { get; set; }
