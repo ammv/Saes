@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Saes.GrpcServer.Interceptors;
 using Saes.GrpcServer.ProtoServices;
 using Saes.GrpcServer.ProtoServices.AuthService;
 using Saes.GrpcServer.Services.Implementations;
@@ -18,7 +19,11 @@ builder.Services.AddSingleton<ITokenService, TokenService>();
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
 // Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options =>
+{
+    options.Interceptors.Add<AuthorizationInterceptor>();
+});
+
 
 var app = builder.Build();
 

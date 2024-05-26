@@ -8,6 +8,7 @@ public partial class SaesContext : DbContext
 {
     public SaesContext()
     {
+        
     }
 
     public SaesContext(DbContextOptions<SaesContext> options)
