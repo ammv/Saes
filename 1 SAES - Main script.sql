@@ -1207,7 +1207,7 @@ BEGIN
 	SET NOCOUNT ON
 
 	IF (@SessionKey IS NULL)
-		RAISERROR('@SessionKey parameter has NULL value', 19, 1)
+		RAISERROR('@SessionKey parameter has NULL value', 18, 1)
 
 	DECLARE @UserSessionID INT
 	DECLARE @IsExpired BIT
@@ -1218,12 +1218,12 @@ BEGIN
 
 	IF @UserSessionID IS NULL
 	BEGIN
-		RAISERROR('@SessionKey parameter has incorrect value', 19, 2)
+		RAISERROR('@SessionKey parameter has incorrect value', 18, 2)
 	END
 
 	IF @IsExpired = 1
 	BEGIN
-		RAISERROR('You cannot make this session current because it has expired.', 19, 3)
+		RAISERROR('You cannot make this session current because it has expired.', 18, 3)
 	END
 
 	EXEC sp_set_session_context N'UserSessionID', @UserSessionID
@@ -1383,7 +1383,7 @@ BEGIN
 		IF NOT EXISTS(SELECT 1 FROM [Authorization].[User] WHERE [Login] = @UserLogin)
 		BEGIN
 			DECLARE @Error nvarchar(256) =  'Пользователь с логином '+@UserLogin+' отсутствует!'
-			RAISERROR(@Error,19,1)
+			RAISERROR(@Error,18,1)
 		END
 
 		DECLARE @PasswordSalt VARBINARY(16) = CRYPT_GEN_RANDOM(16)
@@ -1421,7 +1421,7 @@ BEGIN
 		IF NOT EXISTS(SELECT TOP 1 1 FROM [Authentication].[User] WHERE [UserID] = 1 AND [SysIsDeleted] = 0)
 		BEGIN
 			SET @Error =  'Пользователя с идентификатором '+@UserID+' не существует или удален!'
-			RAISERROR(@Error,19,1)
+			RAISERROR(@Error,18,1)
 		END
 
 		DECLARE @CreatedAt DATETIME = GETDATE()
@@ -1438,8 +1438,8 @@ BEGIN
 			([FirstFactorResult] = 1 AND [SecondFactorResult] = 1)
 			ORDER BY [LogAuthenticationID] DESC )
 
-		INSERT INTO [Authorization].[UserSession]([UserID], [CreatedAt], [ExpiredAt], [LogAuthenticationID]) VALUES
-		(@UserID, @CreatedAt, @ExpiredAt, @LogAuthenticationID)
+		INSERT INTO [Authorization].[UserSession]([UserID], [CreatedAt], [ExpiredAt], [LogAuthenticationID], [SessionKey]) VALUES
+		(@UserID, @CreatedAt, @ExpiredAt, @LogAuthenticationID, CONVERT(NVARCHAR(128), CRYPT_GEN_RANDOM(64), 2))
 
 		SELECT @SessionKey = [SessionKey] FROM [Authorization].[UserSession] WHERE [UserSessionID] = @@IDENTITY
 	END TRY
@@ -1475,7 +1475,7 @@ BEGIN
 
 		IF(@TableDataID IS NULL)
 		BEGIN
-			RAISERROR('В процедуру были переданы имя таблицы и имя схемы несуществующие в Audit.TableData',19,1)
+			RAISERROR('В процедуру были переданы имя таблицы и имя схемы несуществующие в Audit.TableData',18,1)
 		END
 
 		DECLARE @UserSessionID INT
@@ -1716,7 +1716,7 @@ BEGIN#CRLF\
 	BEGIN#CRLF\
 		IF EXISTS(SELECT TOP 1 1 FROM [#SCHEMA].[#TABLE] WHERE [#TABLEID] = @RowID and [SysIsDeleted] = 1)#CRLF\
 		BEGIN#CRLF\
-			RAISERROR(''Record #TABLEID %d in [#SCHEMA].[#TABLE] already deleted'',19,1,@RowID)#CRLF\
+			RAISERROR(''Record #TABLEID %d in [#SCHEMA].[#TABLE] already deleted'',18,1,@RowID)#CRLF\
 		END#CRLF\
 		ELSE#CRLF\
 		BEGIN#CRLF\
@@ -1772,13 +1772,13 @@ BEGIN
 	IF(@TableDataID IS NULL)
 	BEGIN
 		SET @Error = CONCAT(@SchemaName,'.',@TableName, ' не существует в таблице [Audit].[TableData]')
-		RAISERROR(@Error, 19, 1)
+		RAISERROR(@Error, 18, 1)
 	END
 
 	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND TABLE_SCHEMA = @SchemaName AND COLUMN_NAME = @ColumnName)
 	BEGIN
 		SET @Error = CONCAT(@ColumnName, ' не существует в таблице ', @SchemaName, '.', @TableName)
-		RAISERROR(@Error, 19, 2)
+		RAISERROR(@Error, 18, 2)
 	END
 
 	INSERT INTO [Audit].[TableColumnData] VALUES (@TableDataID, @ColumnName, @ColumnRusName)
