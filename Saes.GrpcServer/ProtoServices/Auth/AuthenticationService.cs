@@ -7,6 +7,7 @@ using Saes.GrpcServer.Services.Interfaces;
 using Azure;
 using Saes.Models.Schemas;
 using System.Security.Authentication;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Saes.GrpcServer.ProtoServices.AuthService
 {
@@ -109,13 +110,22 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
                 throw new RpcException(new Status(StatusCode.InvalidArgument, answer));
             }
 
-            var response = new SecondFactorAuthenticateResponse
-            {
-                SessionKey = await _ctx.uspCreateSessionAsync(userId, request.SendTime.ToDateTime().AddHours(Configuration.Cofiguration.SessionExpiredHours))
-            };
+            string sessionKey = await _ctx.uspCreateSessionAsync(userId, request.SendTime.ToDateTime().ToLocalTime().AddHours(Configuration.Cofiguration.SessionExpiredHours));
 
             answer = $"Success Second Factor Authenticate";
             await _logAuthenticationService.AddLogAsync(user.Login, true, true, answer);
+
+            if (sessionKey == null)
+            {
+                answer = $"uspCreateSession returned null value";
+                await _logAuthenticationService.AddLogAsync(user.Login, true, true, answer);
+                throw new RpcException(new Status(StatusCode.Internal, answer));
+            }
+
+            var response = new SecondFactorAuthenticateResponse
+            {
+                SessionKey = sessionKey
+            };
 
             await _ctx.SaveChangesAsync();
 
