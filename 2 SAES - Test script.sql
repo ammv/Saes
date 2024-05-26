@@ -7,8 +7,6 @@
 -- Все блоки можно выполнять сколько угодно раз благодаря откату транзакций
 -- ***********************************************************************
 
-
-
 -- ***********************************ВАЖНО*******************************
 -- !!! ВЫДЕЛИ ОПЕРАЦИЮ НИЖЕ И ВЫПОЛНИ !!!
 USE [SAES]
@@ -36,7 +34,7 @@ INSERT INTO [Audit].[LogAuthentication] ([EnteredLogin], [FirstFactorResult], [S
 
 DECLARE @UserID INT = (SELECT TOP 1 [UserID] FROM [Authentication].[User] WHERE [Login] = 'admin')
 
-DECLARE @SessionKey uniqueidentifier
+DECLARE @SessionKey nvarchar(128)
 
 DECLARE @ExpiredAt datetime = DATEADD(hour, 3, GETDATE())
 
@@ -69,7 +67,7 @@ INSERT INTO [Audit].[LogAuthentication] ([EnteredLogin], [FirstFactorResult], [S
 
 DECLARE @UserID INT = (SELECT TOP 1 [UserID] FROM [Authentication].[User] WHERE [Login] = 'admin')
 
-DECLARE @SessionKey uniqueidentifier
+DECLARE @SessionKey nvarchar(128)
 
 DECLARE @ExpiredAt datetime = DATEADD(hour, 3, GETDATE())
 
@@ -111,7 +109,7 @@ BEGIN TRANSACTION
 INSERT INTO [Audit].[LogAuthentication] ([EnteredLogin], [FirstFactorResult], [SecondFactorResult], [AuthServiceResponse]) VALUES
 ('admin', 1, 1, 'Successfully authenticated')
 DECLARE @UserID INT = (SELECT TOP 1 [UserID] FROM [Authentication].[User] WHERE [Login] = 'admin')
-DECLARE @SessionKey uniqueidentifier
+DECLARE @SessionKey nvarchar(128)
 DECLARE @ExpiredAt datetime = DATEADD(hour, 3, GETDATE())
 EXEC [Authorization].[uspCreateSession] @UserID, @ExpiredAt, @SessionKey OUTPUT
 EXEC [Authorization].[uspSetCurrentUserSessionID] @SessionKey
@@ -145,7 +143,7 @@ BEGIN TRANSACTION
 INSERT INTO [Audit].[LogAuthentication] ([EnteredLogin], [FirstFactorResult], [SecondFactorResult], [AuthServiceResponse]) VALUES
 ('admin', 1, 1, 'Successfully authenticated')
 DECLARE @UserID INT = (SELECT TOP 1 [UserID] FROM [Authentication].[User] WHERE [Login] = 'admin')
-DECLARE @SessionKey uniqueidentifier
+DECLARE @SessionKey nvarchar(128)
 DECLARE @ExpiredAt datetime = DATEADD(hour, -3, GETDATE())
 
 EXEC [Authorization].[uspCreateSession] @UserID, @ExpiredAt, @SessionKey OUTPUT
@@ -183,7 +181,7 @@ BEGIN TRANSACTION
 INSERT INTO [Audit].[LogAuthentication] ([EnteredLogin], [FirstFactorResult], [SecondFactorResult], [AuthServiceResponse]) VALUES
 ('admin', 1, 1, 'Successfully authenticated')
 DECLARE @UserID INT = (SELECT TOP 1 [UserID] FROM [Authentication].[User] WHERE [Login] = 'admin')
-DECLARE @SessionKey uniqueidentifier
+DECLARE @SessionKey nvarchar(128)
 DECLARE @ExpiredAt datetime = DATEADD(hour, 3, GETDATE())
 EXEC [Authorization].[uspCreateSession] @UserID, @ExpiredAt, @SessionKey OUTPUT
 EXEC [Authorization].[uspSetCurrentUserSessionID] @SessionKey
@@ -219,7 +217,7 @@ BEGIN TRANSACTION
 INSERT INTO [Audit].[LogAuthentication] ([EnteredLogin], [FirstFactorResult], [SecondFactorResult], [AuthServiceResponse]) VALUES
 ('admin', 1, 1, 'Successfully authenticated')
 DECLARE @UserID INT = (SELECT TOP 1 [UserID] FROM [Authentication].[User] WHERE [Login] = 'admin')
-DECLARE @SessionKey uniqueidentifier
+DECLARE @SessionKey nvarchar(128)
 DECLARE @ExpiredAt datetime = DATEADD(hour, 3, GETDATE())
 EXEC [Authorization].[uspCreateSession] @UserID, @ExpiredAt, @SessionKey OUTPUT
 EXEC [Authorization].[uspSetCurrentUserSessionID] @SessionKey
@@ -268,7 +266,7 @@ BEGIN TRANSACTION
 INSERT INTO [Audit].[LogAuthentication] ([EnteredLogin], [FirstFactorResult], [SecondFactorResult], [AuthServiceResponse]) VALUES
 ('admin', 1, 1, 'Successfully authenticated')
 DECLARE @UserID INT = (SELECT TOP 1 [UserID] FROM [Authentication].[User] WHERE [Login] = 'admin')
-DECLARE @SessionKey uniqueidentifier
+DECLARE @SessionKey nvarchar(128)
 DECLARE @ExpiredAt datetime = DATEADD(hour, 3, GETDATE())
 EXEC [Authorization].[uspCreateSession] @UserID, @ExpiredAt, @SessionKey OUTPUT
 EXEC [Authorization].[uspSetCurrentUserSessionID] @SessionKey
