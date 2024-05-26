@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.Auth";
+
+import "google/protobuf/timestamp.proto";
+
+// Сервис аутенфикации с 2 методами
+service Authentication {
+    // Аутенфикация по первому фактору (Фактору знания логина и пароля)
+    rpc FirstFactorAuthenticate (FirstFactorAuthenticateRequest) returns (FirstFactorAuthenticateResponse);
+    // Аутенфикация по второму фактору (Фактору знания TOTP пароля)
+    rpc SecondFactorAuthenticate (SecondFactorAuthenticateRequest) returns (SecondFactorAuthenticateResponse);
+}
+
+
+// Информация о машине клиента
+message UserMashineInfo
+{
+    string mac = 1;
+    string ip = 2;
+}
+
+// Запрос на аутенфикацию по первому фактору от клиента
+message FirstFactorAuthenticateRequest {
+    string login = 1;
+    string password = 2;
+    //UserMashineInfo mashineInfo = 3;
+}
+
+message FirstFactorAuthenticateResponse {
+    // Одно из значений:
+    // Либо ключ сессии, если пользователь имеет однофакторную аутенфикацию
+    // Либо has2FA будет иметь значение True, что в свою очередь вынуждает пройти двухфакторную аутенфикацию
+
+	bool has2FA = 1;
+	string sessionKey = 2;
+
+    // Токен для прохождения второг фактора аутенификации для защиты от попыток входа и взлома одноразового пароля
+    string token = 3;
+}
+
+// Запрос на аутенфикацию по второму фактору от клиента
+message SecondFactorAuthenticateRequest {
+    // Токен - используется для того, чтобы проверить, что клиент прошёл аутенфикацию по первому фактору
+    string token = 1;
+    // Введённый OTP пароль
+    string otpPassword = 2;
+    // Время отправления
+    google.protobuf.Timestamp sendTime = 3;
+
+}
+
+// Ответ на запроспо аутенфикации по второму фактору
+message SecondFactorAuthenticateResponse {
+    string sessionKey = 1;
+}

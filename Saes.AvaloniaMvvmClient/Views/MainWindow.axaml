@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		x:DataType="vm:MainViewModel"
+        xmlns:views="clr-namespace:Saes.AvaloniaMvvmClient.Views"
+        mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="450"
+		Width="250" Height="450"
+        x:Class="Saes.AvaloniaMvvmClient.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+		Content="{Binding ContentViewModel}"
+        Title="To do list view model">
+        <!--<views:ToDoListView DataContext="{Binding ToDoList}"/>-->
+</Window>
