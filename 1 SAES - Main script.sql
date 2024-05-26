@@ -1200,7 +1200,7 @@ INSERT INTO [Authentication].[User](Login, PasswordHash, PasswordSalt, UserRoleI
 
 GO
 CREATE PROCEDURE [Authorization].[uspSetCurrentUserSessionID]
-(@SessionKey uniqueidentifier)
+(@SessionKey nvarchar(128))
 AS 
 BEGIN
 	-- Procedure set current user id in sessino context dictionary
@@ -1408,7 +1408,7 @@ CREATE PROCEDURE [Authorization].[uspCreateSession]
 (
 	@UserID int,
 	@ExpiredAt datetime,
-	@SessionKey uniqueidentifier OUTPUT
+	@SessionKey nvarchar(128) OUTPUT
 )
 AS
 BEGIN

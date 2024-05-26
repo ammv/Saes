@@ -30,9 +30,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saes.Protos", "Saes.Protos\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saes.GrpcServer", "Saes.GrpcServer\Saes.GrpcServer.csproj", "{0F826B6F-C1FB-4DC1-AD35-2F255DD958F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saes.GrpcClient", "Saes.GrpcClient\Saes.GrpcClient.csproj", "{9CC6D55C-4D86-48E8-A3F4-EB63B3F63B51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saes.GrpcClient", "Saes.GrpcClient\Saes.GrpcClient.csproj", "{9CC6D55C-4D86-48E8-A3F4-EB63B3F63B51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saes.ConsoleTest", "Saes.ConsoleTest\Saes.ConsoleTest.csproj", "{2F6E16EF-627A-4B75-B820-F71B4874B543}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saes.ConsoleTest", "Saes.ConsoleTest\Saes.ConsoleTest.csproj", "{2F6E16EF-627A-4B75-B820-F71B4874B543}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61F18EE2-4A28-412D-86C3-6A792F0C7CCA}"
+	ProjectSection(SolutionItems) = preProject
+		1 SAES - Main script.sql = 1 SAES - Main script.sql
+		2 SAES - Test script.sql = 2 SAES - Test script.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
