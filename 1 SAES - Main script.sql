@@ -1043,7 +1043,7 @@ BEGIN
 	DECLARE @PasswordHash VARBINARY(32)
 	DECLARE @PasswordSalt VARBINARY(16)
 
-	SELECT TOP 1 @PasswordHash = [PasswordHash], @PasswordSalt = [PasswordSalt] FROM [Authorization].[User] WHERE [Login] = @UserLogin
+	SELECT TOP 1 @PasswordHash = [PasswordHash], @PasswordSalt = [PasswordSalt] FROM [Authentication].[User] WHERE [Login] = @UserLogin
 
 	IF @@ROWCOUNT = 0
 	RETURN 0
@@ -1381,7 +1381,7 @@ BEGIN
 
 	BEGIN TRY
 
-		IF NOT EXISTS(SELECT 1 FROM [Authorization].[User] WHERE [Login] = @UserLogin)
+		IF NOT EXISTS(SELECT 1 FROM [Authentication].[User] WHERE [Login] = @UserLogin)
 		BEGIN
 			DECLARE @Error nvarchar(256) =  'ѕользователь с логином '+@UserLogin+' отсутствует!'
 			RAISERROR(@Error,18,1)
@@ -1390,7 +1390,7 @@ BEGIN
 		DECLARE @PasswordSalt VARBINARY(16) = CRYPT_GEN_RANDOM(16)
 		DECLARE @PasswordHash VARBINARY(32) = [dbo].[udfHashSalt](@UserPassword, @PasswordSalt)
 
-		UPDATE [Authorization].[User] SET PasswordSalt = @PasswordSalt, PasswordHash = @PasswordHash
+		UPDATE [Authentication].[User] SET PasswordSalt = @PasswordSalt, PasswordHash = @PasswordHash
 		WHERE [Login] = @UserLogin
 
 	END TRY
