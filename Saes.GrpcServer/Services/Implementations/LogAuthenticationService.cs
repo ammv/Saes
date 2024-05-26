@@ -1,5 +1,6 @@
 ﻿using Saes.GrpcServer.Services.Interfaces;
 using Saes.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Saes.GrpcServer.Services.Implementations
 {
@@ -18,7 +19,8 @@ namespace Saes.GrpcServer.Services.Implementations
                 EnteredLogin = enteredLogin,
                 FirstFactorResult = firstFactorResult,
                 SecondFactorResult = secondFactorResult,
-                AuthServiceResponse = authServiceResponse
+                AuthServiceResponse = authServiceResponse,
+                Date = DateTime.Now
             });
             _ctx.SaveChanges();
         }
@@ -30,7 +32,8 @@ namespace Saes.GrpcServer.Services.Implementations
                 EnteredLogin = enteredLogin,
                 FirstFactorResult = firstFactorResult,
                 SecondFactorResult = secondFactorResult,
-                AuthServiceResponse = authServiceResponse
+                AuthServiceResponse = authServiceResponse,
+                Date = DateTime.Now
             });
             await _ctx.SaveChangesAsync();
         }
