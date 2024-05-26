@@ -1032,7 +1032,7 @@ END;
 GO
 
 GO
-CREATE FUNCTION [Authorization].[udfVerifyUser]
+CREATE FUNCTION [Authentication].[udfVerifyUser]
 (
 	@UserLogin nvarchar(32),
 	@UserPassword nvarchar(32)
