@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+#nullable disable
+
 namespace Saes.Models.Schemas
 {
     public static class AuthorizationSchema
@@ -46,7 +48,7 @@ namespace Saes.Models.Schemas
             var sqlQueryData = uspCreateSession_Query(userId, expiredAt);
             var result = ctx.Database.ExecuteSqlRaw(sqlQueryData.Sql, sqlQueryData.SqlParameters);
 
-            return (string)sqlQueryData.SqlParameters.Last().Value;
+            return sqlQueryData.SqlParameters.Last().Value as string;
         }
 
         public static async Task<string> uspCreateSessionAsync(this SaesContext ctx, int userId, DateTime expiredAt)
@@ -54,7 +56,7 @@ namespace Saes.Models.Schemas
             var sqlQueryData = uspCreateSession_Query(userId, expiredAt);
             var result = await ctx.Database.ExecuteSqlRawAsync(sqlQueryData.Sql, sqlQueryData.SqlParameters);
 
-            return (string)sqlQueryData.SqlParameters.Last().Value;
+            return sqlQueryData.SqlParameters.Last().Value as string;
         }
 
 

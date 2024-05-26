@@ -10,7 +10,7 @@ namespace Saes.Models.Schemas
     public static class SqlQueryHelper
     {
         public static string FunctionTemplate => "SELECT [{0}].[{1}]({2}) As [Value]";
-        public static string ProcedureTemplate => "[{0}].[{1}] {2}";
+        public static string ProcedureTemplate => "EXEC [{0}].[{1}] {2}";
         public static string GetFunctionName([CallerMemberName] string name = null)
         {
             return name.Replace("_Query", string.Empty);
