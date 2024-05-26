@@ -74,7 +74,7 @@ public class MainViewModel : ViewModelBase
 
             inputTotpPasswordviewModel.SuccessCommand.Select(x => (x, response)).Subscribe(InputTotpPasswordViewModel_SuccessCommandExecuted);
 
-            ContentViewModel = new InputTotpPasswordViewModel();
+            ContentViewModel = inputTotpPasswordviewModel;
         }
         else
         {
