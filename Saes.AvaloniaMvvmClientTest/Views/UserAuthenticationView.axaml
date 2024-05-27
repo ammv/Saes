@@ -35,28 +35,33 @@
 			<Setter Property="Foreground" Value="White" />
 		</Style>
 	</UserControl.Styles>
-	<StackPanel Margin="8">
-		<TextBlock Text="Авторизация"
-				   Classes="h1"
-				   Margin="0 0 0 32"
-				   HorizontalAlignment="Center"/>
-		<TextBlock Text="Логин" Classes="h2"/>
-		<TextBox Classes="input" Text="{Binding Login}"/>
+	<DockPanel>
+		<StackPanel Margin="8"
+					DockPanel.Dock="Top">
+			<TextBlock Text="Авторизация"
+					   Classes="h1"
+					   Margin="0 0 0 32"
+					   HorizontalAlignment="Center"/>
+			<TextBlock Text="Логин" Classes="h2"/>
+			<TextBox Classes="input" Text="{Binding Login}"/>
 
-		<TextBlock Text="Пароль" Classes="h2"/>
+			<TextBlock Text="Пароль" Classes="h2"/>
 
-		<TextBox PasswordChar="*" Classes="input"
-				 Text="{Binding Password}"/>
+			<TextBox PasswordChar="*" Classes="input"
+					 Text="{Binding Password}"/>
+
+			<Button Content="Войти"
+					Command="{Binding AuthCommand}"
+					Classes="primary"
+					Margin="0 0 0 32"
+					HorizontalAlignment="Center"/>
+
+			<TextBlock Text="{Binding Status, StringFormat={}Статус: {0}}" Classes="h3"
+					   TextWrapping="Wrap"/>
+
+		</StackPanel>
 		
-		<Button Content="Войти"
-				Command="{Binding AuthCommand}"
-				Classes="primary"
-				Margin="0 0 0 32"
-				HorizontalAlignment="Center"/>
+	</DockPanel>
 
-		<TextBlock Text="{Binding Status, StringFormat={}Статус: {0}}" Classes="h3"
-				   TextWrapping="Wrap"/>
-		
-	</StackPanel>
 
 </UserControl>
