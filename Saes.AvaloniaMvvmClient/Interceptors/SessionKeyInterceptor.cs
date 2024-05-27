@@ -16,7 +16,6 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
 {
     public class SessionKeyInterceptor: Interceptor
     {
-        private readonly ILogger _logger;
         private readonly ISessionKeyService _sessionKeyService;
         private static readonly ImmutableHashSet<Type> _notInterceptableRequestTypes;
 
@@ -25,10 +24,10 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
             _notInterceptableRequestTypes = ImmutableHashSet.Create(typeof(FirstFactorAuthenticateRequest), typeof(SecondFactorAuthenticateRequest));
         }
 
-        public SessionKeyInterceptor(ILoggerFactory loggerFactory, ISessionKeyService sessionKeyService)
+        public SessionKeyInterceptor(ISessionKeyService sessionKeyService)
         {
-            _logger = loggerFactory.CreateLogger<SessionKeyInterceptor>();
             _sessionKeyService = sessionKeyService;
+            
         }
 
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
@@ -42,8 +41,6 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
             }
             
 
-            _logger.LogInformation("Starting call. Type/Method: {Type} / {Method}",
-                context.Method.Type, context.Method.Name);
             return continuation(request, context);
         }
     }
