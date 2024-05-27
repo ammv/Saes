@@ -3,6 +3,7 @@ using Saes.AvaloniaMvvmClient.Interceptors;
 using Saes.AvaloniaMvvmClient.Services.Impementations;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels;
+using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,16 @@ namespace Saes.AvaloniaMvvmClient.Injections
 
         }
 
-        public static void AddViewModels(this IServiceCollection collection)
+        public static void AddMainViewModels(this IServiceCollection collection)
         {
             collection.AddTransient<MainViewModel>();
+        }
 
+        public static void AddAuthViewModels(this IServiceCollection collection)
+        {
+            collection.AddTransient<AuthenticationMainViewModel>();
+            collection.AddTransient<FirstFactorAuthenticationViewModel>();
+            collection.AddTransient<SecondFactorAuthenticationViewModel>();
         }
     }
 }
