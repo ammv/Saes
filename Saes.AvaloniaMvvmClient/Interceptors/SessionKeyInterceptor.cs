@@ -2,8 +2,10 @@
 using Grpc.Core.Interceptors;
 using Microsoft.Extensions.Logging;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
+using Saes.Protos.Auth;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,12 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
     {
         private readonly ILogger _logger;
         private readonly ISessionKeyService _sessionKeyService;
+        private static readonly ImmutableHashSet<Type> _notInterceptableRequestTypes;
+
+        static SessionKeyInterceptor()
+        {
+            _notInterceptableRequestTypes = ImmutableHashSet.Create(typeof(FirstFactorAuthenticateRequest), typeof(SecondFactorAuthenticateRequest));
+        }
 
         public SessionKeyInterceptor(ILoggerFactory loggerFactory, ISessionKeyService sessionKeyService)
         {
@@ -28,7 +36,11 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
             ClientInterceptorContext<TRequest, TResponse> context,
             AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-            context.Options.Headers.Add("SessionKey", _sessionKeyService.GetSessionKey());
+            if(!_notInterceptableRequestTypes.Contains(typeof(TRequest)))
+            {
+                context.Options.Headers.Add("SessionKey", _sessionKeyService.GetSessionKey());
+            }
+            
 
             _logger.LogInformation("Starting call. Type/Method: {Type} / {Method}",
                 context.Method.Type, context.Method.Name);
