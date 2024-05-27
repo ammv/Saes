@@ -1,5 +1,6 @@
 ﻿using Avalonia.Reactive;
 using ReactiveUI;
+using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
 using System;
 using System.Reactive.Linq;
 
@@ -11,10 +12,15 @@ public class MainViewModel : ViewModelBase
 
 
 
-    public MainViewModel()
+    public MainViewModel(AuthenticationMainViewModel authenticationMainViewModel)
     {
-        
-        _contentViewModel = null;
+        authenticationMainViewModel.AuthenticationCompleted += AuthenticationMainViewModel_AuthenticationCompleted;
+        ContentViewModel = authenticationMainViewModel;
+    }
+
+    private void AuthenticationMainViewModel_AuthenticationCompleted(object sender, EventArgs e)
+    {
+        ContentViewModel = null;
     }
 
     public ViewModelBase ContentViewModel

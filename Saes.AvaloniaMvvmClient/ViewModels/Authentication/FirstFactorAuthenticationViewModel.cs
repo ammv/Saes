@@ -11,7 +11,7 @@ using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization
+namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 {
     public class FirstFactorAuthenticationViewModel: ViewModelBase
     {
@@ -41,6 +41,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization
 
         private bool _authCommandExecuting = false;
         private readonly IGrpcChannelFactory _grpcChannelFactory;
+        private readonly CallInvoker _grpcChannel;
 
         private bool AuthCommandExecuting
         {
@@ -57,13 +58,14 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization
                 (login, password) => !string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password));
             AuthCommand = ReactiveCommand.CreateFromTask(AuthCommandOnExecute, isValidObservable);
             _grpcChannelFactory = grpcChannelFactory;
+            _grpcChannel = _grpcChannelFactory.CreateChannel();
         }
 
         private async Task<FirstFactorAuthenticateResponse> AuthCommandOnExecute()
         {
             AuthCommandExecuting = true;
 
-            var authService = new Authentication.AuthenticationClient(_grpcChannelFactory.CreateChannel());
+            var authService = new Protos.Auth.Authentication.AuthenticationClient(_grpcChannel);
 
             var firstFactorAuthenticateRequest = new FirstFactorAuthenticateRequest
             {

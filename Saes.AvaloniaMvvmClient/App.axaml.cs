@@ -21,7 +21,8 @@ public partial class App : Application
         var collection = new ServiceCollection();
         collection.AddCommonServices();
         collection.AddGrpcServices();
-        collection.AddViewModels();
+        collection.AddMainViewModels();
+        collection.AddAuthViewModels();
 
         // Creates a ServiceProvider containing services from the provided IServiceCollection
         ServiceProvider = collection.BuildServiceProvider();

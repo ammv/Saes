@@ -9,7 +9,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization
+namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 {
     public class AuthenticationMainViewModel: ViewModelBase
     {
@@ -63,6 +63,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization
             if (response == null)
             {
                 ContentViewModel = _firstFactorAuthenticationViewModel;
+                return;
             }
 
             _sessionKeyService.SaveSessionKey(response.SessionKey);

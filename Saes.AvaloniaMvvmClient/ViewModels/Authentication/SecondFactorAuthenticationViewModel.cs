@@ -1,4 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using Grpc.Net.Client;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.Protos.Auth;
@@ -9,12 +11,13 @@ using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization
+namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 {
     public class SecondFactorAuthenticationViewModel: ViewModelBase
     {
         private string _totpPassword;
         private readonly IGrpcChannelFactory _grpcChannelFactory;
+        private readonly CallInvoker _grpcChannel;
 
         public string TotpPassword
         {
@@ -47,13 +50,14 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization
             var isValidObservable = this.WhenAnyValue(x => x.TotpPassword, x => !string.IsNullOrEmpty(x) && x.Replace(" ", "").Trim().Length == 6 && !SuccessCommandIsExecuting);
             SuccessCommand = ReactiveCommand.CreateFromTask(SuccessCommandOnExecute, isValidObservable);
             _grpcChannelFactory = grpcChannelFactory;
+            _grpcChannel = _grpcChannelFactory.CreateChannel();
         }
 
         private async Task<SecondFactorAuthenticateResponse> SuccessCommandOnExecute()
         {
             SuccessCommandIsExecuting = true;
 
-            var authService = new Authentication.AuthenticationClient(_grpcChannelFactory.CreateChannel());
+            var authService = new Protos.Auth.Authentication.AuthenticationClient(_grpcChannel);
 
             var request = new SecondFactorAuthenticateRequest
             {
