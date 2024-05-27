@@ -24,6 +24,8 @@
     <Folder Include="DataModel\" />
     <Folder Include="Core\" />
     <Folder Include="Infastructure\" />
+    <Folder Include="Converters\" />
+    <Folder Include="Styles\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Authentication\AuthenticationMainView.axaml.cs">
+      <DependentUpon>AuthenticationMainView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MainView.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
