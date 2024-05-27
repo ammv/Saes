@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.27.0" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
     <PackageReference Include="Grpc.Net.Client" Version="2.63.0" />
     <PackageReference Include="Grpc.Tools" Version="2.64.0">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +20,10 @@
 		<Protobuf Include="..\Saes.Protos\**\*.proto" GrpcServices="Client">
 			<Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
 		</Protobuf>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Interceptors\" />
 	</ItemGroup>
 
 </Project>

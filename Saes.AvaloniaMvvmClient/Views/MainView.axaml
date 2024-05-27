@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:Saes.AvaloniaMvvmClient.ViewModels"
+             xmlns:vm="clr-namespace:Saes.AvaloniaMvvmClientTest.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Saes.AvaloniaMvvmClient.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -11,17 +11,4 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
-
-	
-	<Grid ShowGridLines="True"  Margin="5"
-      ColumnDefinitions="120, 100"
-      RowDefinitions="Auto, Auto, Auto">
-		<Label Grid.Row="0" Grid.Column="0" Margin="10">Celsius</Label>
-		<TextBox Grid.Row="0" Grid.Column="1" Margin="0 5" Text="0" Name="celsius"/>
-		<Label Grid.Row="1" Grid.Column="0" Margin="10">Fahrenheit</Label>
-		<TextBox Grid.Row="1"  Grid.Column="1" Margin="0 5" Text="0" Name="fahrenheit"/>
-		<Button Grid.Row="2" Grid.Column="1" Margin="0 5">Жесть</Button>
-	</Grid>
-	
-	
 </UserControl>

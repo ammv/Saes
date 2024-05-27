@@ -11,5 +11,4 @@
         Icon="/Assets/avalonia-logo.ico"
 		Content="{Binding ContentViewModel}"
         Title="To do list view model">
-        <!--<views:ToDoListView DataContext="{Binding ToDoList}"/>-->
 </Window>

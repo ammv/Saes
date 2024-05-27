@@ -30,7 +30,7 @@ namespace Saes.AvaloniaMvvmClientTest.ViewModels
         public InputTotpPasswordViewModel()
         {
             var isValidObservable = this.WhenAnyValue(x => x.TotpPassword, x => !string.IsNullOrEmpty(x) && x.Replace(" ", "").Trim().Length == 6);
-            SuccessCommand = ReactiveCommand.Create(SuccessCommandOnExecute);
+            SuccessCommand = ReactiveCommand.Create(SuccessCommandOnExecute, isValidObservable);
 
         }
     }
