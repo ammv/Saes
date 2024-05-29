@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+
+package user;
+
+service UserService {
+    rpc Search (UserLookup) returns (UserLookupResponse);
+}
+
+message UserLookup
+{
+    google.protobuf.Int32Value userId = 1;
+    google.protobuf.StringValue login = 2;
+    google.protobuf.Int32Value userRoleId = 3;
+    google.protobuf.StringValue userRoleName = 4;
+}
+
+message UserLookupResponse
+{
+    repeated models.UserDto data = 1;
+}

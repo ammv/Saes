@@ -4,6 +4,8 @@ option csharp_namespace = "Saes.Protos.Auth";
 
 import "google/protobuf/timestamp.proto";
 
+package auth;
+
 // Сервис аутенфикации с 2 методами
 service Authentication {
     // Аутенфикация по первому фактору (Фактору знания логина и пароля)

@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package models;
+
+message FileDto {
+  int32 fileId = 1;
+  string guid = 2;
+  bytes data = 3;
+  string name = 4;
+  string contentType = 5;
+}
+
+message UserRoleDto
+{
+	int32 userRoleId = 1;
+	string name = 2;
+}
+
+message RightGroupDto
+{
+	int32 rightGroupId = 1;
+	string code = 2;
+	string name = 3;
+}
+
+message RightDto
+{
+	int32 rightId = 1;
+	google.protobuf.Int32Value rightGroupId = 2;
+	RightGroupDto RightGroupDto = 3;
+	string code = 4;
+	string name = 5;
+}
+
+message UserRoleRightDto
+{
+	int32 UserRoleRightId = 1;
+	google.protobuf.Int32Value UserRoleId = 2;
+	google.protobuf.Int32Value RightId = 3;
+	UserRoleDto UserRoleDto = 4;
+	RightDto RightDto = 5;
+}
+
+message UserDto
+{
+	int32 userId = 1;
+	string login = 2;
+	google.protobuf.Int32Value userRoleId = 3;
+	UserRoleDto userRoleDto = 4;
+	google.protobuf.Timestamp lastLoginDate = 5;
+	bool twoFactorEnabled = 6;
+}
