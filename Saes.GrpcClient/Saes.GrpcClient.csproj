@@ -17,7 +17,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\Saes.Protos\**\*.proto" GrpcServices="Client">
+		<Protobuf Include="..\Saes.Protos\**\*.proto" GrpcServices="Client" ProtoRoot="..\Saes.Protos\Protos">
 			<Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
 		</Protobuf>
 	</ItemGroup>
