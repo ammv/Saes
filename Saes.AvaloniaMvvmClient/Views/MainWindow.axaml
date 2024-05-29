@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		x:DataType="vm:MainViewModel"
         xmlns:views="clr-namespace:Saes.AvaloniaMvvmClient.Views"
+		xmlns:custom="using:Saes.AvaloniaMvvmClient.Custom"
         mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="450"
-		Width="250" Height="450"
+		SizeToContent="WidthAndHeight"
         x:Class="Saes.AvaloniaMvvmClient.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
+		HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
 		Content="{Binding ContentViewModel}"
-        Title="To do list view model">
+		WindowStartupLocation="CenterScreen">
 </Window>

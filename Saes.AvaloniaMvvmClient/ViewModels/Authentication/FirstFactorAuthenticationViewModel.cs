@@ -58,7 +58,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
                 (login, password) => !string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password));
             AuthCommand = ReactiveCommand.CreateFromTask(AuthCommandOnExecute, isValidObservable);
             _grpcChannelFactory = grpcChannelFactory;
-            _grpcChannel = _grpcChannelFactory.CreateChannel();
+            //_grpcChannel = _grpcChannelFactory.CreateChannel();
         }
 
         private async Task<FirstFactorAuthenticateResponse> AuthCommandOnExecute()

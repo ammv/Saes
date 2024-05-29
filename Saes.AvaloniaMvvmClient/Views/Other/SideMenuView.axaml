@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Other"
+			  x:DataType="vm:SideMenuViewModel"
+             x:Class="Saes.AvaloniaMvvmClient.Views.Other.SideMenuView">
+	<SplitView IsPaneOpen="{Binding IsOpen}"
+					 DisplayMode="CompactInline"
+					 Content="{Binding Content}"
+					 CompactPaneLength="48"
+					 OpenPaneLength="300">
+		<SplitView.Pane>
+			<StackPanel Spacing="5"
+						Margin="5">
+				<Button Command="{Binding TriggerPaneCommand}">
+					<PathIcon Data="{StaticResource line_horizontal_3_regular}"/>
+				</Button>
+				<ListBox ItemsSource="{Binding Items}"/>
+			</StackPanel>
+		</SplitView.Pane>
+	</SplitView>
+</UserControl>

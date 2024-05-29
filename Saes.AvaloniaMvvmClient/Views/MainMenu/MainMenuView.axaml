@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.MainMenu"
+			 xmlns:vmOther="using:Saes.AvaloniaMvvmClient.ViewModels.Other"
+			 xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1300" d:DesignHeight="720"
+			 MinHeight="720"
+			 MinWidth="1300"
+			 HorizontalAlignment="Stretch"
+			 x:DataType="vm:MainMenuViewModel"
+             x:Class="Saes.AvaloniaMvvmClient.Views.MainMenu.MainMenuView">
+	<Design.DataContext>
+		<vm:MainMenuViewModel/>
+	</Design.DataContext>
+	<UserControl.Styles>
+		<Style Selector="MenuItem">
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+	</UserControl.Styles>
+	<UserControl.DataTemplates>
+		<DataTemplate x:DataType="vmOther:SubMenuItemViewModel">
+			<Grid>
+				<Button HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch" Margin="-10 -5 -32 -5"
+						Opacity="0"
+						Command="{Binding ClickCommand}"/>
+				<StackPanel Spacing="15" Orientation="Horizontal"
+		Margin="0 0 0 0"
+		HorizontalAlignment="Stretch">
+					<PathIcon Data="{Binding Icon}"/>
+					<TextBlock Text="{Binding Title}"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center"
+							   FontSize="20"/>
+				</StackPanel>
+			</Grid>
+
+
+		</DataTemplate>
+		<DataTemplate x:DataType="vmOther:MenuItemViewModel"
+					  >
+			<StackPanel Spacing="15" Orientation="Horizontal"
+		Margin="-2 0 0 0"
+		HorizontalAlignment="Stretch">
+				<PathIcon Data="{Binding Icon}"/>
+				<TextBlock Text="{Binding Title}"
+						   HorizontalAlignment="Left"
+						   VerticalAlignment="Center"
+						   FontSize="20"/>
+			</StackPanel>
+		</DataTemplate>
+	</UserControl.DataTemplates>
+	<Grid RowDefinitions="45,*,24">
+		<Grid ColumnDefinitions="50, *">
+			<Image Source="avares://Saes.AvaloniaMvvmClient/Assets/Images/Logo/logo64x64.png"/>
+			<TabStrip SelectedItem="{Binding TabStrip.SelectedTab, Mode=TwoWay}"
+			  SelectedIndex="{Binding TabStrip.SelectedIndex, Mode=TwoWay}"
+					  Grid.Column="1"
+					  Margin="16 0 0 0"
+					  ItemsSource="{Binding TabStrip.Tabs}">
+				<TabStrip.ItemsPanel>
+					<ItemsPanelTemplate>
+						<UniformGrid Rows="1"/>
+					</ItemsPanelTemplate>
+				</TabStrip.ItemsPanel>
+			</TabStrip>
+		</Grid>
+
+		<SplitView IsPaneOpen="{Binding Menu.IsOpen}" Grid.Row="1"
+				   DisplayMode="CompactInline"
+				   x:Name="menu"
+				   Content="{Binding TabStrip.SelectedTab.Content}"
+				   CompactPaneLength="48"
+				   OpenPaneLength="300">
+			<SplitView.Pane>
+				<StackPanel Spacing="5"
+							Margin="5">
+					<StackPanel Orientation="Horizontal">
+						<Button Command="{Binding Menu.TriggerPaneCommand}"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center">
+							<PathIcon Data="{StaticResource line_horizontal_3_regular}"/>
+						</Button>
+						<TextBlock Text="Главное меню"
+								   Margin="8 0 0 0"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center"
+							   FontSize="20"/>
+					</StackPanel>
+
+					<ItemsControl ItemsSource="{Binding Menu.Items}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Menu Margin="0 8" Height="40">
+									<MenuItem ItemsSource="{Binding Items}" Width="300"
+											  Header="{Binding}">
+										<MenuItem.ItemsPanel>
+											<ItemsPanelTemplate>
+												<VirtualizingStackPanel Orientation="Vertical"/>
+											</ItemsPanelTemplate>
+										</MenuItem.ItemsPanel>
+									</MenuItem>
+								</Menu>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<VirtualizingStackPanel Orientation="Vertical"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+					</ItemsControl>
+				</StackPanel>
+			</SplitView.Pane>
+		</SplitView>
+
+		<StackPanel Grid.Row="2" Background="#f2f2f2" Orientation="Horizontal" Spacing="16">
+			<TextBlock Text="Статус:" HorizontalAlignment="Center" VerticalAlignment="Center"
+					   Margin="4 0 0 0"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

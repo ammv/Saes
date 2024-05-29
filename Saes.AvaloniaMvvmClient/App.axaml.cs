@@ -23,6 +23,7 @@ public partial class App : Application
         collection.AddGrpcServices();
         collection.AddMainViewModels();
         collection.AddAuthViewModels();
+        collection.AddAdministrationViewModels();
 
         // Creates a ServiceProvider containing services from the provided IServiceCollection
         ServiceProvider = collection.BuildServiceProvider();

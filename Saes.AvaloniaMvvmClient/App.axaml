@@ -8,6 +8,12 @@
 		<local:ViewLocator />
 	</Application.DataTemplates>
     <Application.Styles>
+		<!--<StyleInclude Source="/Styles/IncludeStyles.axaml"/>-->
         <FluentTheme />
+		<StyleInclude Source="avares://Saes.AvaloniaMvvmClient/Assets/Icons.axaml"/>
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     </Application.Styles>
+	<Application.Resources>
+		<FontFamily x:Key="IbmPlexMonoFont">avares://Saes.AvaloniaMvvmClient/Assets/Fonts#IBM Plex Mono</FontFamily>
+	</Application.Resources>
 </Application>

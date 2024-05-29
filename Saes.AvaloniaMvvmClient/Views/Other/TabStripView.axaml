@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Other"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="vm:TabStripViewModel"
+             x:Class="Saes.AvaloniaMvvmClient.Views.Other.TabStripView">
+	<Design.DataContext>
+		<vm:TabStripItemViewModel/>
+	</Design.DataContext>
+	<TabStrip SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
+			  SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+					  ItemsSource="{Binding Tabs}">
+		<TabStrip.ItemsPanel>
+			<ItemsPanelTemplate>
+				<UniformGrid Rows="1"/>
+			</ItemsPanelTemplate>
+		</TabStrip.ItemsPanel>
+	</TabStrip>
+</UserControl>

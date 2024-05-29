@@ -10,26 +10,64 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
+  
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+    <AvaloniaResource Remove="Assets\Icons.axaml" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <AvaloniaXaml Remove="Views\Other\SideMenuView.axaml" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Remove="Assets\Fonts\IBMPlexMono-Bold.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-BoldItalic.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-ExtraLight.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-ExtraLightItalic.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-Italic.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-Light.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-LightItalic.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-Medium.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-MediumItalic.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-Regular.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-SemiBold.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-SemiBoldItalic.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-Thin.ttf" />
+    <None Remove="Assets\Fonts\IBMPlexMono-ThinItalic.ttf" />
+    <None Remove="Assets\Images\Logo\logo128x128.png" />
+    <None Remove="Assets\Images\Logo\logo256x256.png" />
+    <None Remove="Assets\Images\Logo\logo64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.5" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.5" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Core\Interfaces\" />
     <Folder Include="DataModel\" />
-    <Folder Include="Core\" />
     <Folder Include="Infastructure\" />
     <Folder Include="Converters\" />
-    <Folder Include="Styles\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Saes.GrpcClient\Saes.GrpcClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaXaml Update="Assets\Icons.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaXaml>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +76,9 @@
     </Compile>
     <Compile Update="Views\MainView.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Other\SubMenuItemView.axaml.cs">
+      <DependentUpon>SubMenuItemView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
