@@ -8,6 +8,6 @@
 		Width="250" Height="450"
         x:Class="Saes.AvaloniaMvvmClientTest.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-		Content="{Binding ContentViewModel}"
         Title="Saes.AvaloniaMvvmClientTest">
+	<Button Content="Open new window" Command="{Binding OpenNewWindowCommand}" HorizontalAlignment="Center"/>
 </Window>
