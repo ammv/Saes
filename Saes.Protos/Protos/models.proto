@@ -141,6 +141,7 @@ message EmployeeDto
 	EmployeePositionDto EmployeePositionDto = 8;
 
 	OrganizationDto OrganizationDto = 9;
+	BusinessEntityDto BusinessEntityDto = 10;
 }
 
 message TableDataDto
@@ -223,7 +224,7 @@ message LogChangeDto
 message JournalInstanceForCPARecordDto
 {
 	google.protobuf.Int32Value OrganizationID = 1;
-	OrganizationContactDto OrganizationContactDto = 2;
+	OrganizationDto OrganizationDto = 2;
 
 	int32 JournalInstanceForCPARecordID = 3;
 	string NameCPI = 4;
@@ -266,7 +267,7 @@ message HardwareDto
 {
 	int32 HardwareId = 1;
 	google.protobuf.Int32Value OrganizationID = 2;
-	OrganizationContactDto OrganizationContactDto = 3;
+	OrganizationDto OrganizationDto = 3;
 	string Name = 4;
 	string SerialNumber = 5;
 	string Note = 6;
@@ -275,7 +276,7 @@ message HardwareDto
 message JournalInstanceForCIHRecordDto
 {
 	google.protobuf.Int32Value OrganizationID = 1;
-	OrganizationContactDto OrganizationContactDto = 2;
+	OrganizationDto OrganizationDto = 2;
 
 	string NameCPI = 3;
 	string SerialCPI = 4;
