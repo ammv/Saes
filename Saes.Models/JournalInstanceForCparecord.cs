@@ -67,8 +67,8 @@ public partial class JournalInstanceForCparecord
     [Column(TypeName = "datetime")]
     public DateTime SysModifiedDate { get; set; }
 
-    [InverseProperty("JournalInstanceCpareceiverNavigation")]
-    public virtual JournalInstanceCpareceiver? JournalInstanceCpareceiver { get; set; }
+    [InverseProperty("Record")]
+    public virtual ICollection<JournalInstanceCpareceiver> JournalInstanceCpareceivers { get; set; } = new List<JournalInstanceCpareceiver>();
 
     public virtual Organization? Organization { get; set; }
 

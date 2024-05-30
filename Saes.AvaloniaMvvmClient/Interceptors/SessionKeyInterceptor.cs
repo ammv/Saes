@@ -1,6 +1,5 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
-using Microsoft.Extensions.Logging;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.Protos.Auth;
 using System;

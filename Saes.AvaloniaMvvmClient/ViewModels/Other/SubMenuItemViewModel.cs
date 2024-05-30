@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using ReactiveUI;
 using System;
@@ -47,14 +48,18 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
 
             Icon = icon as StreamGeometry;
 
-            ClickCommand = ReactiveCommand.Create(OnSubMenuItemClicked);
+            ClickCommand = ReactiveCommand.Create<PointerReleasedEventArgs>(OnSubMenuItemClicked);
         }
 
-        public ReactiveCommand<Unit, Unit> ClickCommand { get; }
+        public ReactiveCommand<PointerReleasedEventArgs, Unit> ClickCommand { get; }
 
-        private void OnSubMenuItemClicked()
+        private void OnSubMenuItemClicked(PointerReleasedEventArgs args)
         {
-            SubMenuItemClicked?.Invoke(this, EventArgs.Empty);
+            if (args?.InitialPressMouseButton == MouseButton.Left)
+            {
+                SubMenuItemClicked?.Invoke(this, EventArgs.Empty);
+            }
+            
         }
 
     }

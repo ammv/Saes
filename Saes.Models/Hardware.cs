@@ -33,4 +33,6 @@ public partial class Hardware
 
     [InverseProperty("Hardware")]
     public virtual ICollection<JournalInstanceForCihconnectedHardware> JournalInstanceForCihconnectedHardwares { get; set; } = new List<JournalInstanceForCihconnectedHardware>();
+
+    public virtual Organization? Organization { get; set; }
 }

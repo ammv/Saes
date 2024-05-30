@@ -73,6 +73,8 @@ public partial class Organization
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
+    public virtual ICollection<Hardware> Hardwares { get; set; } = new List<Hardware>();
+
     public virtual ICollection<JournalInstanceForCihrecord> JournalInstanceForCihrecords { get; set; } = new List<JournalInstanceForCihrecord>();
 
     public virtual ICollection<JournalInstanceForCparecord> JournalInstanceForCparecords { get; set; } = new List<JournalInstanceForCparecord>();

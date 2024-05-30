@@ -13,25 +13,16 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
     {
         public event EventHandler Closed;
 
-        private string _title;
+		private ViewModelTabBase _contentViewModel;
 
-		public string Title
-		{
-			get { return _title; }
-			 set => this.RaiseAndSetIfChanged(ref _title, value);
-		}
-
-		private ViewModelCloseableBase _contentViewModel;
-
-		public ViewModelCloseableBase Content
+		public ViewModelTabBase Content
 		{
 			get { return _contentViewModel; }
             set => this.RaiseAndSetIfChanged(ref _contentViewModel, value);
         }
 
-        public TabStripItemViewModel(string title, ViewModelCloseableBase content)
+        public TabStripItemViewModel(ViewModelTabBase content)
         {
-			Title = title;
             Content = content;
         }
 
@@ -42,9 +33,10 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
             CloseCommand = ReactiveCommand.Create(OnCloseCommand);
         }
 
-        private void OnCloseCommand()
+        private async void OnCloseCommand()
         {
-            bool closed = Content.Close();
+
+            bool closed = await Content.CloseAsync();
             if(closed)
             {
                 OnClosed();

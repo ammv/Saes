@@ -25,11 +25,11 @@ public partial class JournalInstanceCpareceiver
     [Column(TypeName = "datetime")]
     public DateTime SysModifiedDate { get; set; }
 
-    [ForeignKey("JournalInstanceCpareceiverId")]
-    [InverseProperty("JournalInstanceCpareceiver")]
-    public virtual JournalInstanceForCparecord JournalInstanceCpareceiverNavigation { get; set; } = null!;
-
     [ForeignKey("ReceiverId")]
     [InverseProperty("JournalInstanceCpareceivers")]
     public virtual BusinessEntity? Receiver { get; set; }
+
+    [ForeignKey("RecordId")]
+    [InverseProperty("JournalInstanceCpareceivers")]
+    public virtual JournalInstanceForCparecord? Record { get; set; }
 }

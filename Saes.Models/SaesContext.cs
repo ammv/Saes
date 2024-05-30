@@ -8,7 +8,6 @@ public partial class SaesContext : DbContext
 {
     public SaesContext()
     {
-        
     }
 
     public SaesContext(DbContextOptions<SaesContext> options)
@@ -86,7 +85,7 @@ public partial class SaesContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=KOMPUTER\\SQLEXPRESS;Initial Catalog=SAES;Integrated Security=True;Connect Timeout=300;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=KOMPUTER\\SQLEXPRESS;Initial Catalog=SAES;Integrated Security=True;Connect Timeout=400;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -213,6 +212,10 @@ public partial class SaesContext : DbContext
                 });
 
             entity.Property(e => e.SysModifiedDate).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Organization).WithMany(p => p.Hardwares)
+                .HasPrincipalKey(p => p.OrganizationId)
+                .HasForeignKey(d => d.OrganizationId);
         });
 
         modelBuilder.Entity<JournalInstanceCpareceiver>(entity =>
@@ -226,14 +229,11 @@ public partial class SaesContext : DbContext
                     tb.HasTrigger("JournalInstanceCPAReceiver_InsteadOfUpdate");
                 });
 
-            entity.Property(e => e.JournalInstanceCpareceiverId).ValueGeneratedOnAdd();
             entity.Property(e => e.SysModifiedDate).HasDefaultValueSql("(getdate())");
 
-            entity.HasOne(d => d.JournalInstanceCpareceiverNavigation).WithOne(p => p.JournalInstanceCpareceiver)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_JournalInstanceCPAReceiver_JournalInstanceForCPARecord_JournalInstanceForCPARecordID");
-
             entity.HasOne(d => d.Receiver).WithMany(p => p.JournalInstanceCpareceivers).HasConstraintName("FK_JournalInstanceCPAReceiver_BusinessEntity_BusinessEntityID");
+
+            entity.HasOne(d => d.Record).WithMany(p => p.JournalInstanceCpareceivers).HasConstraintName("FK_JournalInstanceCPAReceiver_JournalInstanceForCPARecord_JournalInstanceForCPARecordID");
         });
 
         modelBuilder.Entity<JournalInstanceForCihconnectedHardware>(entity =>

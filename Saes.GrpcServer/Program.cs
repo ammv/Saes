@@ -32,10 +32,11 @@ builder.Services.AddGrpc(options =>
 #endif
 
 // Mapster
-var mapsterConfig = new MapsterConfig();
-builder.Services.AddSingleton<MapsterConfig>();
+//var mapsterConfig = new MapsterConfig();
+//builder.Services.AddSingleton<MapsterConfig>();
 
 var config = new TypeAdapterConfig();
+new MapsterConfig(config);
 new RegisterMapper().Register(config);
 builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IMapper, ServiceMapper>(); //Добавляем сам маппер

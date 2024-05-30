@@ -4,7 +4,8 @@
     {
         public void Register(WebApplication? app)
         {
-            //app.MapGrpcService<UserService>();
+            app.MapGrpcService<UserService>();
+            app.MapGrpcService<UserRoleService>();
         }
     }
 }

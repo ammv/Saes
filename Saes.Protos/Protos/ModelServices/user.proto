@@ -19,6 +19,7 @@ message UserLookup
     google.protobuf.StringValue userRoleName = 4;
 }
 
+// Comment
 message UserLookupResponse
 {
     repeated models.UserDto data = 1;

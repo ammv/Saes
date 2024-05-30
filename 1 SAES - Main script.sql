@@ -793,7 +793,7 @@ CREATE TABLE [AccountingCPI].[JournalInstanceCPAReceiver]
 	[ReceiverID] INT,
 
 	CONSTRAINT PK_JournalInstanceCPAReceiver_JournalInstanceCPAReceiverID PRIMARY KEY ([JournalInstanceCPAReceiverID]),
-	CONSTRAINT FK_JournalInstanceCPAReceiver_JournalInstanceForCPARecord_JournalInstanceForCPARecordID FOREIGN KEY ([JournalInstanceCPAReceiverID]) REFERENCES [AccountingCPI].[JournalInstanceForCPARecord]([JournalInstanceForCPARecordID]),
+	CONSTRAINT FK_JournalInstanceCPAReceiver_JournalInstanceForCPARecord_JournalInstanceForCPARecordID FOREIGN KEY ([RecordID]) REFERENCES [AccountingCPI].[JournalInstanceForCPARecord]([JournalInstanceForCPARecordID]),
 	CONSTRAINT FK_JournalInstanceCPAReceiver_BusinessEntity_BusinessEntityID FOREIGN KEY ([ReceiverID]) REFERENCES [HumanResources].[BusinessEntity]([BusinessEntityID]),
 	CONSTRAINT UQ_JournalInstanceCPAReceiver_RecordID_ReceiverID UNIQUE([RecordID], [ReceiverID])
 )
@@ -814,6 +814,7 @@ CREATE TABLE [Office].[Hardware]
 	[Note] nvarchar(512) null,
 
 	CONSTRAINT PK_Hardware_HardwareID PRIMARY KEY ([HardwareID]),
+	CONSTRAINT FK_Hardware_Organization_OrganizationID FOREIGN KEY ([OrganizationID]) REFERENCES [HumanResources].[Organization]([OrganizationID]),
 	CONSTRAINT UQ_Hardware_SerialNumber UNIQUE ([SerialNumber], [OrganizationID])
 )
 
@@ -2163,5 +2164,6 @@ DROP PROCEDURE [Audit].[uspDeleteMeAfterUsing]
 IF @Error = 1 AND @@TRANCOUNT > 0
 RETURN
 
+USE [SAES]
 
 COMMIT TRANSACTION CreateTables

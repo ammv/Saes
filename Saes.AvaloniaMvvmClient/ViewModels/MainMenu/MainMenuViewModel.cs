@@ -1,5 +1,8 @@
 ﻿using Avalonia;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels.Administration.User;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
 using Saes.AvaloniaMvvmClient.ViewModels.Other;
@@ -19,6 +22,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
     {
         public TabStripViewModel TabStrip { get; }
         public SideMenuViewModel Menu { get; }
+
+        [Reactive]
+        public StatusData Status { get; set; }
 
         public MainMenuViewModel()
         {
@@ -43,6 +49,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             );
 
             Menu.SideMenuItemClicked += Menu_MenuButtonClicked;
+            
+            MessageBus.Current.Listen<StatusData>().Subscribe(x => Status = x);
         }
 
         private void Menu_MenuButtonClicked(object sender, SubMenuItemViewModel e)
@@ -53,8 +61,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             }
             TabStrip.Tabs.Add(new TabStripItemViewModel
             {
-                Title = e.Title,
-                Content = App.ServiceProvider.GetService(e.ViewModelType) as ViewModelCloseableBase
+                Content = App.ServiceProvider.GetService(e.ViewModelType) as ViewModelTabBase
             });
         }
     }

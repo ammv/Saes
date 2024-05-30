@@ -2,9 +2,14 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using OfficeOpenXml;
+using ReactiveUI;
+using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Injections;
+using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels;
 using Saes.AvaloniaMvvmClient.Views;
+using System.Collections.Generic;
 
 namespace Saes.AvaloniaMvvmClient;
 
@@ -14,11 +19,21 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
         var collection = new ServiceCollection();
+
+        //var grpcStatusMessageBus = new MessageBus();
+        //collection.AddSingleton<IGrpcStatusMessageBus>(,);
+
+        var excelExporterConfig = new ExcelExporterConfig();
+        ConfigureExcelExporterConfig.Configure(excelExporterConfig);
+
+        collection.AddSingleton(excelExporterConfig);
+
         collection.AddCommonServices();
         collection.AddGrpcServices();
         collection.AddMainViewModels();

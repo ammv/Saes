@@ -55,3 +55,336 @@ message UserDto
 	google.protobuf.Timestamp lastLoginDate = 5;
 	bool twoFactorEnabled = 6;
 }
+
+message AddressDto
+{
+	int32 AddressID = 1;
+	string Country = 2;
+	string Region = 3;
+	string City = 4;
+	string District = 5;
+	string BuildingNumber = 6;
+	string Corpus = 7;
+	google.protobuf.Int32Value Floor = 8;
+	string Flat = 9;
+	string PostalIndex = 10;
+
+}
+
+message BusinessEntityTypeDto
+{
+	int32 BusinessEntityTypeID = 1;
+	string Name = 2;
+}
+
+message BusinessEntityDto
+{
+	int32 BusinessEntityID = 1;
+	string BusinessEntityTypeID = 2;
+	BusinessEntityTypeDto businessEntityTypeDto = 3;
+}
+
+message OrganizationDto
+{
+	int32 BusinessEntityID = 1;
+	int32 OrganizationID = 2;
+	string FullName = 3;
+	string ShortName = 4;
+	google.protobuf.Int32Value BusinessAddressID = 5;
+	AddressDto BusinessAddressDto = 6;
+	string INN = 7;
+	string KPP = 8;
+	string OKPO = 9;
+	string OGRN = 10;
+	google.protobuf.Timestamp DateOfAssignmentOGRN = 11;
+	string DirectorFullName = 12;
+	string ChiefAccountantFullName = 13;
+	string OKVED = 14;
+	bool IsOwnerJournalAccountingCPI = 15;
+	BusinessEntityDto BusinessEntityDto = 16;
+}
+
+message ContactTypeDto
+{
+	int32 ContactTypeID = 1;
+	string Name = 2;
+}
+
+message OrganizationContactDto
+{
+	int32 OrganizationContactID = 1;
+	int32 OrganizationID =2;
+	OrganizationDto OrganizationDto = 3;
+
+	int32 ContactTypeID = 4;
+	ContactTypeDto ContactTypeDto = 5;
+	string Value = 6;
+	string Note = 7;
+}
+
+message EmployeePositionDto
+{
+	int32 EmployeePositionID = 1;
+	string name = 2;
+	string Note = 3;
+}
+
+message EmployeeDto
+{
+	int32 BusinessEntityID = 1;
+	int32 EmployeeID = 2;
+	int32 OrganizationID = 3;
+	string FirstName = 4;
+	string MiddleName = 5;
+	string LastName = 6;
+	int32 EmployeePositionID = 7;
+	EmployeePositionDto EmployeePositionDto = 8;
+
+	OrganizationDto OrganizationDto = 9;
+}
+
+message TableDataDto
+{
+	int32 TableDataID = 1;
+	string SchemaName = 2;
+	string Name = 3;
+	string RusName = 4;
+}
+
+message TableColumnDataDto
+{
+	int32 TableColumnDataID = 1;
+	int32 TableDataID = 2;
+	TableDataDto TableDataDto = 3;
+	string Name = 4;
+	string RusName = 5;
+}
+
+message LogAuthenticationDto
+{
+	int32 LogAuthenticationID = 1;
+	string EnteredLogin = 2;
+	bool FirstFactorResult = 3;
+	bool SecondFactorResult = 4;
+	string AuthServiceResponse = 5;
+	string MAC = 6;
+	string IP = 7;
+	string MashineName = 8;
+	string MashineUserName = 9;
+	google.protobuf.Timestamp Date = 10;
+}
+
+message UserSessionDto
+{
+	int32 UserSessionID = 1;
+	string SessionKey = 2;
+	int32 UserID = 3;
+	UserDto UserDto = 4;
+	google.protobuf.Timestamp CreatedAt = 5;
+	google.protobuf.Timestamp ExpiredAt = 6;
+	int32 LogAuthenticationID = 7;
+	LogAuthenticationDto LogAuthenticationDto = 8;
+}
+
+message ErrorLogDto
+{
+	int32 ErrorLogID = 1;
+	google.protobuf.Timestamp ErrorTime = 2;
+	int32 UserSessionID = 3;
+	UserSessionDto UserSessionDto = 4;
+	int32 ErrorNumber = 5;
+	int32 ErrorState = 6;
+	string ErrorProcedure = 7;
+	int32 ErrorLine = 8;
+	string ErrorMessage = 9;
+}
+
+message LogDto
+{
+	int32 LogID = 1;
+	int32 TableDataID = 2;
+	TableDataDto TableDataDto = 3;
+	int32 TableRowID = 4;
+	string Action = 5;
+	int32 UserSessionID = 6;
+	UserSessionDto UserSessionDto = 7;
+	google.protobuf.Timestamp Date = 8;
+	string GUID = 9;
+}
+
+message LogChangeDto
+{
+	int32 AuditLogID = 1;
+	LogDto AuditLogDto = 2;
+	google.protobuf.Int32Value TableColumnDataID = 3;
+	TableColumnDataDto TableColumnDataDto = 4;
+}
+
+message JournalInstanceForCPARecordDto
+{
+	google.protobuf.Int32Value OrganizationID = 1;
+	OrganizationContactDto OrganizationContactDto = 2;
+
+	int32 JournalInstanceForCPARecordID = 3;
+	string NameCPI = 4;
+	string SerialCPI = 5;
+	int32 InstanceNumber = 6;
+
+	google.protobuf.Int32Value ReceivedFromID = 7;
+	BusinessEntityDto BusinessEntityDto = 8;
+
+	string DateAndNumberCoverLetterReceive = 9;
+	string DateAndNumberCoverLetterSend = 10;
+	string DateAndNumberConfirmationSend = 11;
+
+	string DateAndNumberCoverLetterReturn = 12;
+	string DateAndNumberConfirmationReturn = 13;
+
+	google.protobuf.Timestamp CommissioningDate = 14;
+	google.protobuf.Timestamp DecommissioningDate = 15;
+
+	google.protobuf.Timestamp DestructionDate = 16;
+
+	string Note = 17;
+
+	google.protobuf.Int32Value SignFileID = 18;
+	FileDto SignFileDto = 19;
+}
+
+message JournalInstanceCPAReceiverDto
+{
+	int32 JournalInstanceCPAReceiverID = 1;
+
+	int32 RecordID = 2;
+	JournalInstanceForCPARecordDto RecordDto = 3;
+
+	int32 ReceiverID = 4;
+	BusinessEntityDto ReceiverDto = 5;
+}
+
+message HardwareDto
+{
+	int32 HardwareId = 1;
+	google.protobuf.Int32Value OrganizationID = 2;
+	OrganizationContactDto OrganizationContactDto = 3;
+	string Name = 4;
+	string SerialNumber = 5;
+	string Note = 6;
+}
+
+message JournalInstanceForCIHRecordDto
+{
+	google.protobuf.Int32Value OrganizationID = 1;
+	OrganizationContactDto OrganizationContactDto = 2;
+
+	string NameCPI = 3;
+	string SerialCPI = 4;
+	google.protobuf.Int32Value InstanceNumber = 5;
+
+	google.protobuf.Int32Value ReceivedFromID = 6;
+	BusinessEntityDto ReceivedFromDto = 7;
+
+	string DateAndNumberCoverLetterReceive = 8;
+
+	google.protobuf.Int32Value CPIUserID = 9;
+	BusinessEntityDto CPIUserDto = 10;
+
+	string DateAndNumberConfirmationIssue = 11;
+	string InstallationDateAndConfirmation = 12;
+	google.protobuf.Timestamp DestructionDate = 13;
+	string DestructionActNumber = 14;
+	string Note = 15;
+
+	google.protobuf.Int32Value SignFileID = 16;
+	FileDto SignFileDto = 17;
+}
+
+message JournalInstanceForCIHInstallerDto
+{
+	int32 JournalInstanceForCIHInstallerID = 1;
+
+	int32 RecordID = 2;
+	JournalInstanceForCIHRecordDto RecordDto = 3;
+
+	int32 InstallerID = 4;
+
+	BusinessEntityDto InstallerDto = 5;
+}
+
+message JournalInstanceForCIHConnectedHardwareDto
+{
+	int32 JournalInstanceForCIHConnectedHardwareID = 1;
+
+	int32 RecordID = 2;
+	JournalInstanceForCIHRecordDto RecordDto = 3;
+
+	int32 HardwareID = 4;
+
+	HardwareDto HardwareDto = 5;
+}
+
+
+message JournalInstanceForCIHDestructorDto
+{
+	int32 JournalInstanceForCIHDestructorID = 1;
+
+	int32 RecordID = 2;
+	JournalInstanceForCIHRecordDto RecordDto = 3;
+
+	int32 DestructorID = 4;
+
+	BusinessEntityDto DestructorDto = 5;
+}
+
+message KeyDocumentTypeDto
+{
+	int32 KeyDocumentTypeID = 1;
+	string Name = 2;
+	string Note = 3;
+}
+
+message KeyHolderTypeDto
+{
+	int32 KeyHolderTypeID = 1;
+	string Name = 2;
+}
+
+message KeyHolderDto
+{
+	int32 KeyHolderID = 1;
+	string SerialNumber = 2;
+
+	int32 TypeID = 3;
+	KeyHolderTypeDto KeyHolderTypeDto = 4;
+
+	google.protobuf.Int32Value UserCPI = 5;
+	BusinessEntityDto UserCPIDto = 6;
+
+	google.protobuf.Int32Value SignFileID = 7;
+	FileDto SignFileDto = 8;
+}
+
+message JournalTechnicalRecordDto
+{
+	google.protobuf.Int32Value OrganizationID = 1;
+	OrganizationDto OrganizationDto = 2;
+
+	int32 JournalTechnicalRecordID = 3;
+	google.protobuf.Timestamp Date = 4;
+
+	string TypeAndSerialUsedCPI = 5;
+	string RecordOnMaintenanceCPI = 6;
+
+	google.protobuf.Int32Value KeyDocumentTypeID = 7;
+	KeyDocumentTypeDto KeyDocumentTypeDto = 8;
+
+	string SerialCPIAndKeyDocumentInstanceNumber = 9;
+	string NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 10;
+
+	google.protobuf.Timestamp DestructionDate = 11;
+	string ActNumber = 12;
+	string Note = 13;
+
+	google.protobuf.Int32Value SignFileID = 14;
+	FileDto SignFileDto = 15;
+}

@@ -12,5 +12,6 @@
         Icon="/Assets/avalonia-logo.ico"
 		HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
 		Content="{Binding ContentViewModel}"
+		x:Name="mainWindow"
 		WindowStartupLocation="CenterScreen">
 </Window>

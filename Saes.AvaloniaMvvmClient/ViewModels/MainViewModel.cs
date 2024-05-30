@@ -1,4 +1,5 @@
 ﻿using Avalonia.Reactive;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
 using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
@@ -15,7 +16,7 @@ public class MainViewModel : ViewModelBase
     {
         //authenticationMainViewModel.AuthenticationCompleted += AuthenticationMainViewModel_AuthenticationCompleted;
         //ContentViewModel = authenticationMainViewModel;
-        ContentViewModel = new MainMenuViewModel();
+        ContentViewModel = App.ServiceProvider.GetRequiredService<MainMenuViewModel>();
     }
 
     private void AuthenticationMainViewModel_AuthenticationCompleted(object sender, EventArgs e)

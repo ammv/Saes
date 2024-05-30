@@ -9,17 +9,26 @@
 	<Design.DataContext>
 		<vm:TabStripItemViewModel/>
 	</Design.DataContext>
-	<Grid ColumnDefinitions="40, *" MinWidth="40" ToolTip.Tip="{Binding Title}"
+	<UserControl.Styles>
+		<Style Selector="Button:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Gray"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</UserControl.Styles>
+	<Grid ColumnDefinitions="40, *" MinWidth="40" ToolTip.Tip="{Binding Content.TabTitle}"
+		  Height="24"
 							  
 								HorizontalAlignment="Center">
 		<Button Content="X" Background="Transparent"
 				FontSize="12"
+				Padding="4 2"
 				HorizontalAlignment="Center"
 				VerticalAlignment="Center"
 				Command="{Binding CloseCommand}"
 				FontWeight="Black"/>
-		<TextBlock Text="{Binding Title}"
+		<TextBlock Text="{Binding Content.TabTitle}"
 				   Grid.Column="1"
+				   FontSize="14"
 				   HorizontalAlignment="Left"
 				   VerticalAlignment="Center"/>
 

@@ -26,9 +26,14 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
 
         public CallInvoker CreateChannel()
         {
-            
             var channel = GrpcChannel.ForAddress(_address);
-            return channel.Intercept(_sp.GetService<SessionKeyInterceptor>()!);
+#if DEBUG
+            return channel.Intercept(_sp.GetRequiredService<StatusLoggingInterceptor>());
+#else
+    return channel.Intercept(_sp.GetService<SessionKeyInterceptor>()!)
+    .Intercept(_sp.GetRequiredService<StatusLoggingInterceptor>());
+#endif
+
         }
     }
 }
