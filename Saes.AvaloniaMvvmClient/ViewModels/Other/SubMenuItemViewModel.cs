@@ -44,9 +44,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
             Title = title;
             ViewModelType = viewModelType;
 
-            App.Current.TryFindResource(iconKey, out var icon);
+            if (iconKey != null)
+            {
+                App.Current.TryFindResource(iconKey, out var icon);
 
-            Icon = icon as StreamGeometry;
+                Icon = icon as StreamGeometry;
+            }
 
             ClickCommand = ReactiveCommand.Create<PointerReleasedEventArgs>(OnSubMenuItemClicked);
         }

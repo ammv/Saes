@@ -33,18 +33,67 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             Menu = new SideMenuViewModel(
                 new ObservableCollection<MenuItemViewModel>
                 {
-                    new MenuItemViewModel("Администрирование", "home_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    new MenuItemViewModel("Аудит", "send_logging_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
-                        new SubMenuItemViewModel("Пользователи", "people_team_regular", typeof(UserListViewModel)),
-                        new SubMenuItemViewModel("Sub item 2", "data_sunburst_regular", null),
-                        new SubMenuItemViewModel("Sub item 3", "data_sunburst_regular", null),
+                        new SubMenuItemViewModel("Данные таблиц", "table_freeze_regular", null),
+                        new SubMenuItemViewModel("Данные столбцов таблиц", "column_triple_regular", null),
+                        new SubMenuItemViewModel("Логи аутенфикаций", "person_arrow_right_regular", null),
+                        new SubMenuItemViewModel("Логи ошибок", "error_circle_regular", null),
+                        new SubMenuItemViewModel("Логи действий", "book_database_regular", null),
+                        new SubMenuItemViewModel("Логи изменений", "book_database_regular", null),
                     }),
-                    new MenuItemViewModel("Menu item 2", "people_community_add_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    new MenuItemViewModel("Авторизация", "people_community_add_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
-                        new SubMenuItemViewModel("Sub item 1", "data_sunburst_regular", null),
-                        new SubMenuItemViewModel("Sub item 2", "data_sunburst_regular", null),
-                        new SubMenuItemViewModel("Sub item 3", "data_sunburst_regular", null),
-                    })
+                        new SubMenuItemViewModel("Роли пользователей", "book_regular", null),
+                        new SubMenuItemViewModel("Группы прав", "book_regular", null),
+                        new SubMenuItemViewModel("Права", "book_regular", null),
+                        new SubMenuItemViewModel("Права ролей", "book_regular", null),
+                        new SubMenuItemViewModel("Сессии", "share_screen_regular", null),
+                        
+                    }),
+                    new MenuItemViewModel("Аутенфикация", "fingerprint_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    {
+                         new SubMenuItemViewModel("Пользователи", "people_team_regular", typeof(UserListViewModel)),
+                    }),
+                    new MenuItemViewModel("Человечские ресурсы", "people_team_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    {
+                         new SubMenuItemViewModel("Типы бизнес-сущностей", "book_regular", null),
+                         new SubMenuItemViewModel("Бизнес-сущности", "people_team_regular", null),
+                         new SubMenuItemViewModel("Организации", "briefcase_regular", null),
+                         new SubMenuItemViewModel("Контакты организаций", "call_regular", null),
+                         new SubMenuItemViewModel("Должности сотрудников", "book_regular", null),
+                         new SubMenuItemViewModel("Сотрудники", "people_team_regular", null),
+                    }),
+                    new MenuItemViewModel("Личная информация", "contact_card_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    {
+                         new SubMenuItemViewModel("Типы контактов", "book_regular", null),
+                         
+                    }),
+                    new MenuItemViewModel("Электронные подписи", "signature_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    {
+                         new SubMenuItemViewModel("Журнал технический (аппаратный) ", "notebook_regular", null),
+                         new SubMenuItemViewModel("Журнал поэкземплярного учета СКЗИ для органа криптографической защиты", "notebook_regular", null),
+                         new SubMenuItemViewModel("Журнал поэкземплярного учета СКЗИ, эксплуатационной и технической документации к ним, ключевых документов (для обладателя конфиденциальной информации) ", "notebook_regular", null),
+                         new SubMenuItemViewModel("Субъекты журнала поэкземплярного учета СКЗИ для органа криптографической защиты которым была разослана информация", "people_community_regular", null),
+                         new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, произведших подключение (установку)",
+                         "people_community_regular", null
+                         ),
+                         new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших изъятие (уничтожение)", "people_community_regular", null),
+                         new SubMenuItemViewModel("Номера аппаратных средств, в которые установлены или к которым подключены СКЗИ", "notebook_regular", null),
+                         new SubMenuItemViewModel("Типы ключевых документов", "document_page_top_right_regular", null),
+                         new SubMenuItemViewModel("Типы ключевых носителей", "usb_stick_regular", null),
+                         new SubMenuItemViewModel("Ключевые носители", "key_regular", null),
+
+                    }),
+                    new MenuItemViewModel("Офис", "office_chair_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    {
+                         new SubMenuItemViewModel("Аппаратура", "phone_laptop_regular", null),
+                    }),
+                    new MenuItemViewModel("Прочее", "book_question_mark_regular", new ObservableCollection<SubMenuItemViewModel>()
+                    {
+                         new SubMenuItemViewModel("Файлы", "document_regular", null),
+                         new SubMenuItemViewModel("Адреса", "location_regular", null),
+                    }),
                 }
             );
 

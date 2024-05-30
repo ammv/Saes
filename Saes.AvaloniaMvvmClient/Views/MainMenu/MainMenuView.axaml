@@ -20,35 +20,41 @@
     </Design.DataContext>
     <UserControl.Styles>
         <Style Selector="MenuItem">
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
+            <!--<Setter Property="Margin" Value="0" />-->
         </Style>
     </UserControl.Styles>
     <UserControl.DataTemplates>
         <DataTemplate x:DataType="vmOther:SubMenuItemViewModel">
-            <Grid x:Name="grid">
+            <Grid x:Name="grid" Width="{Binding $parent[MenuItem].Width}">
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="PointerReleased" SourceObject="{Binding #grod}">
                         <ia:InvokeCommandAction Command="{Binding ClickCommand}" PassEventArgsToCommand="True" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
-                <Button
+                <!--<Button
                     Margin="-10,-5,-32,-5"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Command="{Binding ClickCommand}"
-                    Opacity="0" />
+                    Opacity="0" />-->
                 <StackPanel
+                    Width="{Binding $parent[MenuItem].Width}"
                     Margin="0,0,0,0"
                     HorizontalAlignment="Stretch"
                     Orientation="Horizontal"
                     Spacing="15">
-                    <PathIcon Data="{Binding Icon}" />
+                    <PathIcon
+                        Width="18"
+                        Height="18"
+                        Data="{Binding Icon}" />
                     <TextBlock
+                        Width="{Binding $parent[MenuItem].Width}"
+                        MaxWidth="350"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        FontSize="20"
-                        Text="{Binding Title}" />
+                        FontSize="18"
+                        Text="{Binding Title}"
+                        TextWrapping="Wrap" />
                 </StackPanel>
             </Grid>
 
@@ -116,6 +122,7 @@
                                 <Menu Height="40" Margin="0,8">
                                     <MenuItem
                                         Width="300"
+                                        Classes="MainMenuButton"
                                         Header="{Binding}"
                                         ItemsSource="{Binding Items}">
                                         <MenuItem.ItemsPanel>

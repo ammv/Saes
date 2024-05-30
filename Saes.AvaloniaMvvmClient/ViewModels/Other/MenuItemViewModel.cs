@@ -43,9 +43,13 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
         {
             Title = title;
 
-            App.Current.TryFindResource(iconKey, out var icon);
+            if(iconKey != null)
+            {
+                App.Current.TryFindResource(iconKey, out var icon);
 
-            Icon = icon as StreamGeometry;
+                Icon = icon as StreamGeometry;
+            }
+            
 
             Items = new ObservableCollection<SubMenuItemViewModel>();
             Items.CollectionChanged += Items_CollectionChanged;
