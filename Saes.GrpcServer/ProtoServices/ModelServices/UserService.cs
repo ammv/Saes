@@ -4,8 +4,11 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Saes.Models;
+using Saes.Models.Schemas;
 using Saes.Protos;
 using Saes.Protos.ModelServices;
+
+#nullable disable
 
 namespace Saes.GrpcServer.ProtoServices.ModelServices
 {
@@ -43,6 +46,62 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             response.Data.AddRange(dtos);
 
             return response;
+        }
+
+        public override async Task<UserLookupResponse> Add(UserDataRequest request, ServerCallContext context)
+        {
+            //_ctx.uspAddUser
+
+            if(string.IsNullOrEmpty(request.Login))
+            {
+                throw new ArgumentNullException(nameof(request.Login));
+            }
+
+            if (string.IsNullOrEmpty(request.Password))
+            {
+                throw new ArgumentNullException(nameof(request.Password));
+            }
+
+            User foundByLogin = _ctx.Users.FirstOrDefault(x => x.Login == request.Login);
+            if(foundByLogin != null)
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, request.Login));
+            }
+
+            await _ctx.uspAddUserAsync(request.Login, request.Password, request.UserRoleId);
+
+            var response = new UserLookupResponse();
+
+            response.Data.Add(_ctx.Users.Single(x => x.Login == request.Login).Adapt<UserDto>());
+
+            return response;
+        }
+
+        public override Task<StatusResponse> Edit(UserDataRequest request, ServerCallContext context)
+        {
+            if(request.UserId == null || request.UserId <= 0)
+            {
+                throw new ArgumentNullException(nameof(request.UserId));
+            }
+
+            if(string.IsNullOrEmpty(request.Password))
+
+            if(_ctx.Users.FirstOrDefault(x => x.Login == request.Login && x.UserId != request.UserId) != null)
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, request.Login));
+            }
+
+            User user = _ctx.Users.Single(x => x.UserId == request.UserId);
+
+            user.Login = request.Login;
+            user.UserRoleId = request.UserRoleId;
+
+            _ctx.uspUpdatePasswordUser(request.Login, request.Password);
+
+            _ctx.SaveChanges();
+
+            return Task.FromResult(new StatusResponse { Result = true });
+            
         }
     }
 }
