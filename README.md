@@ -6,12 +6,12 @@ SAES - System of according electronic signatures
 Клиент-Сервер
 
 ## Общие характеристики
-1. ЯП - C#
-2. Платформа - [.NET 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+ЯП - C#\
+Платформа - [.NET 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 
 ## Клиентскаяя часть
-1. UI фреймворк - Avalonia UI
-2. Паттерн - MVVM
+UI фреймворк - Avalonia UI\
+Паттерн - MVVM
 
 ## Серверная часть
 gRPC сервер
@@ -31,12 +31,12 @@ MS SQL
 9. Возвращает ответ (FirstFactorAuthenticateResponse) клиенту
 10. Клиент получает ответ на запрос, обрабатывает его данные и продолжает работу (например переходит в главное меню)
 
-Клиент ---Request---> Сервер gRPC ---SQL Query---> База данных
+Клиент ---Request---> Сервер gRPC ---SQL Query---> База данных\
 Клиент <---Response--- Сервер gRPC <---Result--- База данных
 
 # Как запустить
 ## Требования
-IDE - Visual Studio 2022 или JetBrains Rider
+IDE - Visual Studio 2022 или JetBrains Rider\
 [SDK .NET 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 
 ## Шаги
