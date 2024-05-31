@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+package journalInstanceForCPARecord;
+
+// NOT_IMPLEMENTED
+
+service JournalInstanceForCPARecordService {
+    rpc Search (JournalInstanceForCPARecordLookup) returns (JournalInstanceForCPARecordLookupResponse);
+    rpc Add (JournalInstanceForCPARecordDataRequest) returns (JournalInstanceForCPARecordLookupResponse);
+    rpc Remove (JournalInstanceForCPARecordLookup) returns (statuses.StatusResponse);
+    rpc Edit (JournalInstanceForCPARecordDataRequest) returns (statuses.StatusResponse);
+}
+
+message JournalInstanceForCPARecordLookup
+{
+    google.protobuf.Int32Value OrganizationID = 1;
+	google.protobuf.Int32Value JournalInstanceForCPARecordID = 2;
+	string NameCPI = 3;
+	string SerialCPI = 4;
+	google.protobuf.Int32Value InstanceNumber = 5;
+
+	google.protobuf.Int32Value ReceivedFromID = 6;
+
+	string DateAndNumberCoverLetterReceive = 7;
+	string DateAndNumberCoverLetterSend = 8;
+	string DateAndNumberConfirmationSend = 9;
+
+	string DateAndNumberCoverLetterReturn = 10;
+	string DateAndNumberConfirmationReturn = 11;
+
+	google.protobuf.Timestamp CommissioningDate = 12;
+	google.protobuf.Timestamp DecommissioningDate = 13;
+
+	google.protobuf.Timestamp DestructionDate = 14;
+
+	string Note = 15;
+}
+
+// Add or Edit
+message JournalInstanceForCPARecordDataRequest
+{
+    google.protobuf.Int32Value OrganizationID = 1;
+
+	google.protobuf.Int32Value JournalInstanceForCPARecordID = 2;
+	string NameCPI = 3;
+	string SerialCPI = 4;
+	google.protobuf.Int32Value InstanceNumber = 5;
+
+	google.protobuf.Int32Value ReceivedFromID = 6;
+
+	string DateAndNumberCoverLetterReceive = 7;
+	string DateAndNumberCoverLetterSend = 8;
+	string DateAndNumberConfirmationSend = 9;
+
+	string DateAndNumberCoverLetterReturn = 10;
+	string DateAndNumberConfirmationReturn = 11;
+
+	google.protobuf.Timestamp CommissioningDate = 12;
+	google.protobuf.Timestamp DecommissioningDate = 13;
+
+	google.protobuf.Timestamp DestructionDate = 14;
+
+	string Note = 15;
+
+	models.FileDto SignFileDto = 16;
+}
+
+// Comment
+message JournalInstanceForCPARecordLookupResponse
+{
+    repeated models.JournalInstanceForCPARecordDto data = 1;
+}

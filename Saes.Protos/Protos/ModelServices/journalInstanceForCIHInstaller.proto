@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package journalInstanceForCIHInstaller;
+
+// NOT_IMPLEMENTED
+
+service JournalInstanceForCIHInstallerService {
+    rpc Search (JournalInstanceForCIHInstallerLookup) returns (JournalInstanceForCIHInstallerLookupResponse);
+    rpc Add (JournalInstanceForCIHInstallerDataRequest) returns (JournalInstanceForCIHInstallerLookupResponse);
+    rpc Remove (JournalInstanceForCIHInstallerLookup) returns (statuses.StatusResponse);
+    rpc Edit (JournalInstanceForCIHInstallerDataRequest) returns (statuses.StatusResponse);
+}
+
+message JournalInstanceForCIHInstallerLookup
+{
+    google.protobuf.Int32Value JournalInstanceForCIHInstallerID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value InstallerID = 3;
+}
+
+// Add or Edit
+message JournalInstanceForCIHInstallerDataRequest
+{
+    google.protobuf.Int32Value JournalInstanceForCIHInstallerID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value InstallerID = 3;
+}
+
+// Comment
+message JournalInstanceForCIHInstallerLookupResponse
+{
+    repeated models.JournalInstanceForCIHInstallerDto data = 1;
+}

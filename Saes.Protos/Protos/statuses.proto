@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package statuses;
+
+message StatusResponse
+{
+	bool result = 1;
+}

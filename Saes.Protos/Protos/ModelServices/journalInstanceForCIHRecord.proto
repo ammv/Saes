@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+package journalInstanceForCIHRecord;
+
+// NOT_IMPLEMENTED
+
+service JournalInstanceForCIHRecordService {
+    rpc Search (JournalInstanceForCIHRecordLookup) returns (JournalInstanceForCIHRecordLookupResponse);
+    rpc Add (JournalInstanceForCIHRecordDataRequest) returns (JournalInstanceForCIHRecordLookupResponse);
+    rpc Remove (JournalInstanceForCIHRecordLookup) returns (statuses.StatusResponse);
+    rpc Edit (JournalInstanceForCIHRecordDataRequest) returns (statuses.StatusResponse);
+}
+
+message JournalInstanceForCIHRecordLookup
+{
+    google.protobuf.Int32Value OrganizationID = 1;
+
+	string NameCPI = 2;
+	string SerialCPI = 3;
+	google.protobuf.Int32Value InstanceNumber = 4;
+
+	google.protobuf.Int32Value ReceivedFromID = 5;
+
+	string DateAndNumberCoverLetterReceive = 6;
+
+	google.protobuf.Int32Value CPIUserID = 7;
+
+	string DateAndNumberConfirmationIssue = 8;
+	string InstallationDateAndConfirmation = 9;
+	google.protobuf.Timestamp DestructionDate = 10;
+	string DestructionActNumber = 11;
+	string Note = 12;
+
+	google.protobuf.Int32Value JournalInstanceForCIHRecordId = 13;
+}
+
+// Add or Edit
+message JournalInstanceForCIHRecordDataRequest
+{
+    google.protobuf.Int32Value OrganizationID = 1;
+
+	string NameCPI = 2;
+	string SerialCPI = 3;
+	google.protobuf.Int32Value InstanceNumber = 4;
+
+	google.protobuf.Int32Value ReceivedFromID = 5;
+
+	string DateAndNumberCoverLetterReceive = 6;
+
+	google.protobuf.Int32Value CPIUserID = 7;
+
+	string DateAndNumberConfirmationIssue = 8;
+	string InstallationDateAndConfirmation = 9;
+	google.protobuf.Timestamp DestructionDate = 10;
+	string DestructionActNumber = 11;
+	string Note = 12;
+
+	models.FileDto SignFileDto = 13;
+
+	google.protobuf.Int32Value JournalInstanceForCIHRecordId = 14;
+
+}
+
+// Comment
+message JournalInstanceForCIHRecordLookupResponse
+{
+    repeated models.JournalInstanceForCIHRecordDto data = 1;
+}

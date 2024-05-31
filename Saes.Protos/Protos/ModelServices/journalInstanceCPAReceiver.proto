@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package journalInstanceCPAReceiver;
+
+// NOT_IMPLEMENTED
+
+service JournalInstanceCPAReceiverService {
+    rpc Search (JournalInstanceCPAReceiverLookup) returns (JournalInstanceCPAReceiverLookupResponse);
+    rpc Add (JournalInstanceCPAReceiverDataRequest) returns (JournalInstanceCPAReceiverLookupResponse);
+    rpc Remove (JournalInstanceCPAReceiverLookup) returns (statuses.StatusResponse);
+    rpc Edit (JournalInstanceCPAReceiverDataRequest) returns (statuses.StatusResponse);
+}
+
+message JournalInstanceCPAReceiverLookup
+{
+    google.protobuf.Int32Value JournalInstanceCPAReceiverID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value ReceiverID = 3;
+}
+
+// Add or Edit
+message JournalInstanceCPAReceiverDataRequest
+{
+    google.protobuf.Int32Value JournalInstanceCPAReceiverID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value ReceiverID = 3;
+}
+
+// Comment
+message JournalInstanceCPAReceiverLookupResponse
+{
+    repeated models.JournalInstanceCPAReceiverDto data = 1;
+}

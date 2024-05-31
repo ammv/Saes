@@ -7,6 +7,7 @@ import "google/protobuf/wrappers.proto";
 
 package models;
 
+// PASS
 message FileDto {
   int32 fileId = 1;
   string guid = 2;
@@ -21,6 +22,7 @@ message UserRoleDto
 	string name = 2;
 }
 
+// PASS
 message RightGroupDto
 {
 	int32 rightGroupId = 1;
@@ -28,6 +30,7 @@ message RightGroupDto
 	string name = 3;
 }
 
+// PASS
 message RightDto
 {
 	int32 rightId = 1;
@@ -37,6 +40,7 @@ message RightDto
 	string name = 5;
 }
 
+// PASS
 message UserRoleRightDto
 {
 	int32 UserRoleRightId = 1;
@@ -46,6 +50,7 @@ message UserRoleRightDto
 	RightDto RightDto = 5;
 }
 
+// UPDATE /ADD/EDIT
 message UserDto
 {
 	int32 userId = 1;
@@ -56,6 +61,7 @@ message UserDto
 	bool twoFactorEnabled = 6;
 }
 
+// NEED
 message AddressDto
 {
 	int32 AddressID = 1;
@@ -80,7 +86,7 @@ message BusinessEntityTypeDto
 message BusinessEntityDto
 {
 	int32 BusinessEntityID = 1;
-	string BusinessEntityTypeID = 2;
+	int32 BusinessEntityTypeID = 2;
 	BusinessEntityTypeDto businessEntityTypeDto = 3;
 }
 
@@ -144,6 +150,7 @@ message EmployeeDto
 	BusinessEntityDto BusinessEntityDto = 10;
 }
 
+// PASS
 message TableDataDto
 {
 	int32 TableDataID = 1;
@@ -152,6 +159,7 @@ message TableDataDto
 	string RusName = 4;
 }
 
+// PASS
 message TableColumnDataDto
 {
 	int32 TableColumnDataID = 1;
@@ -175,6 +183,7 @@ message LogAuthenticationDto
 	google.protobuf.Timestamp Date = 10;
 }
 
+// PASS
 message UserSessionDto
 {
 	int32 UserSessionID = 1;
@@ -187,6 +196,7 @@ message UserSessionDto
 	LogAuthenticationDto LogAuthenticationDto = 8;
 }
 
+// PASS
 message ErrorLogDto
 {
 	int32 ErrorLogID = 1;
@@ -213,6 +223,7 @@ message LogDto
 	string GUID = 9;
 }
 
+// PASS
 message LogChangeDto
 {
 	int32 AuditLogID = 1;
@@ -227,6 +238,7 @@ message JournalInstanceForCPARecordDto
 	OrganizationDto OrganizationDto = 2;
 
 	int32 JournalInstanceForCPARecordID = 3;
+
 	string NameCPI = 4;
 	string SerialCPI = 5;
 	int32 InstanceNumber = 6;
@@ -298,6 +310,8 @@ message JournalInstanceForCIHRecordDto
 
 	google.protobuf.Int32Value SignFileID = 16;
 	FileDto SignFileDto = 17;
+
+	int32 JournalInstanceForCIHRecordDto = 18;
 }
 
 message JournalInstanceForCIHInstallerDto

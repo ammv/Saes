@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package keyHolderType;
+
+// NOT_IMPLEMENTED
+
+service KeyHolderTypeService {
+    rpc Search (KeyHolderTypeLookup) returns (KeyHolderTypeLookupResponse);
+    rpc Add (KeyHolderTypeDataRequest) returns (KeyHolderTypeLookupResponse);
+    rpc Remove (KeyHolderTypeLookup) returns (statuses.StatusResponse);
+    rpc Edit (KeyHolderTypeDataRequest) returns (statuses.StatusResponse);
+}
+
+message KeyHolderTypeLookup
+{
+    google.protobuf.Int32Value KeyHolderTypeID = 1;
+	string Name = 2;
+}
+
+// Add or Edit
+message KeyHolderTypeDataRequest
+{
+    google.protobuf.Int32Value KeyHolderTypeID = 1;
+	string Name = 2;
+}
+
+// Comment
+message KeyHolderTypeLookupResponse
+{
+    repeated models.KeyHolderTypeDto data = 1;
+}

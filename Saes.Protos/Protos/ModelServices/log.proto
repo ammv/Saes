@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+
+package log;
+
+// NOT_IMPLEMENTED
+
+service LogService {
+    rpc Search (LogLookup) returns (LogLookupResponse);
+}
+
+message LogLookup
+{
+    google.protobuf.Int32Value LogID = 1;
+	google.protobuf.Int32Value TableDataID = 2;
+	google.protobuf.Int32Value TableRowID = 3;
+	string Action = 4;
+	google.protobuf.Int32Value UserSessionID = 5;
+	google.protobuf.Timestamp Date = 6;
+	string GUID = 7;
+}
+
+
+// Comment
+message LogLookupResponse
+{
+    repeated models.LogDto data = 1;
+}

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package organizationContact;
+
+// NOT_IMPLEMENTED
+
+service OrganizationContactService {
+    rpc Search (OrganizationContactLookup) returns (OrganizationContactLookupResponse);
+    rpc Add (OrganizationContactDataRequest) returns (OrganizationContactLookupResponse);
+    rpc Remove (OrganizationContactLookup) returns (statuses.StatusResponse);
+    rpc Edit (OrganizationContactDataRequest) returns (statuses.StatusResponse);
+}
+
+message OrganizationContactLookup
+{
+    google.protobuf.Int32Value OrganizationContactID = 1;
+	google.protobuf.Int32Value OrganizationID =2;
+	int32 ContactTypeID = 3;
+	string Value = 4;
+}
+
+// Add or Edit
+message OrganizationContactDataRequest
+{
+    google.protobuf.Int32Value OrganizationContactID = 1;
+	google.protobuf.Int32Value OrganizationID =2;
+	google.protobuf.Int32Value ContactTypeID = 3;
+	string Value = 4;
+	string Note = 5;
+}
+
+// Comment
+message OrganizationContactLookupResponse
+{
+    repeated models.OrganizationContactDto data = 1;
+}

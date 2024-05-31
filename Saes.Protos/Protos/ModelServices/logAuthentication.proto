@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+package logAuthentication;
+
+// NOT_IMPLEMENTED
+
+service LogAuthenticationService {
+    rpc Search (LogAuthenticationLookup) returns (LogAuthenticationLookupResponse);
+}
+
+message LogAuthenticationLookup
+{
+    google.protobuf.Int32Value LogAuthenticationID = 1;
+	string EnteredLogin = 2;
+	google.protobuf.BoolValue FirstFactorResult = 3;
+	google.protobuf.BoolValue SecondFactorResult = 4;
+	string AuthServiceResponse = 5;
+	string MAC = 6;
+	string IP = 7;
+	string MashineName = 8;
+	string MashineUserName = 9;
+	google.protobuf.Timestamp Date = 10;
+}
+
+
+// Comment
+message LogAuthenticationLookupResponse
+{
+    repeated models.LogAuthenticationDto data = 1;
+}

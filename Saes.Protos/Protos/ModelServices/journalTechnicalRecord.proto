@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+package journalTechnicalRecord;
+
+// NOT_IMPLEMENTED
+
+service JournalTechnicalRecordService {
+    rpc Search (JournalTechnicalRecordLookup) returns (JournalTechnicalRecordLookupResponse);
+    rpc Add (JournalTechnicalRecordDataRequest) returns (JournalTechnicalRecordLookupResponse);
+    rpc Remove (JournalTechnicalRecordLookup) returns (statuses.StatusResponse);
+    rpc Edit (JournalTechnicalRecordDataRequest) returns (statuses.StatusResponse);
+}
+
+message JournalTechnicalRecordLookup
+{
+    google.protobuf.Int32Value OrganizationID = 1;
+
+	google.protobuf.Int32Value JournalTechnicalRecordID = 2;
+
+	string TypeAndSerialUsedCPI = 3;
+	string RecordOnMaintenanceCPI = 4;
+
+	google.protobuf.Int32Value KeyDocumentTypeID = 5;
+
+	string SerialCPIAndKeyDocumentInstanceNumber = 6;
+	string NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 7;
+
+	google.protobuf.Timestamp DestructionDate = 8;
+	string ActNumber = 9;
+	string Note = 10;
+}
+
+// Add or Edit
+message JournalTechnicalRecordDataRequest
+{
+    google.protobuf.Int32Value OrganizationID = 1;
+
+	google.protobuf.Int32Value JournalTechnicalRecordID = 2;
+	google.protobuf.Timestamp Date = 3;
+
+	string TypeAndSerialUsedCPI = 4;
+	string RecordOnMaintenanceCPI = 5;
+
+	google.protobuf.Int32Value KeyDocumentTypeID = 6;
+
+	string SerialCPIAndKeyDocumentInstanceNumber = 7;
+	string NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 8;
+
+	google.protobuf.Timestamp DestructionDate = 9;
+	string ActNumber = 11;
+	string Note = 12;
+
+	models.FileDto SignFileDto = 13;
+}
+
+// Comment
+message JournalTechnicalRecordLookupResponse
+{
+    repeated models.JournalTechnicalRecordDto data = 1;
+}

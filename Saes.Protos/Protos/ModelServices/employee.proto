@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package employee;
+
+// NOT_IMPLEMENTED
+
+service EmployeeService {
+    rpc Search (EmployeeLookup) returns (EmployeeLookupResponse);
+    rpc Add (EmployeeDataRequest) returns (EmployeeLookupResponse);
+    rpc Remove (EmployeeLookup) returns (statuses.StatusResponse);
+    rpc Edit (EmployeeDataRequest) returns (statuses.StatusResponse);
+}
+
+message EmployeeLookup
+{
+    google.protobuf.Int32Value BusinessEntityID = 1;
+	google.protobuf.Int32Value EmployeeID = 2;
+	google.protobuf.Int32Value OrganizationID = 3;
+	string FirstName = 4;
+	string MiddleName = 5;
+	string LastName = 6;
+	google.protobuf.Int32Value EmployeePositionID = 7;
+}
+
+// Add or Edit
+message EmployeeDataRequest
+{
+    google.protobuf.Int32Value BusinessEntityID = 1;
+	google.protobuf.Int32Value EmployeeID = 2;
+	google.protobuf.Int32Value OrganizationID = 3;
+	string FirstName = 4;
+	string MiddleName = 5;
+	string LastName = 6;
+	google.protobuf.Int32Value EmployeePositionID = 7;
+}
+
+// Comment
+message EmployeeLookupResponse
+{
+    repeated models.EmployeeDto data = 1;
+}

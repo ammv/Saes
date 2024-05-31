@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+
+package organization;
+
+// NOT_IMPLEMENTED
+
+service OrganizationService {
+    rpc Search (OrganizationLookup) returns (OrganizationLookupResponse);
+    rpc Add (OrganizationDataRequest) returns (OrganizationLookupResponse);
+    rpc Remove (OrganizationLookup) returns (statuses.StatusResponse);
+    rpc Edit (OrganizationDataRequest) returns (statuses.StatusResponse);
+}
+
+message OrganizationLookup
+{
+    google.protobuf.Int32Value BusinessEntityID = 1;
+	google.protobuf.Int32Value OrganizationID = 2;
+	string FullName = 3;
+	string ShortName = 4;
+	string INN = 5;
+	string DirectorFullName = 6;
+	string ChiefAccountantFullName = 7;
+}
+
+// Add or Edit
+message OrganizationDataRequest
+{
+	/////////////only for editing//////////////////
+    google.protobuf.Int32Value BusinessEntityID = 1;
+	google.protobuf.Int32Value OrganizationID = 2;
+	//////////////////////////////////////////////
+
+	string FullName = 3;
+	string ShortName = 4;
+	models.AddressDto BusinessAddressDto = 5;
+	string INN = 6;
+	string KPP = 7;
+	string OKPO = 8;
+	string OGRN = 9;
+	google.protobuf.Timestamp DateOfAssignmentOGRN = 10;
+	string DirectorFullName = 11;
+	string ChiefAccountantFullName = 12;
+	string OKVED = 13;
+	google.protobuf.BoolValue IsOwnerJournalAccountingCPI = 14;
+}
+
+// Comment
+message OrganizationLookupResponse
+{
+    repeated models.OrganizationDto data = 1;
+}

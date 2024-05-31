@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package hardware;
+
+// NOT_IMPLEMENTED
+
+service HardWareService {
+    rpc Search (HardWareLookup) returns (HardWareLookupResponse);
+    rpc Add (HardWareDataRequest) returns (HardWareLookupResponse);
+    rpc Remove (HardWareLookup) returns (statuses.StatusResponse);
+    rpc Edit (HardWareDataRequest) returns (statuses.StatusResponse);
+}
+
+message HardWareLookup
+{
+    google.protobuf.Int32Value HardwareId = 1;
+	google.protobuf.Int32Value OrganizationID = 2;
+	string Name = 3;
+	string SerialNumber = 4;
+	string Note = 5;
+}
+
+// Add or Edit
+message HardWareDataRequest
+{
+    google.protobuf.Int32Value HardwareId = 1;
+	google.protobuf.Int32Value OrganizationID = 2;
+	string Name = 4;
+	string SerialNumber = 5;
+	string Note = 6;
+}
+
+// Comment
+message HardWareLookupResponse
+{
+    repeated models.HardwareDto data = 1;
+}

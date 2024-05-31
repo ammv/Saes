@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package journalInstanceForCIHDestructorService;
+
+// NOT_IMPLEMENTED
+
+service JournalInstanceForCIHDestructorService {
+    rpc Search (JournalInstanceForCIHDestructorLookup) returns (JournalInstanceForCIHDestructorLookupResponse);
+    rpc Add (JournalInstanceForCIHDestructorDataRequest) returns (JournalInstanceForCIHDestructorLookupResponse);
+    rpc Remove (JournalInstanceForCIHDestructorLookup) returns (statuses.StatusResponse);
+    rpc Edit (JournalInstanceForCIHDestructorDataRequest) returns (statuses.StatusResponse);
+}
+
+message JournalInstanceForCIHDestructorLookup
+{
+    google.protobuf.Int32Value JournalInstanceForCIHDestructorID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value DestructorID = 3;
+}
+
+// Add or Edit
+message JournalInstanceForCIHDestructorDataRequest
+{
+    google.protobuf.Int32Value JournalInstanceForCIHDestructorID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value DestructorID = 3;
+}
+
+// Comment
+message JournalInstanceForCIHDestructorLookupResponse
+{
+    repeated models.JournalInstanceForCIHDestructorDto data = 1;
+}

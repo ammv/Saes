@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package employeePosition;
+
+// NOT_IMPLEMENTED
+
+service EmployeePositionService {
+    rpc Search (EmployeePositionLookup) returns (EmployeePositionLookupResponse);
+    rpc Add (EmployeePositionDataRequest) returns (EmployeePositionLookupResponse);
+    rpc Remove (EmployeePositionLookup) returns (statuses.StatusResponse);
+    rpc Edit (EmployeePositionDataRequest) returns (statuses.StatusResponse);
+}
+
+message EmployeePositionLookup
+{
+    google.protobuf.Int32Value EmployeePositionID = 1;
+	string name = 2;
+	string Note = 3;
+}
+
+// Add or Edit
+message EmployeePositionDataRequest
+{
+    google.protobuf.Int32Value EmployeePositionID = 1;
+	string name = 2;
+	string Note = 3;
+}
+
+// Comment
+message EmployeePositionLookupResponse
+{
+    repeated models.EmployeePositionDto data = 1;
+}

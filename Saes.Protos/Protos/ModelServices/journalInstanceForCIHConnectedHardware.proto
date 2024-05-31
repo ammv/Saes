@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package journalInstanceForCIHConnectedHardware;
+
+// NOT_IMPLEMENTED 
+
+service JournalInstanceForCIHConnectedHardwareService {
+    rpc Search (JournalInstanceForCIHConnectedHardwareLookup) returns (JournalInstanceForCIHConnectedHardwareLookupResponse);
+    rpc Add (JournalInstanceForCIHConnectedHardwareDataRequest) returns (JournalInstanceForCIHConnectedHardwareLookupResponse);
+    rpc Remove (JournalInstanceForCIHConnectedHardwareLookup) returns (statuses.StatusResponse);
+    rpc Edit (JournalInstanceForCIHConnectedHardwareDataRequest) returns (statuses.StatusResponse);
+}
+
+message JournalInstanceForCIHConnectedHardwareLookup
+{
+    google.protobuf.Int32Value JournalInstanceForCIHConnectedHardwareID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value HardwareID = 3;
+}
+
+// Add or Edit
+message JournalInstanceForCIHConnectedHardwareDataRequest
+{
+    google.protobuf.Int32Value JournalInstanceForCIHConnectedHardwareID = 1;
+
+	google.protobuf.Int32Value RecordID = 2;
+
+	google.protobuf.Int32Value HardwareID = 3;
+}
+
+// Comment
+message JournalInstanceForCIHConnectedHardwareLookupResponse
+{
+    repeated models.JournalInstanceForCIHConnectedHardwareDto data = 1;
+}

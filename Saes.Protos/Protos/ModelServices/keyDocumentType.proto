@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package keyDocumentTypeDto;
+
+// NOT_IMPLEMENTED
+
+service KeyDocumentTypeService {
+    rpc Search (KeyDocumentTypeLookup) returns (KeyDocumentTypeLookupResponse);
+    rpc Add (KeyDocumentTypeDataRequest) returns (KeyDocumentTypeLookupResponse);
+    rpc Remove (KeyDocumentTypeLookup) returns (statuses.StatusResponse);
+    rpc Edit (KeyDocumentTypeDataRequest) returns (statuses.StatusResponse);
+}
+
+message KeyDocumentTypeLookup
+{
+    google.protobuf.Int32Value KeyDocumentTypeID = 1;
+	string Name = 2;
+	string Note = 3;
+}
+
+// Add or Edit
+message KeyDocumentTypeDataRequest
+{
+    google.protobuf.Int32Value KeyDocumentTypeID = 1;
+	string Name = 2;
+	string Note = 3;
+}
+
+// Comment
+message KeyDocumentTypeLookupResponse
+{
+    repeated models.KeyDocumentTypeDto data = 1;
+}

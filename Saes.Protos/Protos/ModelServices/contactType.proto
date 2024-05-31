@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+
+package contactType;
+
+// NOT_IMPLEMENTED
+
+service ContactTypeService {
+    rpc Search (ContactTypeLookup) returns (ContactTypeLookupResponse);
+    rpc Add (ContactTypeDataRequest) returns (ContactTypeLookupResponse);
+    rpc Remove (ContactTypeLookup) returns (statuses.StatusResponse);
+    rpc Edit (ContactTypeDataRequest) returns (statuses.StatusResponse);
+}
+
+message ContactTypeLookup
+{
+    google.protobuf.Int32Value ContactTypeId = 1;
+    google.protobuf.StringValue name = 2;
+}
+
+// Add or Edit
+message ContactTypeDataRequest
+{
+    google.protobuf.Int32Value ContactTypeId = 1;
+    string name = 2;
+}
+
+// Comment
+message ContactTypeLookupResponse
+{
+    repeated models.ContactTypeDto data = 1;
+}
