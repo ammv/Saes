@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Saes.Models.Core;
 using Saes.Models.Extensions;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,73 @@ namespace Saes.Models.Schemas
             var result = await query.SingleAsync();
 
             return result;
+        }
+
+        private static SqlQueryData uspAddUser_Query(string login, string password, int userRoleId)
+        {
+            SqlParameterBuilder sqlParameterBuilder = new SqlParameterBuilder();
+
+            var sqlParameterBuilderResult = sqlParameterBuilder
+                .AddInput(login)
+                .AddInput(password)
+                .AddInput(userRoleId)
+                .Build();
+
+            var sql = SqlQueryHelper.SqlProc(_schemaName, SqlQueryHelper.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
+
+            return new SqlQueryData(sql, sqlParameterBuilderResult.SqlParameters.ToArray());
+        }
+
+        /// <summary>
+        /// Executing procedure uspAddUser in database and return SessionKey
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="userId"></param>
+        /// <param name="expiredAt"></param>
+        /// <returns>Session key</returns>
+        public static int uspAddUser(this SaesContext ctx, string login, string password, int userRoleId)
+        {
+            var sqlQueryData = uspAddUser_Query(login, password, userRoleId);
+            return ctx.Database.ExecuteSqlRaw(sqlQueryData.Sql, sqlQueryData.SqlParameters);
+        }
+
+        public static async Task<int> uspAddUserAsync(this SaesContext ctx, string login, string password, int userRoleId)
+        {
+            var sqlQueryData = uspAddUser_Query(login, password, userRoleId);
+            return await ctx.Database.ExecuteSqlRawAsync(sqlQueryData.Sql, sqlQueryData.SqlParameters);
+        }
+
+        private static SqlQueryData uspUpdatePasswordUser_Query(string login, string password)
+        {
+            SqlParameterBuilder sqlParameterBuilder = new SqlParameterBuilder();
+
+            var sqlParameterBuilderResult = sqlParameterBuilder
+                .AddInput(login)
+                .AddInput(password)
+                .Build();
+
+            var sql = SqlQueryHelper.SqlProc(_schemaName, SqlQueryHelper.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
+
+            return new SqlQueryData(sql, sqlParameterBuilderResult.SqlParameters.ToArray());
+        }
+
+        /// <summary>
+        /// Executing procedure uspUpdatePasswordUser in database and return SessionKey
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="userId"></param>
+        /// <param name="expiredAt"></param>
+        /// <returns>Session key</returns>
+        public static int uspUpdatePasswordUser(this SaesContext ctx, string login, string password)
+        {
+            var sqlQueryData = uspUpdatePasswordUser_Query(login, password);
+            return ctx.Database.ExecuteSqlRaw(sqlQueryData.Sql, sqlQueryData.SqlParameters);
+        }
+
+        public static async Task<int> uspUpdatePasswordUserAsync(this SaesContext ctx, string login, string password)
+        {
+            var sqlQueryData = uspUpdatePasswordUser_Query(login, password);
+            return await ctx.Database.ExecuteSqlRawAsync(sqlQueryData.Sql, sqlQueryData.SqlParameters);
         }
     }
 }
