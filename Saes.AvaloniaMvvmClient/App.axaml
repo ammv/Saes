@@ -1,24 +1,25 @@
-<Application xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Saes.AvaloniaMvvmClient.App"
-			 xmlns:local="using:Saes.AvaloniaMvvmClient"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-	<Application.DataTemplates>
-		<local:ViewLocator />
-	</Application.DataTemplates>
+<Application
+    x:Class="Saes.AvaloniaMvvmClient.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Saes.AvaloniaMvvmClient"
+    RequestedThemeVariant="Default">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
     <Application.Styles>
-		<!--<StyleInclude Source="/Styles/IncludeStyles.axaml"/>-->
+        <!--<StyleInclude Source="/Styles/IncludeStyles.axaml"/>-->
         <FluentTheme />
-		<StyleInclude Source="avares://Saes.AvaloniaMvvmClient/Assets/Icons.axaml"/>
-		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        <StyleInclude Source="avares://Saes.AvaloniaMvvmClient/Assets/Icons.axaml" />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
     </Application.Styles>
-	<Application.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceInclude Source="avares://Saes.AvaloniaMvvmClient/Converters/Include.axaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-		<FontFamily x:Key="IbmPlexMonoFont">avares://Saes.AvaloniaMvvmClient/Assets/Fonts#IBM Plex Mono</FontFamily>
-	</Application.Resources>
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Saes.AvaloniaMvvmClient/Converters/Include.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <FontFamily x:Key="IbmPlexMonoFont">avares://Saes.AvaloniaMvvmClient/Assets/Fonts#IBM Plex Mono</FontFamily>
+    </Application.Resources>
 </Application>

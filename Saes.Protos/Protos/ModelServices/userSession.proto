@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+package userSession;
+
+// NOT_IMPLEMENTED
+
+service UserSessionService {
+    rpc Search (UserSessionLookup) returns (UserSessionLookupResponse);
+}
+
+message UserSessionLookup
+{
+    google.protobuf.Int32Value UserSessionId = 1;
+	google.protobuf.StringValue UserId = 3;
+	models.UserDto UserDto = 4;
+	google.protobuf.Timestamp CreatedAt = 5;
+	google.protobuf.Timestamp ExpiredAt = 6;
+	google.protobuf.Int32Value LogAuthenticationId = 7;
+	models.LogAuthenticationDto LogAuthenticationDto = 8;
+	google.protobuf.BoolValue IsExpired = 9;
+
+	reserved "SessionKey";
+}
+
+// Comment
+message UserSessionLookupResponse
+{
+    repeated models.UserSessionDto data = 1;
+}

@@ -25,8 +25,8 @@ message UserRoleLookup
 // Add or Edit
 message UserRoleDataRequest
 {
-    int32 userRoleId = 1;
-    string name = 2;
+    google.protobuf.Int32Value userRoleId = 1;
+    google.protobuf.StringValue name = 2;
 }
 
 // Comment

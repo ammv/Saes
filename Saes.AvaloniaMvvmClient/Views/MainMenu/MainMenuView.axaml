@@ -10,6 +10,7 @@
     xmlns:vmOther="using:Saes.AvaloniaMvvmClient.ViewModels.Other"
     MinWidth="1300"
     MinHeight="720"
+    MaxWidth="1920"
     HorizontalAlignment="Stretch"
     d:DesignHeight="720"
     d:DesignWidth="1300"
@@ -27,7 +28,7 @@
         <DataTemplate x:DataType="vmOther:SubMenuItemViewModel">
             <Grid x:Name="grid" Width="{Binding $parent[MenuItem].Width}">
                 <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="PointerReleased" SourceObject="{Binding #grod}">
+                    <ia:EventTriggerBehavior EventName="PointerPressed" SourceObject="{Binding #grod}">
                         <ia:InvokeCommandAction Command="{Binding ClickCommand}" PassEventArgsToCommand="True" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
@@ -95,6 +96,7 @@
         <SplitView
             x:Name="menu"
             Grid.Row="1"
+            MinWidth="300"
             CompactPaneLength="48"
             DisplayMode="CompactInline"
             IsPaneOpen="{Binding Menu.IsOpen}"
@@ -143,33 +145,82 @@
                 </StackPanel>
             </SplitView.Pane>
             <SplitView.Content>
-                <StackPanel Margin="8,16,8,8" Spacing="24">
+                <Grid Margin="8,16,8,8" RowDefinitions="Auto,24,*">
                     <TextBlock
-                        FontSize="28"
+                        FontSize="20"
                         FontWeight="SemiBold"
-                        Text="{Binding TabStrip.SelectedTab.Content.TabTitle}" />
-                    <ContentControl Content="{Binding TabStrip.SelectedTab.Content}" />
-                </StackPanel>
+                        Text="{Binding TabStrip.SelectedTab.Content.TabTitle}"
+                        TextWrapping="Wrap" />
+                    <ContentControl
+                        Grid.Row="2"
+                        HorizontalContentAlignment="Stretch"
+                        Content="{Binding TabStrip.SelectedTab.Content}" />
+                </Grid>
             </SplitView.Content>
         </SplitView>
 
         <StackPanel
             Grid.Row="2"
             Background="#f2f2f2"
-            Opacity=".8"
             Orientation="Horizontal"
-            Spacing="4">
+            Spacing="4"
+            ToolTip.Placement="TopEdgeAlignedLeft">
+            <StackPanel.Styles>
+                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                    <Setter Property="Background" Value="Transparent" />
+                </Style>
+                <Style Selector="Button:pointerover > TextBlock">
+                    <Setter Property="TextDecorations" Value="Underline" />
+                </Style>
+            </StackPanel.Styles>
             <PathIcon
                 Width="16"
                 Height="16"
                 Margin="4,0,0,0"
                 VerticalAlignment="Center"
-                Data="{Binding Status.Icon}" />
-            <TextBlock
+                Data="{Binding Status.Icon}"
+                Opacity=".8" />
+            <Button
                 Margin="4,0,0,0"
-                HorizontalAlignment="Center"
+                Padding="0"
+                HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
-                Text="{Binding Status.Message}" />
+                Background="Transparent"
+                Opacity=".8">
+                <Button.Content>
+                    <TextBlock Text="{Binding Status.Message}" />
+                </Button.Content>
+                <Button.Flyout>
+                    <Flyout Placement="TopEdgeAlignedLeft" VerticalOffset="-8">
+                        <Border
+                            MaxWidth="450"
+                            VerticalAlignment="Stretch"
+                            CornerRadius="10">
+                            <Grid Margin="4" RowDefinitions="24,Auto">
+                                <PathIcon
+                                    Width="24"
+                                    Height="24"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="{Binding Status.Icon}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0,4,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    FontSize="16"
+                                    Text="{Binding Status.Message}"
+                                    TextWrapping="Wrap" />
+                            </Grid>
+                        </Border>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <!--<TextBlock Margin="4,0,0,0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Opacity=".8"
+                       Text="{Binding Status.Message}" />-->
         </StackPanel>
     </Grid>
 </UserControl>

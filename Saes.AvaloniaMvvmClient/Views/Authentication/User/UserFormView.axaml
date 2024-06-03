@@ -1,0 +1,24 @@
+<Window
+    x:Class="Saes.AvaloniaMvvmClient.Views.Authentication.User.UserFormView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication.User"
+    Width="200"
+    Height="100"
+    x:DataType="vm:UserFormViewModel"
+    Background="Transparent"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <StackPanel>
+        <TextBlock Text="Логин" />
+        <TextBox Text="{Binding DataRequest.Login, Mode=TwoWay}" />
+        <Button Command="{Binding FormCommand}" Content="Accept" />
+    </StackPanel>
+
+
+
+
+</Window>

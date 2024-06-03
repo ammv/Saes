@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+
+package tableData;
+
+// NOT_IMPLEMENTED
+
+service TableDataService {
+    rpc Search (TableDataLookup) returns (TableDataLookupResponse);
+}
+
+message TableDataLookup
+{
+    google.protobuf.Int32Value TableDataId = 1;
+	google.protobuf.StringValue SchemaName = 2;
+	google.protobuf.StringValue Name = 3;
+	google.protobuf.StringValue RusName = 4;
+}
+
+
+// Comment
+message TableDataLookupResponse
+{
+    repeated models.TableDataDto data = 1;
+}

@@ -1,0 +1,174 @@
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.HumanResources.Employee.EmployeeListView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Employee"
+    Width="1440"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:EmployeeListViewModel"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
+            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,16,*">
+        <Grid>
+            <StackPanel
+                Margin=""
+                Orientation="Horizontal"
+                Spacing="16">
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="№ п/п" />
+                    <TextBox Text="{Binding Lookup.EmployeeId, Mode=TwoWay}" />
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="Название" />
+                    <TextBox Text="{Binding Lookup.FirstName, Mode=TwoWay}" />
+                </StackPanel>
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="PrimaryButton"
+                    Command="{Binding SearchCommand}"
+                    Content="Поиск" />
+            </StackPanel>
+
+            <StackPanel
+                Margin=""
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="16">
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="SecondaryButton"
+                    Command="{Binding AddCommand}"
+                    Content="Добавить" />
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="SecondaryButton"
+                    Command="{Binding ExportCommand}"
+                    Content="Экспорт" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <Image
+                Height="80"
+                anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+                IsVisible="{Binding TabIsLoading}" />
+
+            <DataGrid
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="False"
+                GridLinesVisibility="All"
+                HorizontalScrollBarVisibility="Auto"
+                IsReadOnly="True"
+                IsVisible="{Binding !TabIsLoading}"
+                ItemsSource="{Binding Entities}"
+                MaxColumnWidth="200"
+                SelectedItem="{Binding SelectedEntity}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding SeeCommand}" Header="Посмотреть">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource eye_show_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding EditCommand}" Header="Изменить">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource edit_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding AddCommand}"
+                            Header="Добавить"
+                            IsEnabled="False">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource add_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding DeleteCommand}" Header="Удалить">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource delete_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <!--
+                        message EmployeeDto
+                        {
+                        int32 BusinessEntityID = 1;
+                        int32 EmployeeID = 2;
+                        int32 OrganizationID = 3;
+                        string FirstName = 4;
+                        string MiddleName = 5;
+                        string LastName = 6;
+                        int32 EmployeePositionID = 7;
+                        EmployeePositionDto EmployeePositionDto = 8;
+                        
+                        OrganizationDto OrganizationDto = 9;
+                        BusinessEntityDto BusinessEntityDto = 10;
+                        }
+                    -->
+                    <DataGridTextColumn
+                        Binding="{Binding EmployeeId}"
+                        Header="№ п/п"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding OrganizationDto.ShortName}"
+                        Header="Организация"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding OrganizationDto.ShortName}"
+                        Header="Организация"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+
+                    <DataGridTextColumn
+                        Binding="{Binding MiddleName}"
+                        Header="Фамилия"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding FirstName}"
+                        Header="Имя"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding LastName}"
+                        Header="Отчество"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding EmployeePositionDto.Name}"
+                        Header="Должность"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>

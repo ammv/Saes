@@ -62,22 +62,29 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 throw new ArgumentNullException(nameof(request.Password));
             }
 
-            User foundByLogin = _ctx.Users.FirstOrDefault(x => x.Login == request.Login);
+            User foundByLogin = await _ctx.Users.FirstOrDefaultAsync(x => x.Login == request.Login);
             if(foundByLogin != null)
             {
                 throw new RpcException(new Status(StatusCode.AlreadyExists, request.Login));
             }
 
-            await _ctx.uspAddUserAsync(request.Login, request.Password, request.UserRoleId);
+            if (request.UserRoleId == null)
+            {
+                throw new ArgumentNullException(nameof(request.UserRoleId));
+            }
+
+            await _ctx.uspAddUserAsync(request.Login, request.Password, request.UserRoleId.Value);
 
             var response = new UserLookupResponse();
 
-            response.Data.Add(_ctx.Users.Single(x => x.Login == request.Login).Adapt<UserDto>());
+            var addedUser = await _ctx.Users.SingleAsync(x => x.Login == request.Login);
+
+            response.Data.Add(addedUser.Adapt<UserDto>());
 
             return response;
         }
 
-        public override Task<StatusResponse> Edit(UserDataRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> Edit(UserDataRequest request, ServerCallContext context)
         {
             if(request.UserId == null || request.UserId <= 0)
             {
@@ -86,22 +93,34 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             if(string.IsNullOrEmpty(request.Password))
 
-            if(_ctx.Users.FirstOrDefault(x => x.Login == request.Login && x.UserId != request.UserId) != null)
+            if(await _ctx.Users.FirstOrDefaultAsync(x => x.Login == request.Login && x.UserId != request.UserId) != null)
             {
                 throw new RpcException(new Status(StatusCode.AlreadyExists, request.Login));
             }
 
-            User user = _ctx.Users.Single(x => x.UserId == request.UserId);
+            User user = await _ctx.Users.SingleAsync(x => x.UserId == request.UserId);
 
             user.Login = request.Login;
             user.UserRoleId = request.UserRoleId;
 
-            _ctx.uspUpdatePasswordUser(request.Login, request.Password);
+            await _ctx.uspUpdatePasswordUserAsync(request.Login, request.Password);
 
             _ctx.SaveChanges();
 
-            return Task.FromResult(new StatusResponse { Result = true });
+            return new StatusResponse { Result = true };
             
+        }
+
+        public override async Task<StatusResponse> Remove(UserLookup request, ServerCallContext context)
+        {
+            if(request.UserId == null)
+            {
+                throw new ArgumentNullException(nameof(request.UserId));
+            }
+            User user = await _ctx.Users.SingleAsync(x => x.UserId == request.UserId);
+            _ctx.Users.Remove(user);
+
+            return new StatusResponse { Result = true };
         }
     }
 }

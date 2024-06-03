@@ -20,10 +20,10 @@ message LogLookup
     google.protobuf.Int32Value LogID = 1;
 	google.protobuf.Int32Value TableDataID = 2;
 	google.protobuf.Int32Value TableRowID = 3;
-	string Action = 4;
+	google.protobuf.StringValue Action = 4;
 	google.protobuf.Int32Value UserSessionID = 5;
 	google.protobuf.Timestamp Date = 6;
-	string GUID = 7;
+	google.protobuf.StringValue GUID = 7;
 }
 
 

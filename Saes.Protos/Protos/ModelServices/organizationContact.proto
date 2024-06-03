@@ -20,8 +20,8 @@ message OrganizationContactLookup
 {
     google.protobuf.Int32Value OrganizationContactID = 1;
 	google.protobuf.Int32Value OrganizationID =2;
-	int32 ContactTypeID = 3;
-	string Value = 4;
+	google.protobuf.Int32Value ContactTypeID = 3;
+	google.protobuf.StringValue Value = 4;
 }
 
 // Add or Edit
@@ -30,8 +30,8 @@ message OrganizationContactDataRequest
     google.protobuf.Int32Value OrganizationContactID = 1;
 	google.protobuf.Int32Value OrganizationID =2;
 	google.protobuf.Int32Value ContactTypeID = 3;
-	string Value = 4;
-	string Note = 5;
+	google.protobuf.StringValue Value = 4;
+	google.protobuf.StringValue Note = 5;
 }
 
 // Comment

@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Mapster;
 using Saes.Models;
 using Saes.Protos;
@@ -7,7 +8,7 @@ namespace Saes.GrpcServer.Mapping
 {
     public class RegisterMapper : IRegister
     {
-        public Timestamp DtoT(DateTime? datetime)
+        public static Timestamp DtoT(DateTime? datetime)
         {
             if(datetime.HasValue)
             {
@@ -17,11 +18,13 @@ namespace Saes.GrpcServer.Mapping
         }
         public void Register(TypeAdapterConfig config)
         {
+            
             bool requireDms = false;
             bool preserveRef = true;
             config.NewConfig<Models.File, FileDto>()
                 .RequireDestinationMemberSource(requireDms)
-                .PreserveReference(preserveRef);
+                .PreserveReference(preserveRef)
+                .Map(dest => dest.Data, src => ByteString.CopyFrom(src.Data));
             config.NewConfig<UserRole, UserRoleDto>()
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef);
@@ -54,7 +57,12 @@ namespace Saes.GrpcServer.Mapping
                .PreserveReference(preserveRef)
                .Map(dest => dest.DateOfAssignmentOGRN, src => DtoT(src.DateOfAssignmentOgrn))
                .Map(dest => dest.BusinessAddressDto, src => src.BusinessAddress)
-               .Map(dest => dest.BusinessEntityDto, src => src.BusinessEntity);
+               .Map(dest => dest.BusinessEntityDto, src => src.BusinessEntity)
+               .Map(dest => dest.IsOwnerJournalAccountingCPI, src => src.IsOwnerJournalAccountingCpi)
+               .Map(dest => dest.OKPO, src => src.Okpo)
+               .Map(dest => dest.KPP, src => src.Kpp)
+               .Map(dest => dest.OGRN, src => src.Ogrn)
+               .Map(dest => dest.INN, src => src.Inn);
             config.NewConfig<ContactType, ContactTypeDto>()
                .RequireDestinationMemberSource(requireDms)
                .PreserveReference(preserveRef);
@@ -82,7 +90,10 @@ namespace Saes.GrpcServer.Mapping
             config.NewConfig<LogAuthentication, LogAuthenticationDto>()
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef)
-                .Map(dest => dest.Date, src => DtoT(src.Date));
+                .Map(dest => dest.IP, src => src.Ip)
+                .Map(dest => dest.MAC, src => src.Mac)
+                .Map(dest => dest.Date, src => DtoT(src.Date))
+                ;
             config.NewConfig<UserSession, UserSessionDto>()
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef)
@@ -99,6 +110,7 @@ namespace Saes.GrpcServer.Mapping
                 .PreserveReference(preserveRef)
                 .Map(dest => dest.Date, src => DtoT(src.Date))
                 .Map(dest => dest.TableDataDto, src => src.TableData)
+                .Map(dest => dest.GUID, src => src.Guid)
                 .Map(dest => dest.UserSessionDto, src => src.UserSession);
             config.NewConfig<LogChange, LogChangeDto>()
                 .RequireDestinationMemberSource(requireDms)
@@ -111,11 +123,16 @@ namespace Saes.GrpcServer.Mapping
                 .Map(dest => dest.DecommissioningDate, src => DtoT(src.DecommissioningDate))
                 .Map(dest => dest.SignFileDto, src => src.SignFile)
                 .Map(dest => dest.BusinessEntityDto, src => src.ReceivedFrom)
-                .Map(dest => dest.OrganizationDto, src => src.Organization);
+                .Map(dest => dest.OrganizationDto, src => src.Organization)
+                .Map(dest => dest.JournalInstanceForCPARecordId, src => src.JournalInstanceForCparecordId)
+                .Map(dest => dest.NameCPI, src => src.NameCpi)
+                .Map(dest => dest.SerialCPI, src => src.SerialCpi)
+                ;
             config.NewConfig<JournalInstanceCpareceiver, JournalInstanceCPAReceiverDto>()
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef)
                 .Map(dest => dest.RecordDto, src => src.Record)
+                .Map(dest => dest.JournalInstanceCPAReceiverId, src => src.JournalInstanceCpareceiverId)
                 .Map(dest => dest.ReceiverDto, src => src.Receiver);
             config.NewConfig<Hardware, HardwareDto>()
                .RequireDestinationMemberSource(requireDms)
@@ -126,21 +143,29 @@ namespace Saes.GrpcServer.Mapping
                .PreserveReference(preserveRef)
                .Map(dest => dest.DestructionDate, src => DtoT(src.DestructionDate))
                .Map(dest => dest.ReceivedFromDto, src => src.ReceivedFrom)
+               .Map(dest => dest.JournalInstanceForCIHRecordId, src => src.JournalInstanceForCihrecordId)
                .Map(dest => dest.CPIUserDto, src => src.Cpiuser)
+               .Map(dest => dest.OrganizationDto, src => src.Organization)
+               .Map(dest => dest.NameCPI, src => src.NameCpi)
+               .Map(dest => dest.CPIUserId, src => src.CpiuserId)
+                .Map(dest => dest.SerialCPI, src => src.SerialCpi)
                .Map(dest => dest.SignFileDto, src => src.SignFile);
             config.NewConfig<JournalInstanceForCihinstaller, JournalInstanceForCIHInstallerDto>()
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef)
                 .Map(dest => dest.RecordDto, src => src.Record)
+                .Map(dest => dest.JournalInstanceForCIHInstallerId, src => src.JournalInstanceForCihinstallerId)
                 .Map(dest => dest.InstallerDto, src => src.Installer);
             config.NewConfig<JournalInstanceForCihconnectedHardware, JournalInstanceForCIHConnectedHardwareDto>()
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef)
+                .Map(dest => dest.JournalInstanceForCIHConnectedHardwareId, src => src.JournalInstanceForCihconnectedHardwareId)
                 .Map(dest => dest.RecordDto, src => src.Record)
                 .Map(dest => dest.HardwareDto, src => src.Hardware);
             config.NewConfig<JournalInstanceForCihdestructor, JournalInstanceForCIHDestructorDto>()
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef)
+                .Map(dest => dest.JournalInstanceForCIHDestructorId, src => src.JournalInstanceForCihdestructorId)
                 .Map(dest => dest.RecordDto, src => src.Record)
                 .Map(dest => dest.DestructorDto, src => src.Destructor);
             config.NewConfig<KeyDocumentType, KeyDocumentTypeDto>()
@@ -153,7 +178,8 @@ namespace Saes.GrpcServer.Mapping
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef)
                 .Map(dest => dest.KeyHolderTypeDto, src => src.Type)
-                .Map(dest => dest.UserCPIDto, src => src.UserCpi)
+                .Map(dest => dest.UserCPI, src => src.UserCpi)
+                .Map(dest => dest.UserCPIDto, src => src.UserCpiNavigation)
                 .Map(dest => dest.SignFileDto, src => src.SignFile);
             config.NewConfig<JournalTechnicalRecord, JournalTechnicalRecordDto>()
                .RequireDestinationMemberSource(requireDms)
@@ -162,6 +188,10 @@ namespace Saes.GrpcServer.Mapping
                .Map(dest => dest.DestructionDate, src => DtoT(src.DestructionDate))
                .Map(dest => dest.OrganizationDto, src => src.Organization)
                .Map(dest => dest.KeyDocumentTypeDto, src => src.KeyDocumentType)
+               .Map(dest => dest.TypeAndSerialUsedCPI, src => src.TypeAndSerialUsedCpi)
+               .Map(dest => dest.RecordOnMaintenanceCPI, src => src.RecordOnMaintenanceCpi)
+               .Map(dest => dest.SerialCPIAndKeyDocumentInstanceNumber, src => src.SerialCpiandKeyDocumentInstanceNumber)
+               .Map(dest => dest.NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted, src => src.NumberOneTimeKeyCarrierCpizoneCryptoKeysInserted)
                .Map(dest => dest.SignFileDto, src => src.SignFile);
         }
     }

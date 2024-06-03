@@ -32,13 +32,20 @@ public partial class App : Application
         var excelExporterConfig = new ExcelExporterConfig();
         ConfigureExcelExporterConfig.Configure(excelExporterConfig);
 
+
+
         collection.AddSingleton(excelExporterConfig);
 
         collection.AddCommonServices();
         collection.AddGrpcServices();
         collection.AddMainViewModels();
-        collection.AddAuthViewModels();
-        collection.AddAdministrationViewModels();
+        collection.AddAuthenticationViewModels();
+        collection.AddElectricitySignsViewModels();
+        collection.AddAuditViewModels();
+        collection.AddHumanResourcesViewModels();
+        collection.AddAuthorizationViewModels();
+        collection.AddOfficeViewModels();
+        collection.AddPersonViewModels();
 
         // Creates a ServiceProvider containing services from the provided IServiceCollection
         ServiceProvider = collection.BuildServiceProvider();

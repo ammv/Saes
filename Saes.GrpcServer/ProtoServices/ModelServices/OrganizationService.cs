@@ -54,7 +54,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             if (request.IsOwnerJournalAccountingCPI == null)
                 throw new ArgumentNullException(nameof(request.IsOwnerJournalAccountingCPI));
 
-            BusinessEntityType businessEntityType = _ctx.BusinessEntityTypes.FirstOrDefault(x => x.Name == "организация");
+            BusinessEntityType businessEntityType = _ctx.BusinessEntityTypes.FirstOrDefault(x => x.Name == "Организация");
 
             BusinessEntity businessEntity = new BusinessEntity { BusinessEntityType = businessEntityType };
 
@@ -94,20 +94,24 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 throw new ArgumentNullException(nameof(request.BusinessEntityID));
             }
 
-            Organization organization = _ctx.Organizations.Single(x => x.BusinessEntityId == request.BusinessEntityID);
+            Organization organization = await _ctx.Organizations.FirstOrDefaultAsync(x => x.BusinessEntityId == request.BusinessEntityID);
 
-            organization.Okpo = organization.Okpo == request.OKPO ? organization.Okpo: request.OKPO;
-            organization.Okved = organization.Okved == request.OKVED ? organization.Okved : request.OKVED;
-            organization.FullName = organization.FullName == request.FullName ? organization.FullName : request.FullName;
-            organization.ShortName = organization.ShortName == request.ShortName ? organization.ShortName : request.ShortName;
-            organization.DirectorFullName = organization.DirectorFullName == request.DirectorFullName ? organization.DirectorFullName : request.DirectorFullName;
-            organization.Inn = organization.Inn == request.INN ? organization.Inn : request.INN;
-            organization.Ogrn = organization.Ogrn == request.OGRN ? organization.Ogrn : request.OGRN;
-            organization.DateOfAssignmentOgrn = organization.DateOfAssignmentOgrn == request.DateOfAssignmentOGRN?.ToDateTime().ToLocalTime() ? organization.DateOfAssignmentOgrn : request.DateOfAssignmentOGRN?.ToDateTime().ToLocalTime();
-            organization.FullName = organization.FullName == request.FullName ? organization.FullName : request.FullName;
-            organization.Kpp = organization.Kpp == request.KPP ? organization.Kpp : request.KPP;
+            if (organization == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, "Organization not found"));
+            }
 
-            _ctx.Organizations.AddOrUpdate(organization);
+            organization.Okpo = request.OKPO ?? organization.Okpo;
+            organization.Okved = request.OKVED ?? organization.Okved;
+            organization.FullName = request.FullName ?? organization.FullName;
+            organization.ShortName = request.ShortName ?? organization.ShortName;
+            organization.DirectorFullName = request.DirectorFullName ?? organization.DirectorFullName;
+            organization.Inn = request.INN ?? organization.Inn;
+            organization.Ogrn = request.OGRN ?? organization.Ogrn;
+            organization.DateOfAssignmentOgrn = request.DateOfAssignmentOGRN?.ToDateTime().ToLocalTime() ?? organization.DateOfAssignmentOgrn;
+            organization.Kpp = request.KPP ?? organization.Kpp;
+
+            _ctx.Organizations.Update(organization);
 
             await _ctx.SaveChangesAsync();
 

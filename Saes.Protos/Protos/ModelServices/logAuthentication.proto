@@ -17,14 +17,14 @@ service LogAuthenticationService {
 message LogAuthenticationLookup
 {
     google.protobuf.Int32Value LogAuthenticationID = 1;
-	string EnteredLogin = 2;
+	google.protobuf.StringValue EnteredLogin = 2;
 	google.protobuf.BoolValue FirstFactorResult = 3;
 	google.protobuf.BoolValue SecondFactorResult = 4;
-	string AuthServiceResponse = 5;
-	string MAC = 6;
-	string IP = 7;
-	string MashineName = 8;
-	string MashineUserName = 9;
+	google.protobuf.StringValue AuthServiceResponse = 5;
+	google.protobuf.StringValue MAC = 6;
+	google.protobuf.StringValue IP = 7;
+	google.protobuf.StringValue MashineName = 8;
+	google.protobuf.StringValue MashineUserName = 9;
 	google.protobuf.Timestamp Date = 10;
 }
 

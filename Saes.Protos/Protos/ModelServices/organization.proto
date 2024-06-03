@@ -22,10 +22,10 @@ message OrganizationLookup
 {
     google.protobuf.Int32Value BusinessEntityID = 1;
 	google.protobuf.Int32Value OrganizationID = 2;
-	string FullName = 3;
-	string ShortName = 4;
-	string INN = 5;
-	string DirectorFullName = 6;
+	google.protobuf.StringValue FullName = 3;
+	google.protobuf.StringValue ShortName = 4;
+	google.protobuf.StringValue INN = 5;
+	google.protobuf.StringValue DirectorFullName = 6;
 	string ChiefAccountantFullName = 7;
 }
 
@@ -37,17 +37,17 @@ message OrganizationDataRequest
 	google.protobuf.Int32Value OrganizationID = 2;
 	//////////////////////////////////////////////
 
-	string FullName = 3;
-	string ShortName = 4;
+	google.protobuf.StringValue FullName = 3;
+	google.protobuf.StringValue ShortName = 4;
 	models.AddressDto BusinessAddressDto = 5;
-	string INN = 6;
-	string KPP = 7;
-	string OKPO = 8;
-	string OGRN = 9;
+	google.protobuf.StringValue INN = 6;
+	google.protobuf.StringValue KPP = 7;
+	google.protobuf.StringValue OKPO = 8;
+	google.protobuf.StringValue OGRN = 9;
 	google.protobuf.Timestamp DateOfAssignmentOGRN = 10;
-	string DirectorFullName = 11;
-	string ChiefAccountantFullName = 12;
-	string OKVED = 13;
+	google.protobuf.StringValue DirectorFullName = 11;
+	google.protobuf.StringValue ChiefAccountantFullName = 12;
+	google.protobuf.StringValue OKVED = 13;
 	google.protobuf.BoolValue IsOwnerJournalAccountingCPI = 14;
 }
 

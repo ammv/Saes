@@ -57,6 +57,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
                 case NotifyCollectionChangedAction.Add:
                     var newItem = e.NewItems[0] as TabStripItemViewModel;
                     newItem.Closed += TabStripItem_Closed;
+                    SelectedTab = Tabs.Last();
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     var oldItem = e.OldItems[0] as TabStripItemViewModel;

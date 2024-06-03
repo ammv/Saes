@@ -28,10 +28,10 @@ message UserLookup
 // Add or Edit
 message UserDataRequest
 {
-    int32 userId = 1;
-    string login = 2;
-    int32 userRoleId = 3;
-    string password = 4;
+    google.protobuf.Int32Value userId = 1;
+    google.protobuf.StringValue login = 2;
+    google.protobuf.Int32Value userRoleId = 3;
+    google.protobuf.StringValue password = 4;
 }
 
 // Comment

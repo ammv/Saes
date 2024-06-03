@@ -51,17 +51,14 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
                 Icon = icon as StreamGeometry;
             }
 
-            ClickCommand = ReactiveCommand.Create<PointerReleasedEventArgs>(OnSubMenuItemClicked);
+            ClickCommand = ReactiveCommand.Create<PointerPressedEventArgs>(OnSubMenuItemClicked);
         }
 
-        public ReactiveCommand<PointerReleasedEventArgs, Unit> ClickCommand { get; }
+        public ReactiveCommand<PointerPressedEventArgs, Unit> ClickCommand { get; }
 
-        private void OnSubMenuItemClicked(PointerReleasedEventArgs args)
+        private void OnSubMenuItemClicked(PointerPressedEventArgs args)
         {
-            if (args?.InitialPressMouseButton == MouseButton.Left)
-            {
-                SubMenuItemClicked?.Invoke(this, EventArgs.Empty);
-            }
+            SubMenuItemClicked?.Invoke(this, EventArgs.Empty);
             
         }
 

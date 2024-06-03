@@ -1,0 +1,32 @@
+﻿using Saes.GrpcServer.ProtoServices.ModelServices;
+
+namespace Saes.GrpcServer.ProtoServices
+{
+    public class ModelServicesGrpcRegister
+    {
+        public void Register(WebApplication? app)
+        {
+            app.MapGrpcService<UserService>();
+            app.MapGrpcService<UserRoleService>();
+            app.MapGrpcService<JournalInstanceForCIHConnectedHardwareService>();
+            app.MapGrpcService<JournalInstanceForCIHDestructorService>();
+            app.MapGrpcService<JournalInstanceForCIHInstallerService>();
+            app.MapGrpcService<JournalInstanceForCIHRecordService>();
+            app.MapGrpcService<JournalInstanceForCPARecordService>();
+            app.MapGrpcService<KeyDocumentTypeService>();
+            app.MapGrpcService<KeyHolderService>();
+            app.MapGrpcService<KeyHolderTypeService>();
+            app.MapGrpcService<LogAuthenticationService>();
+            app.MapGrpcService<OrganizationService>();
+            app.MapGrpcService<ErrorLogService>();
+            app.MapGrpcService<EmployeeService>();
+            app.MapGrpcService<EmployeePositionService>();
+            app.MapGrpcService<OrganizationContactService>();
+            app.MapGrpcService<BusinessEntityService>();
+            app.MapGrpcService<BusinessEntityTypeService>();
+            app.MapGrpcService<HardwareService>();
+            app.MapGrpcService<RightService>();
+            app.MapGrpcService<UserSessionService>();
+        }
+    }
+}

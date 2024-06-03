@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+package errorLog;
+
+// NOT_IMPLEMENTED
+
+service ErrorLogService {
+    rpc Search (ErrorLogLookup) returns (ErrorLogLookupResponse);
+}
+
+message ErrorLogLookup
+{
+	google.protobuf.Int32Value ErrorLogID = 1;
+	google.protobuf.Timestamp ErrorTime = 2;
+	google.protobuf.Int32Value UserSessionID = 3;
+	google.protobuf.Int32Value ErrorNumber = 4;
+	google.protobuf.Int32Value ErrorState = 5;
+	string ErrorProcedure = 6;
+	google.protobuf.Int32Value ErrorLine = 7;
+	string ErrorMessage = 8;
+}
+
+
+// Comment
+message ErrorLogLookupResponse
+{
+    repeated models.ErrorLogDto data = 1;
+}

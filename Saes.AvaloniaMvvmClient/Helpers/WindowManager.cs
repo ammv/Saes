@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,15 @@ namespace Saes.AvaloniaMvvmClient.Helpers
                 throw new ArgumentNullException(nameof(window));
             }
             _windows.Remove(window);
+        }
+        
+        public static async Task Close(Func<Window, bool> selector)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _windows.FirstOrDefault(selector)?.Close();
+            }); 
+            
         }
     }
 }

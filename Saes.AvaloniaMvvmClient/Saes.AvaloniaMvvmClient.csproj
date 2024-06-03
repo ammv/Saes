@@ -36,6 +36,7 @@
     <None Remove="Assets\Fonts\IBMPlexMono-SemiBoldItalic.ttf" />
     <None Remove="Assets\Fonts\IBMPlexMono-Thin.ttf" />
     <None Remove="Assets\Fonts\IBMPlexMono-ThinItalic.ttf" />
+    <None Remove="Assets\Gifs\loading.gif" />
     <None Remove="Assets\Images\Logo\logo128x128.png" />
     <None Remove="Assets\Images\Logo\logo256x256.png" />
     <None Remove="Assets\Images\Logo\logo64x64.png" />
@@ -43,6 +44,7 @@
 
   <ItemGroup>
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Include="AnimatedImage.Avalonia" Version="1.0.7" />
     <PackageReference Include="Avalonia" Version="11.0.5" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.0.5" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.5" />
@@ -59,6 +61,13 @@
     <Folder Include="Core\Interfaces\" />
     <Folder Include="DataModel\" />
     <Folder Include="Infastructure\" />
+    <Folder Include="ViewModels\Audit\LogChange\" />
+    <Folder Include="ViewModels\Authorization\UserRoleRight\" />
+    <Folder Include="ViewModels\Other\FileFolder\" />
+    <Folder Include="ViewModels\Other\Address\" />
+    <Folder Include="Views\Audit\LogChange\" />
+    <Folder Include="Views\Audit\TableDataColumn\" />
+    <Folder Include="Views\Authorization\UserRoleRight\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -72,14 +81,92 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Audit\ErrorLog\ErrorLogListView.axaml.cs">
+      <DependentUpon>ErrorLogListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Audit\LogAuthentication\LogAuthenticationListView.axaml.cs">
+      <DependentUpon>LogAuthenticationListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Audit\Log\LogListView.axaml.cs">
+      <DependentUpon>LogListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Audit\TableData\TableDataListView.axaml.cs">
+      <DependentUpon>TableDataListView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Authentication\AuthenticationMainView.axaml.cs">
       <DependentUpon>AuthenticationMainView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Authorization\RightGroup\RightGroupListView.axaml.cs">
+      <DependentUpon>RightGroupListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Authorization\Right\RightListView.axaml.cs">
+      <DependentUpon>RightListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Authorization\UserRole\UserRoleListView.axaml.cs">
+      <DependentUpon>UserRoleListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Authorization\UserSession\UserSessionListView.axaml.cs">
+      <DependentUpon>UserSessionListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalInstanceCPAReceiver\JournalInstanceCPAReceiverListView.axaml.cs">
+      <DependentUpon>JournalInstanceCPAReceiverListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalInstanceForCIHConnectedHardware\JournalInstanceForCIHConnectedHardwareListView.axaml.cs">
+      <DependentUpon>JournalInstanceForCIHConnectedHardwareListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalInstanceForCIHDestructor\JournalInstanceForCIHDestructorListView.axaml.cs">
+      <DependentUpon>JournalInstanceForCIHDestructorListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalInstanceForCIHInstaller\JournalInstanceForCIHInstallerListView.axaml.cs">
+      <DependentUpon>JournalInstanceForCIHInstallerListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalInstanceForCIHRecord\JournalInstanceForCIHRecordListView.axaml.cs">
+      <DependentUpon>JournalInstanceForCIHRecordListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalInstanceForCPARecord\JournalInstanceForCPARecordListView.axaml.cs">
+      <DependentUpon>JournalInstanceForCPARecordListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalTechnicalRecord\JournalTechnicalRecordListView.axaml.cs">
+      <DependentUpon>JournalTechnicalRecordListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\KeyDocumentType\KeyDocumentTypeListView.axaml.cs">
+      <DependentUpon>KeyDocumentTypeListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\KeyHolderType\KeyHolderTypeListView.axaml.cs">
+      <DependentUpon>KeyHolderTypeListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\KeyHolder\KeyHolderListView.axaml.cs">
+      <DependentUpon>KeyHolderListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HumanResources\BusinessEntityType\BusinessEntityTypeListView.axaml.cs">
+      <DependentUpon>BusinessEntityTypeListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HumanResources\BusinessEntity\BusinessEntityListView.axaml.cs">
+      <DependentUpon>BusinessEntityListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HumanResources\EmployeePosition\EmployeePositionListView.axaml.cs">
+      <DependentUpon>EmployeePositionListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HumanResources\Employee\EmployeeListView.axaml.cs">
+      <DependentUpon>EmployeeListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HumanResources\OrganizationContact\OrganizationContactListView.axaml.cs">
+      <DependentUpon>OrganizationContactListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HumanResources\Organization\OrganizationListView.axaml.cs">
+      <DependentUpon>OrganizationListView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MainView.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Views\Office\Hardware\HardwareListView.axaml.cs">
+      <DependentUpon>HardwareListView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Other\SubMenuItemView.axaml.cs">
       <DependentUpon>SubMenuItemView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Person\ContactType\ContactTypeListView.axaml.cs">
+      <DependentUpon>ContactTypeListView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

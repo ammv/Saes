@@ -12,13 +12,13 @@ package businessEntity;
 
 service BusinessEntityService {
     rpc Search (BusinessEntityLookup) returns (BusinessEntityLookupResponse);
-    rpc Add (BusinessEntityTypeeDataRequest) returns (BusinessEntityLookupResponse);
+    rpc Add (BusinessEntityDataRequest) returns (BusinessEntityLookupResponse);
     rpc Remove (BusinessEntityLookup) returns (statuses.StatusResponse);
-    rpc Edit (BusinessEntityTypeeDataRequest) returns (statuses.StatusResponse);
+    rpc Edit (BusinessEntityDataRequest) returns (statuses.StatusResponse);
 }
 
 // Add or edit
-message BusinessEntityTypeeDataRequest
+message BusinessEntityDataRequest
 {
     google.protobuf.Int32Value BusinessEntityID = 1;
 	google.protobuf.Int32Value BusinessEntityTypeID = 2;

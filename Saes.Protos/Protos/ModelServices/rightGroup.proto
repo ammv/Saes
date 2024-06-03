@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package rightGroup;
+
+// NOT_IMPLEMENTED
+
+service RightGroupService {
+    rpc Search (RightGroupLookup) returns (RightGroupLookupResponse);
+    rpc Add (RightGroupDataRequest) returns (RightGroupLookupResponse);
+    rpc Remove (RightGroupLookup) returns (statuses.StatusResponse);
+    rpc Edit (RightGroupDataRequest) returns (statuses.StatusResponse);
+}
+
+message RightGroupLookup
+{
+    google.protobuf.Int32Value rightGroupId = 1;
+    google.protobuf.StringValue name = 2;
+    google.protobuf.StringValue code = 3;
+}
+
+// Add or Edit
+message RightGroupDataRequest
+{
+    google.protobuf.Int32Value rightGroupId = 1;
+    google.protobuf.StringValue name = 2;
+    google.protobuf.StringValue code = 3;
+}
+
+// Comment
+message RightGroupLookupResponse
+{
+    repeated models.RightGroupDto data = 1;
+}

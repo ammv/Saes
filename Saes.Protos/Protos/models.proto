@@ -11,9 +11,9 @@ package models;
 message FileDto {
   int32 fileId = 1;
   string guid = 2;
-  bytes data = 3;
-  string name = 4;
-  string contentType = 5;
+  google.protobuf.BytesValue data = 3;
+  google.protobuf.StringValue name = 4;
+  google.protobuf.StringValue contentType = 5;
 }
 
 message UserRoleDto
@@ -26,8 +26,8 @@ message UserRoleDto
 message RightGroupDto
 {
 	int32 rightGroupId = 1;
-	string code = 2;
-	string name = 3;
+	google.protobuf.StringValue code = 2;
+	google.protobuf.StringValue name = 3;
 }
 
 // PASS
@@ -36,8 +36,8 @@ message RightDto
 	int32 rightId = 1;
 	google.protobuf.Int32Value rightGroupId = 2;
 	RightGroupDto RightGroupDto = 3;
-	string code = 4;
-	string name = 5;
+	google.protobuf.StringValue code = 4;
+	google.protobuf.StringValue name = 5;
 }
 
 // PASS
@@ -58,92 +58,92 @@ message UserDto
 	google.protobuf.Int32Value userRoleId = 3;
 	UserRoleDto userRoleDto = 4;
 	google.protobuf.Timestamp lastLoginDate = 5;
-	bool twoFactorEnabled = 6;
+	google.protobuf.BoolValue twoFactorEnabled = 6;
 }
 
 // NEED
 message AddressDto
 {
-	int32 AddressID = 1;
-	string Country = 2;
-	string Region = 3;
-	string City = 4;
-	string District = 5;
-	string BuildingNumber = 6;
-	string Corpus = 7;
+	int32 AddressId = 1;
+	google.protobuf.StringValue Country = 2;
+	google.protobuf.StringValue Region = 3;
+	google.protobuf.StringValue City = 4;
+	google.protobuf.StringValue District = 5;
+	google.protobuf.StringValue BuildingNumber = 6;
+	google.protobuf.StringValue Corpus = 7;
 	google.protobuf.Int32Value Floor = 8;
-	string Flat = 9;
-	string PostalIndex = 10;
+	google.protobuf.StringValue Flat = 9;
+	google.protobuf.StringValue PostalIndex = 10;
 
 }
 
 message BusinessEntityTypeDto
 {
-	int32 BusinessEntityTypeID = 1;
+	int32 BusinessEntityTypeId = 1;
 	string Name = 2;
 }
 
 message BusinessEntityDto
 {
-	int32 BusinessEntityID = 1;
-	int32 BusinessEntityTypeID = 2;
+	int32 BusinessEntityId = 1;
+	int32 BusinessEntityTypeId = 2;
 	BusinessEntityTypeDto businessEntityTypeDto = 3;
 }
 
 message OrganizationDto
 {
-	int32 BusinessEntityID = 1;
-	int32 OrganizationID = 2;
-	string FullName = 3;
-	string ShortName = 4;
-	google.protobuf.Int32Value BusinessAddressID = 5;
+	int32 BusinessEntityId = 1;
+	int32 OrganizationId = 2;
+	google.protobuf.StringValue FullName = 3;
+	google.protobuf.StringValue ShortName = 4;
+	google.protobuf.Int32Value BusinessAddressId = 5;
 	AddressDto BusinessAddressDto = 6;
-	string INN = 7;
-	string KPP = 8;
-	string OKPO = 9;
-	string OGRN = 10;
+	google.protobuf.StringValue INN = 7;
+	google.protobuf.StringValue KPP = 8;
+	google.protobuf.StringValue OKPO = 9;
+	google.protobuf.StringValue OGRN = 10;
 	google.protobuf.Timestamp DateOfAssignmentOGRN = 11;
-	string DirectorFullName = 12;
-	string ChiefAccountantFullName = 13;
-	string OKVED = 14;
+	google.protobuf.StringValue DirectorFullName = 12;
+	google.protobuf.StringValue ChiefAccountantFullName = 13;
+	google.protobuf.StringValue OKVED = 14;
 	bool IsOwnerJournalAccountingCPI = 15;
 	BusinessEntityDto BusinessEntityDto = 16;
 }
 
 message ContactTypeDto
 {
-	int32 ContactTypeID = 1;
-	string Name = 2;
+	int32 ContactTypeId = 1;
+	google.protobuf.StringValue Name = 2;
 }
 
 message OrganizationContactDto
 {
-	int32 OrganizationContactID = 1;
-	int32 OrganizationID =2;
+	int32 OrganizationContactId = 1;
+	int32 OrganizationId =2;
 	OrganizationDto OrganizationDto = 3;
 
-	int32 ContactTypeID = 4;
+	int32 ContactTypeId = 4;
 	ContactTypeDto ContactTypeDto = 5;
-	string Value = 6;
-	string Note = 7;
+	google.protobuf.StringValue Value = 6;
+	google.protobuf.StringValue Note = 7;
 }
 
 message EmployeePositionDto
 {
-	int32 EmployeePositionID = 1;
+	int32 EmployeePositionId = 1;
 	string name = 2;
-	string Note = 3;
+	google.protobuf.StringValue Note = 3;
 }
 
 message EmployeeDto
 {
-	int32 BusinessEntityID = 1;
-	int32 EmployeeID = 2;
-	int32 OrganizationID = 3;
+	int32 BusinessEntityId = 1;
+	int32 EmployeeId = 2;
+	int32 OrganizationId = 3;
 	string FirstName = 4;
 	string MiddleName = 5;
-	string LastName = 6;
-	int32 EmployeePositionID = 7;
+	google.protobuf.StringValue LastName = 6;
+	int32 EmployeePositionId = 7;
 	EmployeePositionDto EmployeePositionDto = 8;
 
 	OrganizationDto OrganizationDto = 9;
@@ -153,71 +153,74 @@ message EmployeeDto
 // PASS
 message TableDataDto
 {
-	int32 TableDataID = 1;
+	int32 TableDataId = 1;
 	string SchemaName = 2;
 	string Name = 3;
-	string RusName = 4;
+	google.protobuf.StringValue RusName = 4;
 }
 
 // PASS
 message TableColumnDataDto
 {
-	int32 TableColumnDataID = 1;
-	int32 TableDataID = 2;
+	int32 TableColumnDataId = 1;
+	google.protobuf.Int32Value TableDataId = 2;
 	TableDataDto TableDataDto = 3;
 	string Name = 4;
-	string RusName = 5;
+	google.protobuf.StringValue RusName = 5;
 }
 
 message LogAuthenticationDto
 {
-	int32 LogAuthenticationID = 1;
-	string EnteredLogin = 2;
+	int32 LogAuthenticationId = 1;
+	google.protobuf.StringValue EnteredLogin = 2;
 	bool FirstFactorResult = 3;
 	bool SecondFactorResult = 4;
 	string AuthServiceResponse = 5;
-	string MAC = 6;
-	string IP = 7;
-	string MashineName = 8;
-	string MashineUserName = 9;
+	google.protobuf.StringValue MAC = 6;
+	google.protobuf.StringValue IP = 7;
+	google.protobuf.StringValue MashineName = 8;
+	google.protobuf.StringValue MashineUserName = 9;
 	google.protobuf.Timestamp Date = 10;
 }
 
 // PASS
 message UserSessionDto
 {
-	int32 UserSessionID = 1;
-	string SessionKey = 2;
-	int32 UserID = 3;
+	int32 UserSessionId = 1;
+	int32 UserId = 3;
 	UserDto UserDto = 4;
 	google.protobuf.Timestamp CreatedAt = 5;
 	google.protobuf.Timestamp ExpiredAt = 6;
-	int32 LogAuthenticationID = 7;
+	int32 LogAuthenticationId = 7;
 	LogAuthenticationDto LogAuthenticationDto = 8;
+	google.protobuf.BoolValue IsExpired = 9;
+
+	reserved "SessionKey";
 }
 
 // PASS
 message ErrorLogDto
 {
-	int32 ErrorLogID = 1;
+	int32 ErrorLogId = 1;
 	google.protobuf.Timestamp ErrorTime = 2;
-	int32 UserSessionID = 3;
+	google.protobuf.Int32Value UserSessionId = 3;
 	UserSessionDto UserSessionDto = 4;
 	int32 ErrorNumber = 5;
-	int32 ErrorState = 6;
-	string ErrorProcedure = 7;
-	int32 ErrorLine = 8;
+	google.protobuf.Int32Value ErrorState = 6;
+	google.protobuf.StringValue ErrorProcedure = 7;
+	google.protobuf.Int32Value ErrorLine = 8;
 	string ErrorMessage = 9;
+	google.protobuf.Int32Value ErrorSeverity = 10;
 }
 
 message LogDto
 {
-	int32 LogID = 1;
-	int32 TableDataID = 2;
+	int32 LogId = 1;
+	google.protobuf.Int32Value TableDataId = 2;
 	TableDataDto TableDataDto = 3;
-	int32 TableRowID = 4;
+	int32 TableRowId = 4;
 	string Action = 5;
-	int32 UserSessionID = 6;
+	google.protobuf.Int32Value UserSessionId = 6;
 	UserSessionDto UserSessionDto = 7;
 	google.protobuf.Timestamp Date = 8;
 	string GUID = 9;
@@ -226,114 +229,116 @@ message LogDto
 // PASS
 message LogChangeDto
 {
-	int32 AuditLogID = 1;
+	google.protobuf.Int32Value AuditLogId = 1;
 	LogDto AuditLogDto = 2;
-	google.protobuf.Int32Value TableColumnDataID = 3;
+	google.protobuf.Int32Value TableColumnDataId = 3;
 	TableColumnDataDto TableColumnDataDto = 4;
+	google.protobuf.StringValue OldValue = 5;
+	google.protobuf.StringValue NewValue = 6;
 }
 
 message JournalInstanceForCPARecordDto
 {
-	google.protobuf.Int32Value OrganizationID = 1;
+	google.protobuf.Int32Value OrganizationId = 1;
 	OrganizationDto OrganizationDto = 2;
 
-	int32 JournalInstanceForCPARecordID = 3;
+	int32 JournalInstanceForCPARecordId = 3;
 
-	string NameCPI = 4;
-	string SerialCPI = 5;
-	int32 InstanceNumber = 6;
+	google.protobuf.StringValue NameCPI = 4;
+	google.protobuf.StringValue SerialCPI = 5;
+	google.protobuf.StringValue InstanceNumber = 6;
 
-	google.protobuf.Int32Value ReceivedFromID = 7;
+	google.protobuf.Int32Value ReceivedFromId = 7;
 	BusinessEntityDto BusinessEntityDto = 8;
 
-	string DateAndNumberCoverLetterReceive = 9;
-	string DateAndNumberCoverLetterSend = 10;
-	string DateAndNumberConfirmationSend = 11;
+	google.protobuf.StringValue DateAndNumberCoverLetterReceive = 9;
+	google.protobuf.StringValue DateAndNumberCoverLetterSend = 10;
+	google.protobuf.StringValue DateAndNumberConfirmationSend = 11;
 
-	string DateAndNumberCoverLetterReturn = 12;
-	string DateAndNumberConfirmationReturn = 13;
+	google.protobuf.StringValue DateAndNumberCoverLetterReturn = 12;
+	google.protobuf.StringValue DateAndNumberConfirmationReturn = 13;
 
 	google.protobuf.Timestamp CommissioningDate = 14;
 	google.protobuf.Timestamp DecommissioningDate = 15;
 
 	google.protobuf.Timestamp DestructionDate = 16;
 
-	string Note = 17;
+	google.protobuf.StringValue Note = 17;
 
-	google.protobuf.Int32Value SignFileID = 18;
+	google.protobuf.Int32Value SignFileId = 18;
 	FileDto SignFileDto = 19;
 }
 
 message JournalInstanceCPAReceiverDto
 {
-	int32 JournalInstanceCPAReceiverID = 1;
+	int32 JournalInstanceCPAReceiverId = 1;
 
-	int32 RecordID = 2;
+	google.protobuf.Int32Value RecordId = 2;
 	JournalInstanceForCPARecordDto RecordDto = 3;
 
-	int32 ReceiverID = 4;
+	google.protobuf.Int32Value ReceiverId = 4;
 	BusinessEntityDto ReceiverDto = 5;
 }
 
 message HardwareDto
 {
 	int32 HardwareId = 1;
-	google.protobuf.Int32Value OrganizationID = 2;
+	google.protobuf.Int32Value OrganizationId = 2;
 	OrganizationDto OrganizationDto = 3;
-	string Name = 4;
-	string SerialNumber = 5;
-	string Note = 6;
+	google.protobuf.StringValue Name = 4;
+	google.protobuf.StringValue SerialNumber = 5;
+	google.protobuf.StringValue Note = 6;
 }
 
 message JournalInstanceForCIHRecordDto
 {
-	google.protobuf.Int32Value OrganizationID = 1;
+	google.protobuf.Int32Value OrganizationId = 1;
 	OrganizationDto OrganizationDto = 2;
 
-	string NameCPI = 3;
-	string SerialCPI = 4;
+	google.protobuf.StringValue NameCPI = 3;
+	google.protobuf.StringValue SerialCPI = 4;
 	google.protobuf.Int32Value InstanceNumber = 5;
 
-	google.protobuf.Int32Value ReceivedFromID = 6;
+	google.protobuf.Int32Value ReceivedFromId = 6;
 	BusinessEntityDto ReceivedFromDto = 7;
 
-	string DateAndNumberCoverLetterReceive = 8;
+	google.protobuf.StringValue DateAndNumberCoverLetterReceive = 8;
 
-	google.protobuf.Int32Value CPIUserID = 9;
+	google.protobuf.Int32Value CPIUserId = 9;
 	BusinessEntityDto CPIUserDto = 10;
 
-	string DateAndNumberConfirmationIssue = 11;
-	string InstallationDateAndConfirmation = 12;
+	google.protobuf.StringValue DateAndNumberConfirmationIssue = 11;
+	google.protobuf.StringValue InstallationDateAndConfirmation = 12;
 	google.protobuf.Timestamp DestructionDate = 13;
-	string DestructionActNumber = 14;
-	string Note = 15;
+	google.protobuf.StringValue DestructionActNumber = 14;
+	google.protobuf.StringValue Note = 15;
 
-	google.protobuf.Int32Value SignFileID = 16;
+	google.protobuf.Int32Value SignFileId = 16;
 	FileDto SignFileDto = 17;
 
-	int32 JournalInstanceForCIHRecordDto = 18;
+	int32 JournalInstanceForCIHRecordId = 18;
 }
 
 message JournalInstanceForCIHInstallerDto
 {
-	int32 JournalInstanceForCIHInstallerID = 1;
+	int32 JournalInstanceForCIHInstallerId = 1;
 
-	int32 RecordID = 2;
+	int32 RecordId = 2;
 	JournalInstanceForCIHRecordDto RecordDto = 3;
 
-	int32 InstallerID = 4;
+	int32 InstallerId = 4;
 
 	BusinessEntityDto InstallerDto = 5;
 }
 
 message JournalInstanceForCIHConnectedHardwareDto
 {
-	int32 JournalInstanceForCIHConnectedHardwareID = 1;
+	int32 JournalInstanceForCIHConnectedHardwareId = 1;
 
-	int32 RecordID = 2;
+	int32 RecordId = 2;
 	JournalInstanceForCIHRecordDto RecordDto = 3;
 
-	int32 HardwareID = 4;
+	int32 HardwareId = 4;
 
 	HardwareDto HardwareDto = 5;
 }
@@ -341,65 +346,65 @@ message JournalInstanceForCIHConnectedHardwareDto
 
 message JournalInstanceForCIHDestructorDto
 {
-	int32 JournalInstanceForCIHDestructorID = 1;
+	int32 JournalInstanceForCIHDestructorId = 1;
 
-	int32 RecordID = 2;
+	int32 RecordId = 2;
 	JournalInstanceForCIHRecordDto RecordDto = 3;
 
-	int32 DestructorID = 4;
+	int32 DestructorId = 4;
 
 	BusinessEntityDto DestructorDto = 5;
 }
 
 message KeyDocumentTypeDto
 {
-	int32 KeyDocumentTypeID = 1;
+	int32 KeyDocumentTypeId = 1;
 	string Name = 2;
-	string Note = 3;
+	google.protobuf.StringValue Note = 3;
 }
 
 message KeyHolderTypeDto
 {
-	int32 KeyHolderTypeID = 1;
+	int32 KeyHolderTypeId = 1;
 	string Name = 2;
 }
 
 message KeyHolderDto
 {
-	int32 KeyHolderID = 1;
+	int32 KeyHolderId = 1;
 	string SerialNumber = 2;
 
-	int32 TypeID = 3;
+	int32 TypeId = 3;
 	KeyHolderTypeDto KeyHolderTypeDto = 4;
 
 	google.protobuf.Int32Value UserCPI = 5;
 	BusinessEntityDto UserCPIDto = 6;
 
-	google.protobuf.Int32Value SignFileID = 7;
+	google.protobuf.Int32Value SignFileId = 7;
 	FileDto SignFileDto = 8;
 }
 
 message JournalTechnicalRecordDto
 {
-	google.protobuf.Int32Value OrganizationID = 1;
+	google.protobuf.Int32Value OrganizationId = 1;
 	OrganizationDto OrganizationDto = 2;
 
-	int32 JournalTechnicalRecordID = 3;
+	int32 JournalTechnicalRecordId = 3;
 	google.protobuf.Timestamp Date = 4;
 
-	string TypeAndSerialUsedCPI = 5;
-	string RecordOnMaintenanceCPI = 6;
+	google.protobuf.StringValue TypeAndSerialUsedCPI = 5;
+	google.protobuf.StringValue RecordOnMaintenanceCPI = 6;
 
-	google.protobuf.Int32Value KeyDocumentTypeID = 7;
+	google.protobuf.Int32Value KeyDocumentTypeId = 7;
 	KeyDocumentTypeDto KeyDocumentTypeDto = 8;
 
-	string SerialCPIAndKeyDocumentInstanceNumber = 9;
-	string NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 10;
+	google.protobuf.StringValue SerialCPIAndKeyDocumentInstanceNumber = 9;
+	google.protobuf.StringValue NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 10;
 
 	google.protobuf.Timestamp DestructionDate = 11;
-	string ActNumber = 12;
-	string Note = 13;
+	google.protobuf.StringValue ActNumber = 12;
+	google.protobuf.StringValue Note = 13;
 
-	google.protobuf.Int32Value SignFileID = 14;
+	google.protobuf.Int32Value SignFileId = 14;
 	FileDto SignFileDto = 15;
 }

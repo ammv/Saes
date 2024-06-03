@@ -17,7 +17,11 @@ namespace Saes.AvaloniaMvvmClient.Converters
             {
                 return timestamp.ToDateTime().ToLocalTime().ToString();
             }
-            return new BindingNotification(new InvalidCastException($"Cant casting {value.GetType().Name} to DateTime"), BindingErrorType.Error);
+            if(value == null)
+            {
+                return BindingOperations.DoNothing;
+            }
+            return new BindingNotification(new InvalidCastException($"Cant casting {value?.GetType().Name} to DateTime"), BindingErrorType.Error);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -28,7 +32,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
             }
             if(value is null)
             {
-                return new BindingNotification(new InvalidCastException($"Value was Null"), BindingErrorType.Error);
+                return BindingOperations.DoNothing;
             }
             return new BindingNotification(new InvalidCastException($"Cant casting {value.GetType().Name} to Timestamp"), BindingErrorType.Error);
         }

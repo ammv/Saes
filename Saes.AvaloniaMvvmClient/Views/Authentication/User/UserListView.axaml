@@ -1,0 +1,159 @@
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.Authentication.User.UserListView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication.User"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:UserListViewModel"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <Grid RowDefinitions="Auto,16,*">
+        <Grid>
+            <StackPanel
+                Margin=""
+                Orientation="Horizontal"
+                Spacing="16">
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="150"
+                        FontSize="14"
+                        Text="Логин" />
+                    <TextBox Text="{Binding Lookup.Login, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="ComboboxField">
+                    <TextBlock FontSize="14" Text="Роль" />
+                    <ComboBox
+                        Width="150"
+                        DisplayMemberBinding="{Binding Name}"
+                        ItemsSource="{Binding UserRoleCollection.Items}"
+                        SelectedItem="{Binding UserRoleCollection.Selected}"
+                        SelectedValueBinding="{Binding UserRoleId}" />
+                </StackPanel>
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="PrimaryButton"
+                    Command="{Binding SearchCommand}"
+                    Content="Поиск" />
+
+                <Button VerticalAlignment="Bottom" Classes="IconButton">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_regular}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <StackPanel
+                                VerticalAlignment="Stretch"
+                                Orientation="Horizontal"
+                                Spacing="16">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                                    <TextBlock
+                                        Width="75"
+                                        FontSize="12"
+                                        Text="№ п/п" />
+                                    <TextBox Height="24" Text="{Binding Lookup.UserId, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                                    <TextBlock
+                                        Width="75"
+                                        FontSize="12"
+                                        Text="№ п/п роли" />
+                                    <TextBox Height="24" Text="{Binding Lookup.UserRoleId, Mode=TwoWay}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+
+            <StackPanel
+                Margin=""
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="16">
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="SecondaryButton"
+                    Command="{Binding AddCommand}"
+                    Content="Добавить" />
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="SecondaryButton"
+                    Command="{Binding ExportCommand}"
+                    Content="Экспорт" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <Image
+                Height="80"
+                anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+                IsVisible="{Binding TabIsLoading}" />
+
+            <DataGrid
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="False"
+                GridLinesVisibility="All"
+                IsReadOnly="True"
+                IsVisible="{Binding !TabIsLoading}"
+                ItemsSource="{Binding Entities}"
+                SelectedItem="{Binding SelectedEntity}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding SeeCommand}" Header="Посмотреть">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource eye_show_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding EditCommand}" Header="Изменить">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource edit_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding AddCommand}" Header="Добавить">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource add_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding DeleteCommand}" Header="Удалить">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource delete_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding UserId}" Header="№ п/п" />
+                    <DataGridTextColumn Binding="{Binding Login}" Header="Логин" />
+                    <DataGridTextColumn Binding="{Binding UserRoleDto.Name}" Header="Роль" />
+                    <DataGridTextColumn Binding="{Binding LastLoginDate, Converter={StaticResource TimestampToDateTimeConverter}, StringFormat=D, Mode=OneTime}" Header="Дата последнего захода" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+
+    </Grid>
+
+</UserControl>
