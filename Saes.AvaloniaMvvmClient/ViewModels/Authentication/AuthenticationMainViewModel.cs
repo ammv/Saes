@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
+using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
 using Saes.Protos.Auth;
 using System;
 using System.Collections.Generic;
@@ -18,20 +20,33 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
         private readonly ISessionKeyService _sessionKeyService;
         private SecondFactorAuthenticationViewModel _secondFactorAuthenticationViewModel;
 
-        public event EventHandler AuthenticationCompleted;
+        [Reactive]
+        public bool DialogMode { get; set; }
+
+        [Reactive]
+        public Action CompleteCallback { get; set; }
 
         protected virtual void OnAuthenticationCompleted()
         {
-            AuthenticationCompleted?.Invoke(this, EventArgs.Empty);
+            if (DialogMode)
+            {
+                CompleteCallback?.Invoke();
+                return;
+            }
+            NavigationService.NavigateTo(App.ServiceProvider.GetService<MainMenuViewModel>());
         }
+        [Reactive]
+        public ViewModelBase Content { get; set; }
 
-        public AuthenticationMainViewModel(FirstFactorAuthenticationViewModel firstFactorAuthenticationViewModel, ISessionKeyService sessionKeyService)
+        public AuthenticationMainViewModel(FirstFactorAuthenticationViewModel firstFactorAuthenticationViewModel, ISessionKeyService sessionKeyService, INavigationService navigationService)
         {
             _firstFactorAuthenticationViewModel = firstFactorAuthenticationViewModel;
             _sessionKeyService = sessionKeyService;
+            NavigationService = navigationService;
             _firstFactorAuthenticationViewModel.AuthCommand.Subscribe(FirstFactorCommandOnExecute);
 
-            ContentViewModel = _firstFactorAuthenticationViewModel;
+            Content = _firstFactorAuthenticationViewModel;
+            DialogMode = false;
         }
 
         private void FirstFactorCommandOnExecute(FirstFactorAuthenticateResponse response)
@@ -52,17 +67,17 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
                 _secondFactorAuthenticationViewModel.FirstAuthToken = response.Token;
 
                 _secondFactorAuthenticationViewModel.SuccessCommand.Subscribe(SecondFactorCommandOnExecute);
-            } 
+            }
 
-            ContentViewModel = _secondFactorAuthenticationViewModel;
+            Content = _secondFactorAuthenticationViewModel;
 
         }
-
+        
         private void SecondFactorCommandOnExecute(SecondFactorAuthenticateResponse response)
         {
             if (response == null)
             {
-                ContentViewModel = _firstFactorAuthenticationViewModel;
+                Content = _firstFactorAuthenticationViewModel;
                 return;
             }
 
@@ -70,13 +85,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
             OnAuthenticationCompleted();
         }
 
-        private ViewModelBase _contentViewModel;
-
-        public ViewModelBase ContentViewModel
-        {
-            get { return _contentViewModel; }
-            private set { this.RaiseAndSetIfChanged(ref _contentViewModel, value); }
-        }
-
+        public INavigationService NavigationService { get; }
     }
 }

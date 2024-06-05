@@ -83,7 +83,7 @@
                 IsReadOnly="True"
                 IsVisible="{Binding !TabIsLoading}"
                 ItemsSource="{Binding Entities}"
-                MaxColumnWidth="200"
+                ColumnWidth="200"
                 SelectedItem="{Binding SelectedEntity}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -98,6 +98,14 @@
                     <DataGridTextColumn
                         Binding="{Binding RightId}"
                         Header="№ п/п"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding RightGroupDto.Name}"
+                        Header="Группа прав"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding RightGroupDto.Code}"
+                        Header="Код группы прав"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding Name}"

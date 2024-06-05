@@ -1,0 +1,96 @@
+<Window
+    x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.KeyHolder.KeyHolderFormView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder"
+    Title="{Binding Title}"
+    Width="300"
+    MinWidth="300"
+    HorizontalAlignment="Stretch"
+    x:DataType="vm:KeyHolderFormViewModel"
+    Background="White"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Window.Effect>
+        <DropShadowEffect />
+    </Window.Effect>
+    <StackPanel
+        Margin="8"
+        Orientation="Vertical"
+        Spacing="16">
+
+        <TextBlock
+            FontSize="24"
+            FontWeight="SemiBold"
+            Text="{Binding Title}"
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField">
+            <TextBlock FontSize="14" Text="№ п/п" />
+            <TextBox IsEnabled="False" Text="{Binding DataRequest.KeyHolderID, Mode=OneTime}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField">
+            <TextBlock FontSize="14" Text="Серийный номер" />
+            <TextBox IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.SerialNumber, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="ComboboxField">
+            <TextBlock FontSize="14" Text="Тип" />
+            <ComboBox
+                Width="200"
+                DisplayMemberBinding="{Binding, Converter={StaticResource BusinessEntityToStringConverter}}"
+                ItemsSource="{Binding UserCpiCollection.Items}"
+                SelectedItem="{Binding UserCpiCollection.Selected}"
+                SelectedValueBinding="{Binding DataRequest.UserCPI, Mode=TwoWay}" />
+            <Button
+                Background="Transparent"
+                Command="{Binding UserCpiCollection.ClearSelectedCommand}"
+                Content="Очистить выбор"
+                FontSize="8" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="ComboboxField">
+            <TextBlock FontSize="14" Text="Тип" />
+            <ComboBox
+                Width="200"
+                DisplayMemberBinding="{Binding Name}"
+                ItemsSource="{Binding KeyHolderTypeCollection.Items}"
+                SelectedItem="{Binding KeyHolderTypeCollection.Selected}"
+                SelectedValueBinding="{Binding DataRequest.TypeID, Mode=TwoWay}" />
+            <Button
+                Background="Transparent"
+                Command="{Binding KeyHolderTypeCollection.ClearSelectedCommand}"
+                Content="Очистить выбор"
+                FontSize="8" />
+        </StackPanel>
+
+        <Button
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="PrimaryButton"
+            Command="{Binding FormCommand}"
+            Content="{Binding CurrentMode, Converter={StaticResource FormModeToStringConverter}}"
+            IsVisible="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" />
+    </StackPanel>
+
+
+
+
+</Window>

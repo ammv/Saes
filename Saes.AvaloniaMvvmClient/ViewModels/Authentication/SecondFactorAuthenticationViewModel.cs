@@ -47,7 +47,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 
         public SecondFactorAuthenticationViewModel(IGrpcChannelFactory grpcChannelFactory)
         {
-            var isValidObservable = this.WhenAnyValue(x => x.TotpPassword, x => !string.IsNullOrEmpty(x) && x.Replace(" ", "").Trim().Length == 6 && !SuccessCommandIsExecuting);
+            var isValidObservable = this.WhenAnyValue(x => x.TotpPassword, x => x.SuccessCommandIsExecuting, (password, executing) => !string.IsNullOrEmpty(password) && password.Replace(" ", "").Trim().Length == 6 && !executing);
+
             SuccessCommand = ReactiveCommand.CreateFromTask(SuccessCommandOnExecute, isValidObservable);
             _grpcChannelFactory = grpcChannelFactory;
             _grpcChannel = _grpcChannelFactory.CreateChannel();
@@ -66,7 +67,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
                 SendTime = Timestamp.FromDateTime(DateTime.UtcNow)
             };
 
-            SecondFactorAuthenticateResponse response;
+            SecondFactorAuthenticateResponse response = null;
 
             try
             {
@@ -76,8 +77,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
             {
                 return null;
             }
+            finally
+            {
+                SuccessCommandIsExecuting = false;
+            }
 
-            SuccessCommandIsExecuting = false;
+            
 
             return response;
         }

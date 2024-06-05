@@ -80,7 +80,7 @@
                       IsReadOnly="True"
                       IsVisible="{Binding !TabIsLoading}"
                       ItemsSource="{Binding Entities}"
-                      MaxColumnWidth="200"
+                      ColumnWidth="200"
                       SelectedItem="{Binding SelectedEntity}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>

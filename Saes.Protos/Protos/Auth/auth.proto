@@ -3,6 +3,7 @@ syntax = "proto3";
 option csharp_namespace = "Saes.Protos.Auth";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 package auth;
 
@@ -35,10 +36,10 @@ message FirstFactorAuthenticateResponse {
     // Либо has2FA будет иметь значение True, что в свою очередь вынуждает пройти двухфакторную аутенфикацию
 
 	bool has2FA = 1;
-	string sessionKey = 2;
+	google.protobuf.StringValue sessionKey = 2;
 
     // Токен для прохождения второг фактора аутенификации для защиты от попыток входа и взлома одноразового пароля
-    string token = 3;
+    google.protobuf.StringValue token = 3;
 }
 
 // Запрос на аутенфикацию по второму фактору от клиента

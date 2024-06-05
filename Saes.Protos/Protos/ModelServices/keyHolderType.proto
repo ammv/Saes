@@ -19,14 +19,14 @@ service KeyHolderTypeService {
 message KeyHolderTypeLookup
 {
     google.protobuf.Int32Value KeyHolderTypeID = 1;
-	string Name = 2;
+	google.protobuf.StringValue Name = 2;
 }
 
 // Add or Edit
 message KeyHolderTypeDataRequest
 {
     google.protobuf.Int32Value KeyHolderTypeID = 1;
-	string Name = 2;
+	google.protobuf.StringValue Name = 2;
 }
 
 // Comment

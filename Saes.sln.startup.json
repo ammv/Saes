@@ -76,6 +76,16 @@
       "SolutionConfiguration": "Debug",
       "SolutionPlatform": "x64"
     },
+    "Release Server & Desktop": {
+      "Projects": {
+        "Saes.GrpcServer": {
+          "ProfileName": "https"
+        },
+        "Saes.AvaloniaMvvmClient.Desktop": {}
+      },
+      "SolutionConfiguration": "Release",
+      "SolutionPlatform": "x64"
+    },
     // Только сервер
     "Debug Server": {
       "Projects": {

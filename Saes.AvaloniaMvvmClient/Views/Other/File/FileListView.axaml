@@ -1,0 +1,126 @@
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.Other.File.FileListView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Other.File"
+    Width="1440"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:FileListViewModel"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
+            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,16,*">
+        <Grid>
+            <StackPanel
+                Margin=""
+                Orientation="Horizontal"
+                Spacing="16">
+
+                <!--<StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                    <TextBlock Width="200"
+                               FontSize="14"
+                               Text="№ п/п" />
+                    <TextBox Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
+                    <TextBlock Width="200"
+                               FontSize="14"
+                               Text="Название" />
+                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                </StackPanel>-->
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="PrimaryButton"
+                    Command="{Binding SearchCommand}"
+                    Content="Поиск" />
+            </StackPanel>
+
+            <StackPanel
+                Margin=""
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="16">
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="SecondaryButton"
+                    Command="{Binding ExportCommand}"
+                    Content="Экспорт" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <Image
+                Height="80"
+                anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+                IsVisible="{Binding TabIsLoading}" />
+
+            <DataGrid
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="False"
+                GridLinesVisibility="All"
+                HorizontalScrollBarVisibility="Auto"
+                IsReadOnly="True"
+                IsVisible="{Binding !TabIsLoading}"
+                ItemsSource="{Binding Entities}"
+                ColumnWidth="200"
+                SelectedItem="{Binding SelectedEntity}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding SeeCommand}" Header="Посмотреть">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource eye_show_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <!--
+                    int32 FileId = 1;
+                    google.protobuf.Int32Value OrganizationID = 2;
+                    OrganizationDto OrganizationDto = 3;
+                    string Name = 4;
+                    string SerialNumber = 5;
+                    string Note = 6;
+                -->
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding FileId}"
+                        Header="№ п/п"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding Guid}"
+                        Header="Guid"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding Name}"
+                        Header="Название"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding ContentType}"
+                        Header="Тип контента"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>

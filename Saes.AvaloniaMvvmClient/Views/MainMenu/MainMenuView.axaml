@@ -29,7 +29,7 @@
             <Grid x:Name="grid" Width="{Binding $parent[MenuItem].Width}">
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="PointerPressed" SourceObject="{Binding #grod}">
-                        <ia:InvokeCommandAction Command="{Binding ClickCommand}" PassEventArgsToCommand="True" />
+                        <ia:InvokeCommandAction Command="{Binding ClickCommand}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
                 <!--<Button
@@ -102,47 +102,80 @@
             IsPaneOpen="{Binding Menu.IsOpen}"
             OpenPaneLength="300">
             <SplitView.Pane>
-                <StackPanel Margin="5" Spacing="5">
-                    <StackPanel Orientation="Horizontal">
-                        <Button
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Command="{Binding Menu.TriggerPaneCommand}">
-                            <PathIcon Data="{StaticResource line_horizontal_3_regular}" />
-                        </Button>
-                        <TextBlock
-                            Margin="8,0,0,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            FontSize="20"
-                            Text="Главное меню" />
-                    </StackPanel>
+                <Grid Margin="5" RowDefinitions="Auto, *">
+                    <StackPanel Spacing="5">
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Command="{Binding Menu.TriggerPaneCommand}">
+                                <PathIcon Data="{StaticResource line_horizontal_3_regular}" />
+                            </Button>
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                Text="Главное меню" />
+                        </StackPanel>
 
-                    <ItemsControl ItemsSource="{Binding Menu.Items}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Menu Height="40" Margin="0,8">
-                                    <MenuItem
-                                        Width="300"
-                                        Classes="MainMenuButton"
-                                        Header="{Binding}"
-                                        ItemsSource="{Binding Items}">
-                                        <MenuItem.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <VirtualizingStackPanel Orientation="Vertical" />
-                                            </ItemsPanelTemplate>
-                                        </MenuItem.ItemsPanel>
-                                    </MenuItem>
-                                </Menu>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Menu.Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Menu Height="40" Margin="0,8">
+                                        <MenuItem
+                                            Width="300"
+                                            Classes="MainMenuButton"
+                                            Header="{Binding}"
+                                            ItemsSource="{Binding Items}">
+                                            <MenuItem.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel Orientation="Vertical" />
+                                                </ItemsPanelTemplate>
+                                            </MenuItem.ItemsPanel>
+                                        </MenuItem>
+                                    </Menu>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+                    <Button
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        Command="{Binding ExitCommand}">
+                        <Grid>
+                            <StackPanel
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Stretch"
+                                Orientation="Horizontal"
+                                Spacing="15">
+                                <PathIcon
+                                    Width="22"
+                                    Height="22"
+                                    Data="{StaticResource sign_out_regular}">
+                                    <PathIcon.RenderTransform>
+                                        <RotateTransform Angle="180" />
+                                    </PathIcon.RenderTransform>
+                                </PathIcon>
+                                <TextBlock
+                                    MaxWidth="350"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"
+                                    Text="Выйти из аккаунта"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                </Grid>
+
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid Margin="8,16,8,8" RowDefinitions="Auto,24,*">

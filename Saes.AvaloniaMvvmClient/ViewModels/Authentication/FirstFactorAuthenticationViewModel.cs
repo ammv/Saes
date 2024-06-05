@@ -54,11 +54,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 
         public FirstFactorAuthenticationViewModel(IGrpcChannelFactory grpcChannelFactory)
         {
-            var isValidObservable = this.WhenAnyValue(x => x.Login, x => x.Password,
-                (login, password) => !string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password));
+            var isValidObservable = this.WhenAnyValue(x => x.Login, x => x.Password, x =>x.AuthCommandExecuting,
+                (login, password, executing) => !string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password) && !executing);
             AuthCommand = ReactiveCommand.CreateFromTask(AuthCommandOnExecute, isValidObservable);
             _grpcChannelFactory = grpcChannelFactory;
-            //_grpcChannel = _grpcChannelFactory.CreateChannel();
+            _grpcChannel = _grpcChannelFactory.CreateChannel();
         }
 
         private async Task<FirstFactorAuthenticateResponse> AuthCommandOnExecute()
@@ -73,7 +73,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
                 Password = _password
             };
 
-            FirstFactorAuthenticateResponse firstFactorAuthenticateResponse;
+            FirstFactorAuthenticateResponse firstFactorAuthenticateResponse = null;
 
             try
             {
@@ -81,7 +81,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
             }
             catch (RpcException ex)
             {
-                return null;
+                Status = ex.Message;
             }
 
             AuthCommandExecuting = false;

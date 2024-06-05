@@ -20,9 +20,9 @@ message HardwareLookup
 {
     google.protobuf.Int32Value HardwareId = 1;
 	google.protobuf.Int32Value OrganizationID = 2;
-	string Name = 3;
-	string SerialNumber = 4;
-	string Note = 5;
+	google.protobuf.StringValue Name = 3;
+	google.protobuf.StringValue SerialNumber = 4;
+	google.protobuf.StringValue Note = 5;
 }
 
 // Add or Edit
@@ -30,9 +30,9 @@ message HardwareDataRequest
 {
     google.protobuf.Int32Value HardwareId = 1;
 	google.protobuf.Int32Value OrganizationID = 2;
-	string Name = 4;
-	string SerialNumber = 5;
-	string Note = 6;
+	google.protobuf.StringValue Name = 4;
+	google.protobuf.StringValue SerialNumber = 5;
+	google.protobuf.StringValue Note = 6;
 }
 
 // Comment

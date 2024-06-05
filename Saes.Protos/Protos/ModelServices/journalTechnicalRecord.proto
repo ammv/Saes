@@ -23,17 +23,17 @@ message JournalTechnicalRecordLookup
 
 	google.protobuf.Int32Value JournalTechnicalRecordID = 2;
 
-	string TypeAndSerialUsedCPI = 3;
-	string RecordOnMaintenanceCPI = 4;
+	google.protobuf.StringValue TypeAndSerialUsedCPI = 3;
+	google.protobuf.StringValue RecordOnMaintenanceCPI = 4;
 
 	google.protobuf.Int32Value KeyDocumentTypeID = 5;
 
-	string SerialCPIAndKeyDocumentInstanceNumber = 6;
-	string NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 7;
+	google.protobuf.StringValue SerialCPIAndKeyDocumentInstanceNumber = 6;
+	google.protobuf.StringValue NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 7;
 
 	google.protobuf.Timestamp DestructionDate = 8;
-	string ActNumber = 9;
-	string Note = 10;
+	google.protobuf.StringValue ActNumber = 9;
+	google.protobuf.StringValue Note = 10;
 }
 
 // Add or Edit
@@ -44,17 +44,17 @@ message JournalTechnicalRecordDataRequest
 	google.protobuf.Int32Value JournalTechnicalRecordID = 2;
 	google.protobuf.Timestamp Date = 3;
 
-	string TypeAndSerialUsedCPI = 4;
-	string RecordOnMaintenanceCPI = 5;
+	google.protobuf.StringValue TypeAndSerialUsedCPI = 4;
+	google.protobuf.StringValue RecordOnMaintenanceCPI = 5;
 
 	google.protobuf.Int32Value KeyDocumentTypeID = 6;
 
-	string SerialCPIAndKeyDocumentInstanceNumber = 7;
-	string NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 8;
+	google.protobuf.StringValue SerialCPIAndKeyDocumentInstanceNumber = 7;
+	google.protobuf.StringValue NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted = 8;
 
 	google.protobuf.Timestamp DestructionDate = 9;
-	string ActNumber = 11;
-	string Note = 12;
+	google.protobuf.StringValue ActNumber = 11;
+	google.protobuf.StringValue Note = 12;
 
 	models.FileDto SignFileDto = 13;
 }

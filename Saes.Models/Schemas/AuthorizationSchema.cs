@@ -59,7 +59,41 @@ namespace Saes.Models.Schemas
             return sqlQueryData.SqlParameters.Last().Value as string;
         }
 
+        private static SqlQueryData uspSetCurrentUserSessionID_Query(string sessionKey)
+        {
+            SqlParameterBuilder sqlParameterBuilder = new SqlParameterBuilder();
 
-        
+            var sqlParameterBuilderResult = sqlParameterBuilder
+                .AddInput(sessionKey)
+                .Build();
+
+            var sql = SqlQueryHelper.SqlProc(_schemaName, SqlQueryHelper.GetFunctionName(), sqlParameterBuilderResult.SqlParametersString);
+
+            return new SqlQueryData(sql, sqlParameterBuilderResult.SqlParameters.ToArray());
+        }
+
+        /// <summary>
+        /// Executing procedure uspSetCurrentUserSessionID in database and return SessionKey
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="userId"></param>
+        /// <param name="expiredAt"></param>
+        /// <returns>Session key</returns>
+        public static int uspSetCurrentUserSessionIDn(this SaesContext ctx, string sessionKey)
+        {
+            var sqlQueryData = uspSetCurrentUserSessionID_Query(sessionKey);
+            var result = ctx.Database.ExecuteSqlRaw(sqlQueryData.Sql, sqlQueryData.SqlParameters);
+
+            return result;
+        }
+
+        public static async Task<int> uspSetCurrentUserSessionIDAsync(this SaesContext ctx, string sessionKey)
+        {
+            var sqlQueryData = uspSetCurrentUserSessionID_Query(sessionKey);
+            var result = await ctx.Database.ExecuteSqlRawAsync(sqlQueryData.Sql, sqlQueryData.SqlParameters);
+
+            return result;
+        }
+
     }
 }

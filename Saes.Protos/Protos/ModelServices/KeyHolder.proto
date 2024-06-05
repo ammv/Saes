@@ -19,7 +19,7 @@ service KeyHolderService {
 message KeyHolderLookup
 {
     google.protobuf.Int32Value KeyHolderID = 1;
-	string SerialNumber = 2;
+	google.protobuf.StringValue SerialNumber = 2;
 	google.protobuf.Int32Value TypeID = 3;
 	google.protobuf.Int32Value UserCPI = 4;
 }
@@ -28,10 +28,10 @@ message KeyHolderLookup
 message KeyHolderDataRequest
 {
     google.protobuf.Int32Value KeyHolderID = 1;
-	string SerialNumber = 2;
+	google.protobuf.StringValue SerialNumber = 2;
 	google.protobuf.Int32Value TypeID = 3;
 	google.protobuf.Int32Value UserCPI = 4;
-	models.FileDto SignFileDto = 5;
+	google.protobuf.Int32Value SignFileId = 5;
 }
 
 // Comment

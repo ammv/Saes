@@ -46,6 +46,7 @@ public partial class App : Application
         collection.AddAuthorizationViewModels();
         collection.AddOfficeViewModels();
         collection.AddPersonViewModels();
+        collection.AddOtherViewModels();
 
         // Creates a ServiceProvider containing services from the provided IServiceCollection
         ServiceProvider = collection.BuildServiceProvider();

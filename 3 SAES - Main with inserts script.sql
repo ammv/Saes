@@ -208,6 +208,12 @@ CREATE TABLE [File]
 	CONSTRAINT UQ_File_GUID UNIQUE([GUID])
 )
 
+INSERT INTO [File]([Name], [ContentType], [Data]) VALUES
+('Тест', 'txt', NULL),
+('Годовой отчёт', 'docx', NULL),
+('Среднесуточная стоимость моего завтра', 'xlsx', NULL),
+('Изображение нашего сотрудника', 'png', NULL)
+
 -- Название: Роль пользователя
 CREATE TABLE [Authorization].[UserRole]
 (
@@ -235,13 +241,6 @@ CREATE TABLE [Authorization].[RightGroup]
 	CONSTRAINT UQ_RightGroup_Code UNIQUE([Code]),
 )
 
-INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Аудит', 'audit');
-INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Авторизация', 'authorization');
-INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Человеческие ресурсы', 'human_resources');
-INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Персональная информация', 'person');
-INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Журналы учёта ЭП', 'accounting_cpi');
-INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Офис', 'office');
-
 -- Название: Право
 -- Описание: например есть форма UserListView, право просмотра её называется UserListView_CanView и может иметь состояние 0 или 1
 -- т.е. используется для учёта различных прав в системе: право на печать, просмотр, редактирование
@@ -257,30 +256,254 @@ CREATE TABLE [Authorization].[Right]
 	CONSTRAINT UQ_Right_GroupID_Code UNIQUE([RightGroupID], [Code])
 )
 
---INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Аудит', 'audit');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Просмотр данных таблиц','table_data_see');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Экспорт данных таблиц','table_data_export');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Просмотр столбцов данных таблиц','table_column_data_see');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Экспорт столбцов данных таблиц','table_column_data_export');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Просмотр логов аутенфикаций','log_authentication_see');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Экспорт логов аутенфикаций','log_authentication_export');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Просмотр логов ошибок','log_error_see');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Экспорт логов ошибок','log_error_export');
+-- /////////////// AUDIT ///////////////////
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Логи', 'log');
 INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Просмотр логов','log_see');
 INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Экспорт логов','log_export');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Просмотр логов изменений','log_change_see');
-INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (1, 'Экспорт логов изменений','log_change_export');
---INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Авторизация', 'authorization');
 
---INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Человеческие ресурсы', 'human_resources');
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Логи ошибок', 'log_error');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (2, 'Просмотр логов ошибок','log_error_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (2, 'Экспорт логов ошибок','log_error_export');
 
---INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Персональная информация', 'person');
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Логи аутенфикаций', 'log_auth');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (3, 'Просмотр логов аутенфикации','log_auth_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (3, 'Экспорт логов аутенфикации','log_auth_export');
 
---INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Персональная информация', 'person');
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Логи изменений', 'log_change');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (4, 'Просмотр логов аутенфикации','log_change_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (4, 'Экспорт логов аутенфикации','log_change_export');
 
---INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Журналы учёта ЭП', 'accounting_cpi');
 
---INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Офис', 'office');
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Данные таблиц', 'table_data');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (5, 'Просмотр данных таблиц','table_data_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (5, 'Экспорт данных таблиц','table_data_export');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Данные столбцов таблиц', 'table_column_data');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (6, 'Просмотр столбцов данных таблиц','table_column_data_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (6, 'Экспорт столбцов данных таблиц','table_column_data_export');
+
+-- /////////////// Аутенфикация ///////////////////
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Пользователи', 'user');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (7, 'Просмотр пользователей','user_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (7, 'Экспорт пользователей','user_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (7, 'Добавление пользователей','user_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (7, 'Изменение пользователей','user_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (7, 'Удаление пользователей','user_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (7, 'Восстановление пользователей','user_recover');
+
+-- /////////////// Авторизация ///////////////////
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Права', 'right');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (8, 'Просмотр прав','right_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (8, 'Экспорт прав','see_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (8, 'Удаление прав','see_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (8, 'Восстановление прав','see_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Группы прав', 'right_group');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (9, 'Просмотр группы прав','right_group_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (9, 'Экспорт группы прав','right_group_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (9, 'Добавление группы прав','right_group_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (9, 'Изменение группы прав','right_group_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (9, 'Удаление группы прав','right_group_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (9, 'Восстановление группы прав','right_group_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Роли пользователей', 'user_role');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (10, 'Просмотр ролей пользователей','user_role_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (10, 'Экспорт ролей пользователей','user_role_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (10, 'Добавление ролей пользователей','user_role_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (10, 'Изменение ролей пользователей','user_role_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (10, 'Удаление ролей пользователей','user_role_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (10, 'Восстановление ролей пользователей','user_role_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Права ролей пользователей', 'user_role_right');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (11, 'Просмотр прав ролей пользователей','user_role_right_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (11, 'Экспорт прав ролей пользователей','user_role_right_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (11, 'Добавление прав ролей пользователей','user_role_right_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (11, 'Изменение прав ролей пользователей','user_role_right_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (11, 'Удаление прав ролей пользователей','user_role_right_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (11, 'Восстановление прав ролей пользователей','user_role_right_recover');
+
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Сессии пользователей', 'user_session');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (12, 'Просмотр сессий пользователей','user_session_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (12, 'Экспорт сессий пользователей','user_session_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (12, 'Изменение сессий пользователей','user_session_edit');
+
+-- /////////////// Человеческие ресурсы ///////////////////
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Бизнес-сущности', 'business_entity');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (13, 'Просмотр бизнес-сущностей','business_entity_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (13, 'Экспорт бизнес-сущностей','business_entity_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (13, 'Удаление бизнес-сущностей','business_entity_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (13, 'Восстановление бизнес-сущностей','business_entity_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Тип бизнес-сущности', 'business_entity_type');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (14, 'Просмотр типов бизнес-сущностей','business_entity_type_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (14, 'Экспорт типов бизнес-сущностей','business_entity_type_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (14, 'Удаление типов бизнес-сущностей','business_entity_type_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (14, 'Восстановление типов бизнес-сущностей','business_entity_type_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Сотрудники', 'employee');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (15, 'Просмотр сотрудников','employee_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (15, 'Экспорт сотрудников','employee_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (15, 'Добавление сотрудников','employee_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (15, 'Изменение сотрудников','employee_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (15, 'Удаление сотрудников','employee_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (15, 'Восстановление сотрудников','employee_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Должности сотрудников', 'employee_position');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (16, 'Просмотр должностей сотрудников','employee_position_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (16, 'Экспорт должностей сотрудников','employee_position_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (16, 'Добавление должностей сотрудников','employee_position_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (16, 'Изменение должностей сотрудников','employee_position_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (16, 'Удаление должностей сотрудников','employee_position_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (16, 'Восстановление должностей сотрудников','employee_position_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Организации', 'organization');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (17, 'Просмотр организаций','organization_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (17, 'Экспорт организаций','organization_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (17, 'Добавление организаций','organization_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (17, 'Изменение организаций','organization_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (17, 'Удаление организаций','organization_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (17, 'Восстановление организаций','organization_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Контакты организаций', 'orgnanization_contact');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (18, 'Просмотр контактов организаций','orgnanization_contact_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (18, 'Экспорт контактов организаций','orgnanization_contact_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (18, 'Добавление контактов организаций','orgnanization_contact_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (18, 'Изменение контактов организаций','orgnanization_contact_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (18, 'Удаление контактов организаций','orgnanization_contact_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (18, 'Восстановление контактов организаций','orgnanization_contact_recover');
+
+-- /////////////// Офис ///////////////////
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Аппаратура', 'hardware');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (19, 'Просмотр аппаратуры','hardware_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (19, 'Экспорт аппаратуры','hardware_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (19, 'Добавление аппаратуры','hardware_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (19, 'Изменение аппаратуры','hardware_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (19, 'Удаление аппаратуры','hardware_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (19, 'Восстановление аппаратуры','hardware_recover');
+
+-- /////////////// Личная информация ///////////////////
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Типы контактов', 'contact_type');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (20, 'Просмотр типов контактов','contact_type_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (20, 'Экспорт типов контактов','contact_type_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (20, 'Добавление типов контактов','contact_type_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (20, 'Изменение типов контактов','contact_type_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (20, 'Удаление типов контактов','contact_type_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (20, 'Восстановление типов контактов','contact_type_recover');
+
+-- /////////////// Прочее ///////////////////
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Адреса', 'address');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (21, 'Просмотр адресов','address_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (21, 'Экспорт адресов','address_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (21, 'Добавление адресов','address_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (21, 'Изменение адресов','address_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (21, 'Удаление адресов','address_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (21, 'Восстановление адресов','address_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Файлы', 'file');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (22, 'Просмотр файлов','file_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (22, 'Экспорт файлов','file_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (22, 'Добавление файлов','file_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (22, 'Изменение файлов','file_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (22, 'Удаление файлов','file_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (22, 'Восстановление файлов','file_recover');
+
+-- /////////////// Электронные подписи ///////////////////
+
+-- TEMPLATE
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('title', 'code');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (23, 'Просмотр сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','code_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (23, 'Экспорт сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','code_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (23, 'Добавление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','code_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (23, 'Изменение сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','code_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (23, 'Удаление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','code_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (23, 'Восстановление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','code_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Типы ключевых носителей', 'key_holder_type');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (24, 'Просмотр типов ключевых носителей','key_holder_type_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (24, 'Экспорт типов ключевых носителей','key_holder_type_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (24, 'Добавление типов ключевых носителей','key_holder_type_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (24, 'Изменение типов ключевых носителей','key_holder_type_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (24, 'Удаление типов ключевых носителей','key_holder_type_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (24, 'Восстановление типов ключевых носителей','key_holder_type_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Типы ключевых документов', 'key_document_type');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (25, 'Просмотр типов ключевых документов','key_document_type_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (25, 'Экспорт типов ключевых документов','key_document_type_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (25, 'Добавление типов ключевых документов','key_document_type_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (25, 'Изменение типов ключевых документов','key_document_type_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (25, 'Удаление типов ключевых документов','key_document_type_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (25, 'Восстановление типов ключевых документов','key_document_type_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Ключевые носители', 'key_holder');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (26, 'Просмотр ключевых носителей','key_holder_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (26, 'Экспорт ключевых носителей','key_holder_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (26, 'Добавление ключевых носителей','key_holder_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (26, 'Изменение ключевых носителей','key_holder_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (26, 'Удаление ключевых носителей','key_holder_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (26, 'Восстановление ключевых носителей','key_holder_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Записи журнала технического (аппаратного)', 'journal_technical_record');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (27, 'Просмотр записей журнала технического (аппаратного)','journal_technical_record_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (27, 'Экспорт записей журнала технического (аппаратного)','journal_technical_record_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (27, 'Добавление записей журнала технического (аппаратного)','journal_technical_record_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (27, 'Изменение записей журнала технического (аппаратного)','journal_technical_record_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (27, 'Удаление записей журнала технического (аппаратного)','journal_technical_record_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (27, 'Восстановление записей журнала технического (аппаратного)','journal_technical_record_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Записи журнала поэкземплярного учёта СКЗИ для ОКЗ', 'journal_instance_for_cpa_record');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (28, 'Просмотр записей журнала поэкземплярного учёта СКЗИ для ОКЗ','journal_instance_for_cpa_record_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (28, 'Экспорт записей журнала поэкземплярного учёта СКЗИ для ОКЗ','journal_instance_for_cpa_record_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (28, 'Добавление записей журнала поэкземплярного учёта СКЗИ для ОКЗ','journal_instance_for_cpa_record_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (28, 'Изменение записей журнала поэкземплярного учёта СКЗИ для ОКЗ','journal_instance_for_cpa_record_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (28, 'Удаление записей журнала поэкземплярного учёта СКЗИ для ОКЗ','journal_instance_for_cpa_record_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (28, 'Восстановление записей журнала поэкземплярного учёта СКЗИ для ОКЗ','journal_instance_for_cpa_record_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Записи журнала поэкземплярного учета СКЗИ для ОКИ', 'journal_instance_for_cih_record');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (29, 'Просмотр записей журнала поэкземплярного учета СКЗИ для ОКИ','journal_instance_for_cih_record_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (29, 'Экспорт записей журнала поэкземплярного учета СКЗИ для ОКИ','journal_instance_for_cih_record_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (29, 'Добавление записей журнала поэкземплярного учета СКЗИ для ОКИ','journal_instance_for_cih_record_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (29, 'Изменение записей журнала поэкземплярного учета СКЗИ для ОКИ','journal_instance_for_cih_record_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (29, 'Удаление записей журнала поэкземплярного учета СКЗИ для ОКИ','journal_instance_for_cih_record_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (29, 'Восстановление записей журнала поэкземплярного учета СКЗИ для ОКИ','journal_instance_for_cih_record_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Субъекты журнала поэкземплярного учета СКЗИ для органа криптографической защиты которым была разослана информация', 'journal_instance_cpa_receiver');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (30, 'Просмотр субъектов журнала поэкземплярного учета СКЗИ для ОКЗ которым была разослана информация','journal_instance_cpa_receiver_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (30, 'Экспорт субъектов журнала поэкземплярного учета СКЗИ для ОКЗ которым была разослана информация','journal_instance_cpa_receiver_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (30, 'Добавление субъектов журнала поэкземплярного учета СКЗИ для ОКЗ которым была разослана информация','journal_instance_cpa_receiver_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (30, 'Изменение субъектов журнала поэкземплярного учета СКЗИ для ОКЗ которым была разослана информация','journal_instance_cpa_receiver_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (30, 'Удаление субъектов журнала поэкземплярного учета СКЗИ для ОКЗ которым была разослана информация','journal_instance_cpa_receiver_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (30, 'Восстановление субъектов журнала поэкземплярного учета СКЗИ для ОКЗ которым была разослана информация','journal_instance_cpa_receiver_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Сотрудники ОКЗ, пользователи СКЗИ, производившие подключение (установку)', 'journal_instance_for_cih_installer');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (31, 'Просмотр сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_installer_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (31, 'Экспорт сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_installer_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (31, 'Добавление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_installer_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (31, 'Изменение сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_installer_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (31, 'Удаление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_installer_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (31, 'Восстановление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_installer_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Сотрудники ОКЗ, пользователи СКЗИ, производивших изъятие (уничтожение)', 'journal_instance_for_cih_destructor');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (32, 'Просмотр сотрудников ОКЗ, пользователей СКЗИ, производивших изъятие (уничтожение)','journal_instance_for_cih_destructor_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (32, 'Экспорт сотрудников ОКЗ, пользователей СКЗИ, производивших изъятие (уничтожение)','journal_instance_for_cih_destructor_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (32, 'Добавление сотрудников ОКЗ, пользователей СКЗИ, производивших изъятие (уничтожение)','journal_instance_for_cih_destructor_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (32, 'Изменение сотрудников ОКЗ, пользователей СКЗИ, производивших изъятие (уничтожение)','journal_instance_for_cih_destructor_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (32, 'Удаление сотрудников ОКЗ, пользователей СКЗИ, производивших изъятие (уничтожение)','journal_instance_for_cih_destructor_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (32, 'Восстановление сотрудников ОКЗ, пользователей СКЗИ, производивших изъятие (уничтожение)','journal_instance_for_cih_destructor_recover');
+
+INSERT INTO [Authorization].[RightGroup] (Name, Code) VALUES ('Cотрудники ОКЗ, пользователи СКЗИ, производивших подключение (установку)', 'journal_instance_for_cih_connected_hardware');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (33, 'Просмотр сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_connected_hardware_see');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (33, 'Экспорт сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_connected_hardware_export');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (33, 'Добавление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_connected_hardware_add');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (33, 'Изменение сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_connected_hardware_edit');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (33, 'Удаление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_connected_hardware_delete');
+INSERT INTO [Authorization].[Right] ([RightGroupID], Name, Code) VALUES (33, 'Восстановление сотрудников ОКЗ, пользователей СКЗИ, производивших подключение (установку)','journal_instance_for_cih_connected_hardware_recover');
 
 -- Название: Права роли пользователя
 -- Описание: Набор прав определенной роли пользователя
@@ -406,6 +629,27 @@ CREATE TABLE [Person].[Address]
 
 	CONSTRAINT PK_Address_AddressID PRIMARY KEY([AddressID])
 )
+
+-- Вставка 1
+INSERT INTO [Person].[Address] ([Country], [Region], [City], [District], [Street], [BuildingNumber], [Corpus], [Floor], [Flat], [PostalIndex])
+VALUES ('Россия', 'Московская область', 'Москва', 'Центральный', 'Тверская', '12', '1', '5', '10', '125009');
+
+-- Вставка 2
+INSERT INTO [Person].[Address] ([Country], [Region], [City], [District], [Street], [BuildingNumber], [Corpus], [Floor], [Flat], [PostalIndex])
+VALUES ('Украина', 'Киевская область', 'Киев', 'Шевченковский', 'Крещатик', '14', null, '3', '5', '01001');
+
+-- Вставка 3
+INSERT INTO [Person].[Address] ([Country], [Region], [City], [District], [Street], [BuildingNumber], [Corpus], [Floor], [Flat], [PostalIndex])
+VALUES ('Беларусь', 'Минская область', 'Минск', 'Центральный', 'Независимости проспект', '45', '2', '10', '152', '220004');
+
+-- Вставка 4
+INSERT INTO [Person].[Address] ([Country], [Region], [City], [District], [Street], [BuildingNumber], [Corpus], [Floor], [Flat], [PostalIndex])
+VALUES ('Казахстан', 'город республиканского значения Алматы', 'Алматы', 'Медеуский', 'Абая проспект', '10', null, '7', '85', '050000');
+
+-- Вставка 5
+INSERT INTO [Person].[Address] ([Country], [Region], [City], [District], [Street], [BuildingNumber], [Corpus], [Floor], [Flat], [PostalIndex])
+VALUES ('США', 'Калифорния', 'Лос-Анджелес', 'Голливуд', 'Бульвар Голливуд', '7021', null, '12', '210', '90028');
+
 
 -- Название: Тип бизнес-сущности
 -- Описание: Представляет тип бизнес-сущности, например организация, сотрудник, контрагент
@@ -1069,8 +1313,8 @@ CREATE TABLE [AccountingCPI].[JournalInstanceForCIHRecord]
 
 	-- Блок: Отметка о подключении (установке СКЗИ) 
 	-- №9 [Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ,
-	-- произведших подключение (установку) таблица]: JournalInstanceAccountingCPIForCIHInstallers
-	-- №10 Дата подключения (установки) и подписи лиц, произведших подключение (установку) 
+	-- производивших подключение (установку) таблица]: JournalInstanceAccountingCPIForCIHInstallers
+	-- №10 Дата подключения (установки) и подписи лиц, производивших подключение (установку) 
 	[InstallationDateAndConfirmation] nvarchar(256) null,
 	-- №11 [Номера аппаратных средств, в которые установлены или к которым подключены СКЗИ 
 	-- таблица]: JournalInstanceAccountingCPIForCIHConnectedHardwares
@@ -1142,7 +1386,7 @@ INSERT INTO [AccountingCPI].[JournalInstanceForCIHRecord]([OrganizationID], [Nam
 )
 
 -- Название: Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ,
--- произведших подключение (установку)
+-- производивших подключение (установку)
 -- Описание: Используется в журнале поэкземплярного учета скзи,
 -- эксплуатационной и технической документации к ним,
 -- ключевых документов (для обладателя конфиденциальной информации) 
@@ -1459,7 +1703,7 @@ BEGIN
 
 			  IF (charindex('#UPDATE',@SqlMain) > 0)
 			  BEGIN
-				SELECT @SqlUpdate = @SqlUpdate + REPLACE(@SqlUpdateColumnTemplate, '#NAME', [sc].[name])
+				SELECT @SqlUpdate = @SqlUpdate + REPLACE(@SqlUpdateColumnTemplate, '#NAME', [sc].[Name])
 				FROM sys.columns as sc
 				WHERE object_id = OBJECT_ID(REPLACE(REPLACE('[#SCHEMA].[#TABLE]', '#SCHEMA', @SchemaName),  '#TABLE', @TableName))
 				AND ([sc].[is_identity] = 0 AND [sc].[is_computed] = 0)
@@ -1757,6 +2001,17 @@ BEGIN
 		BEGIN
 			SET @Error = CONCAT('Нельзя создать сессию, чьё время истекания меньше текущего:[CreatedAt] ',@CreatedAt,' > [ExpiredAt] ',@ExpiredAt)
 			RAISERROR(@Error,18,2)
+		END
+
+		DECLARE @UsedSessionKey nvarchar(128) = (
+			SELECT TOP 1 [SessionKey] FROM [UserSession]
+			WHERE [IsExpired] = 0
+			AND DATEDIFF(minute,[ExpiredAt], GETDATE()) > 10)
+		
+		IF @UsedSessionKey IS NOT NULL
+		BEGIN
+			SELECT @SessionKey = @UsedSessionKey
+			RETURN
 		END
 
 		DECLARE @LogAuthenticationID INT = (
@@ -2329,7 +2584,7 @@ EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'ReceivedFromID', 'Субъект от к
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DateAndNumberCoverLetterReceive', 'Дата и номер сопроводительного письма или дата изготовления ключевых документов и расписка в изготовлении в отметке о получении'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'CPIUserID', 'Идентификатор субъекта (пользователя) получившего СКЗИ в отметке о выдаче'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DateAndNumberConfirmationIssue', 'Дата и расписка в получении в отметке о выдаче'
-EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'InstallationDateAndConfirmation', 'Дата подключения (установки) и подписи лиц, произведших подключение (установку) в отметке о подключении (установке СКЗИ)'
+EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'InstallationDateAndConfirmation', 'Дата подключения (установки) и подписи лиц, производивших подключение (установку) в отметке о подключении (установке СКЗИ)'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DestructionDate', 'Дата изъятия (уничтожения) в отметка об изъятии СКЗИ из аппаратных средств, уничтожении ключевых документов'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DestructionActNumber', 'Номер акта или расписка об уничтожении в отметка об изъятии СКЗИ из аппаратных средств, уничтожении ключевых документов'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'Note', 'Примечание'
@@ -2337,7 +2592,7 @@ EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'SignFileID', 'Идентификатор фа
 
 SET @csn = 'AccountingCPI'
 SET @ctn = 'JournalInstanceForCIHInstaller'
-INSERT INTO [Audit].[TableData] VALUES (@csn, @ctn, 'Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, произведших подключение (установку)')
+INSERT INTO [Audit].[TableData] VALUES (@csn, @ctn, 'Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших подключение (установку)')
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'JournalInstanceForCIHInstallerID', 'Идентификатор'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'RecordID', 'Идентификатор записи журнала поэкземплярного учета СКЗИ для обладателя конфиденциальной информации'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'InstallerID', 'Идентификатор субъекта журнала учета СКЗИ производившего установку СКЗИ'

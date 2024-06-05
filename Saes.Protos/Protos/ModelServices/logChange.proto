@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "models.proto";
+import "statuses.proto";
+
+package logChange;
+
+// NOT_IMPLEMENTED
+
+service LogChangeService {
+    rpc Search (LogChangeLookup) returns (LogChangeLookupResponse);
+}
+
+message LogChangeLookup
+{
+    google.protobuf.Int32Value AuditLogId = 1;
+	google.protobuf.Int32Value TableColumnDataId = 2;
+	google.protobuf.StringValue OldValue = 3;
+	google.protobuf.StringValue NewValue = 4;
+}
+
+// Comment
+message LogChangeLookupResponse
+{
+    repeated models.LogChangeDto data = 1;
+}

@@ -121,7 +121,7 @@ namespace Saes.GrpcServer.Mapping
                 .Map(dest => dest.DestructionDate, src => DtoT(src.DestructionDate))
                 .Map(dest => dest.CommissioningDate, src => DtoT(src.CommissioningDate))
                 .Map(dest => dest.DecommissioningDate, src => DtoT(src.DecommissioningDate))
-                .Map(dest => dest.SignFileDto, src => src.SignFile)
+                //.Map(dest => dest.SignFileDto, src => src.SignFile)
                 .Map(dest => dest.BusinessEntityDto, src => src.ReceivedFrom)
                 .Map(dest => dest.OrganizationDto, src => src.Organization)
                 .Map(dest => dest.JournalInstanceForCPARecordId, src => src.JournalInstanceForCparecordId)
@@ -179,8 +179,8 @@ namespace Saes.GrpcServer.Mapping
                 .PreserveReference(preserveRef)
                 .Map(dest => dest.KeyHolderTypeDto, src => src.Type)
                 .Map(dest => dest.UserCPI, src => src.UserCpi)
-                .Map(dest => dest.UserCPIDto, src => src.UserCpiNavigation)
-                .Map(dest => dest.SignFileDto, src => src.SignFile);
+                .Map(dest => dest.UserCPIDto, src => src.UserCpiNavigation);
+                //.Map(dest => dest.SignFileDto, src => src.SignFile);
             config.NewConfig<JournalTechnicalRecord, JournalTechnicalRecordDto>()
                .RequireDestinationMemberSource(requireDms)
                .PreserveReference(preserveRef)

@@ -19,16 +19,16 @@ service KeyDocumentTypeService {
 message KeyDocumentTypeLookup
 {
     google.protobuf.Int32Value KeyDocumentTypeID = 1;
-	string Name = 2;
-	string Note = 3;
+	google.protobuf.StringValue Name = 2;
+	google.protobuf.StringValue Note = 3;
 }
 
 // Add or Edit
 message KeyDocumentTypeDataRequest
 {
     google.protobuf.Int32Value KeyDocumentTypeID = 1;
-	string Name = 2;
-	string Note = 3;
+	google.protobuf.StringValue Name = 2;
+	google.protobuf.StringValue Note = 3;
 }
 
 // Comment

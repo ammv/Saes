@@ -28,8 +28,10 @@ builder.Services.AddGrpc(options =>
     options.Interceptors.Add<AuthorizationInterceptor>();
 });
 #else
-    builder.Services.AddGrpc();
+builder.Services.AddGrpc();
+builder.Services.AddGrpcReflection();
 #endif
+
 
 // Mapster
 //var mapsterConfig = new MapsterConfig();
@@ -42,6 +44,11 @@ builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IMapper, ServiceMapper>(); //Добавляем сам маппер
 
 var app = builder.Build();
+
+#if DEBUG
+    app.MapGrpcReflectionService();
+#endif
+
 
 // Configure the HTTP request pipeline.
 // GRPC

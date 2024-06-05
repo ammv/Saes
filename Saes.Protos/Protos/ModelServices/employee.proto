@@ -21,9 +21,9 @@ message EmployeeLookup
     google.protobuf.Int32Value BusinessEntityID = 1;
 	google.protobuf.Int32Value EmployeeID = 2;
 	google.protobuf.Int32Value OrganizationID = 3;
-	string FirstName = 4;
-	string MiddleName = 5;
-	string LastName = 6;
+	google.protobuf.StringValue FirstName = 4;
+	google.protobuf.StringValue MiddleName = 5;
+	google.protobuf.StringValue LastName = 6;
 	google.protobuf.Int32Value EmployeePositionID = 7;
 }
 
@@ -33,9 +33,9 @@ message EmployeeDataRequest
     google.protobuf.Int32Value BusinessEntityID = 1;
 	google.protobuf.Int32Value EmployeeID = 2;
 	google.protobuf.Int32Value OrganizationID = 3;
-	string FirstName = 4;
-	string MiddleName = 5;
-	string LastName = 6;
+	google.protobuf.StringValue FirstName = 4;
+	google.protobuf.StringValue MiddleName = 5;
+	google.protobuf.StringValue LastName = 6;
 	google.protobuf.Int32Value EmployeePositionID = 7;
 }
 

@@ -1,5 +1,7 @@
 ﻿using Grpc.Core;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
@@ -16,51 +18,125 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
 {
     public class KeyHolderListViewModel : ViewModelTabListBase<KeyHolderDto, KeyHolderLookup>
     {
+        private readonly IDialogService _dialogService;
         private CallInvoker _grpcChannel;
 
-        public KeyHolderListViewModel(IGrpcChannelFactory grpcChannelFactory)
+        public KeyHolderListViewModel(IGrpcChannelFactory grpcChannelFactory, IDialogService dialogService)
         {
             TabTitle = "Ключевые носители";
             _grpcChannel = grpcChannelFactory.CreateChannel();
+            _dialogService = dialogService;
+            KeyHolderTypeCollection = new CollectionWithSelection<KeyHolderTypeDto>();
         }
         public override async Task<bool> CloseAsync()
         {
             return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
         }
 
-        protected override Task OnAddCommand()
+        protected override async Task OnAddCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<KeyHolderFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Add, async (f) => {
+                await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
+            }, SelectedEntity);
+
+            _dialogService.ShowDialog(vm);
+
+            await _Search();
         }
 
-        protected override Task OnCopyCommand()
+        protected override async Task OnCopyCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnDeleteCommand()
+        protected override async Task OnDeleteCommand()
         {
-            throw new NotImplementedException();
+            if (SelectedEntity == null) return;
+
+            if (!await MessageBoxHelper.Question("Вопрос",
+                $"Вы уверены, что хотите удалить данную запись с № {_selectedEntity.KeyHolderId} ?")) return;
+
+            try
+            {
+                var client = new KeyHolderService.KeyHolderServiceClient(_grpcChannel);
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на удаление типа ключевого носителя"));
+                var response = await client.RemoveAsync(new KeyHolderLookup { KeyHolderID = SelectedEntity.KeyHolderId });
+                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+
+                if (response.Result)
+                {
+                    MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+                }
+                else
+                {
+                    MessageBus.Current.SendMessage(StatusData.Error("Ошибка"));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBus.Current.SendMessage(StatusData.Error(ex));
+            }
+
+            await _Search();
         }
 
-        protected override Task OnEditCommand()
+        protected override async Task OnEditCommand()
         {
-            throw new NotImplementedException();
+            if (SelectedEntity == null) return;
+
+            var vm = App.ServiceProvider.GetService<KeyHolderFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Edit, async (f) => {
+                await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
+            }, SelectedEntity);
+
+            _dialogService.ShowDialog(vm);
+
+            await _Search();
         }
 
-        protected override Task OnSeeCommand()
+        [Reactive]
+        public CollectionWithSelection<KeyHolderTypeDto> KeyHolderTypeCollection { get; set; }
+
+        protected override async Task OnSeeCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<KeyHolderFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.See, async (f) => {
+                await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
+            }, SelectedEntity);
+
+            _dialogService.ShowDialog(vm);
+
+            await _Search();
         }
 
-        protected override Task _Export()
+        protected override async Task _Export()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
         protected override async Task _Loaded()
         {
             await _Search();
+            try
+            {
+                var client = new KeyHolderTypeService.KeyHolderTypeServiceClient(_grpcChannel);
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение записей типов ключевых носителей"));
+                var response = await client.SearchAsync(new KeyHolderTypeLookup());
+                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+                foreach(var item in response.Data)
+                {
+                    KeyHolderTypeCollection.Items.Add(item);
+                }
+                MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+            }
+            catch (Exception ex)
+            {
+                MessageBus.Current.SendMessage(StatusData.Error(ex));
+            }
         }
 
         protected override async Task _Search()

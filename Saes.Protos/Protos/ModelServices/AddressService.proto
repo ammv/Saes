@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package address;
+
+// NOT_IMPLEMENTED
+
+service AddressService {
+    rpc Search (AddressLookup) returns (AddressLookupResponse);
+    rpc Add (AddressDataRequest) returns (AddressLookupResponse);
+    rpc Remove (AddressLookup) returns (statuses.StatusResponse);
+    rpc Edit (AddressDataRequest) returns (statuses.StatusResponse);
+}
+
+message AddressLookup
+{
+    google.protobuf.Int32Value AddressId = 1;
+	google.protobuf.StringValue Country = 2;
+	google.protobuf.StringValue Region = 3;
+	google.protobuf.StringValue City = 4;
+	google.protobuf.StringValue District = 5;
+	google.protobuf.StringValue BuildingNumber = 6;
+	google.protobuf.StringValue Corpus = 7;
+	google.protobuf.Int32Value Floor = 8;
+	google.protobuf.StringValue Flat = 9;
+	google.protobuf.StringValue PostalIndex = 10;
+}
+
+// Add or Edit
+message AddressDataRequest
+{
+    google.protobuf.Int32Value AddressId = 1;
+	google.protobuf.StringValue Country = 2;
+	google.protobuf.StringValue Region = 3;
+	google.protobuf.StringValue City = 4;
+	google.protobuf.StringValue District = 5;
+	google.protobuf.StringValue BuildingNumber = 6;
+	google.protobuf.StringValue Corpus = 7;
+	google.protobuf.Int32Value Floor = 8;
+	google.protobuf.StringValue Flat = 9;
+	google.protobuf.StringValue PostalIndex = 10;
+}
+
+// Comment
+message AddressLookupResponse
+{
+    repeated models.AddressDto data = 1;
+}

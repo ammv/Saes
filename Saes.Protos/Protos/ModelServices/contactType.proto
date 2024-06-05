@@ -27,7 +27,7 @@ message ContactTypeLookup
 message ContactTypeDataRequest
 {
     google.protobuf.Int32Value ContactTypeId = 1;
-    string name = 2;
+    google.protobuf.StringValue name = 2;
 }
 
 // Comment

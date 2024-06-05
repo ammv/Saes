@@ -20,7 +20,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
 
         public JournalInstanceForCIHInstallerListViewModel(IGrpcChannelFactory grpcChannelFactory)
         {
-            TabTitle = "Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, произведших подключение (установку)";
+            TabTitle = "Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших подключение (установку)";
             _grpcChannel = grpcChannelFactory.CreateChannel();
         }
         public override async Task<bool> CloseAsync()

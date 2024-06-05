@@ -26,8 +26,8 @@ message BusinessEntityTypeLookup
 // Add or Edit
 message BusinessEntityTypeDataRequest
 {
-    int32 businessEntityTypeId = 1;
-    string name = 2;
+    google.protobuf.Int32Value businessEntityTypeId = 1;
+    google.protobuf.StringValue name = 2;
 }
 
 // Comment

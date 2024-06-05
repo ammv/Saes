@@ -42,19 +42,42 @@ using Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserSession;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.TableData;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.TableDataColumn;
 using Saes.AvaloniaMvvmClient.ViewModels.Authorization.RightGroup;
+using Saes.AvaloniaMvvmClient.ViewModels.Audit.LogChange;
+using Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRoleRight;
+using Saes.AvaloniaMvvmClient.ViewModels.Other.Address;
+using Saes.AvaloniaMvvmClient.ViewModels.Other.File;
+using Saes.AvaloniaMvvmClient.ViewModels.Audit.Log;
+using Saes.AvaloniaMvvmClient.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
 {
     public class MainMenuViewModel: ViewModelBase
     {
+
+        public ReactiveCommand<Unit, Unit> ExitCommand { get; }
+
         public TabStripViewModel TabStrip { get; }
         public SideMenuViewModel Menu { get; }
 
         [Reactive]
         public StatusData Status { get; set; }
+        public INavigationService NavigationService { get; }
 
-        public MainMenuViewModel()
+        private async Task OnExitCommand()
         {
+            var result = await MessageBoxHelper.Question("Вопрос", "Вы уверены, что хотите выйти из аккаунта?");
+            if(result)
+            {
+                NavigationService.NavigateTo(App.ServiceProvider.GetService<AuthenticationMainViewModel>());
+            }
+
+        }
+
+        public MainMenuViewModel(INavigationService navigationService)
+        {
+            ExitCommand = ReactiveCommand.CreateFromTask(OnExitCommand);
+
             TabStrip = new TabStripViewModel(new ObservableCollection<TabStripItemViewModel>());
 
             Menu = new SideMenuViewModel(
@@ -66,15 +89,15 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                         new SubMenuItemViewModel("Данные столбцов таблиц", "column_triple_regular", typeof(TableDataColumnListViewModel)),
                         new SubMenuItemViewModel("Логи аутенфикаций", "person_arrow_right_regular", typeof(LogAuthenticationListViewModel)),
                         new SubMenuItemViewModel("Логи ошибок", "error_circle_regular", typeof(ErrorLogListViewModel)),
-                        new SubMenuItemViewModel("Логи действий", "book_database_regular", typeof(ErrorLogListViewModel)),
-                        new SubMenuItemViewModel("Логи изменений", "book_database_regular", null),
+                        new SubMenuItemViewModel("Логи действий", "book_database_regular", typeof(LogListViewModel)),
+                        new SubMenuItemViewModel("Логи изменений", "book_database_regular", typeof(LogChangeListViewModel)),
                     }),
                     new MenuItemViewModel("Авторизация", "people_community_add_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
                         new SubMenuItemViewModel("Роли пользователей", "book_regular", typeof(UserRoleListViewModel)),
                         new SubMenuItemViewModel("Группы прав", "book_regular", typeof(RightGroupListViewModel)),
                         new SubMenuItemViewModel("Права", "book_regular", typeof(RightListViewModel)),
-                        new SubMenuItemViewModel("Права ролей", "book_regular", null),
+                        new SubMenuItemViewModel("Права ролей", "book_regular", typeof(UserRoleRightListViewModel)),
                         new SubMenuItemViewModel("Сессии", "share_screen_regular", typeof(UserSessionListViewModel)),
                         
                     }),
@@ -102,7 +125,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                          new SubMenuItemViewModel("Журнал поэкземплярного учета СКЗИ для органа криптографической защиты", "notebook_regular", typeof(JournalInstanceForCPARecordListViewModel)),
                          new SubMenuItemViewModel("Журнал поэкземплярного учета СКЗИ, эксплуатационной и технической документации к ним, ключевых документов (для обладателя конфиденциальной информации) ", "notebook_regular", typeof(JournalInstanceForCIHRecordListViewModel)),
                          new SubMenuItemViewModel("Субъекты журнала поэкземплярного учета СКЗИ для органа криптографической защиты которым была разослана информация", "people_community_regular", typeof(JournalInstanceCPAReceiverListViewModel)),
-                         new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, произведших подключение (установку)",
+                         new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших подключение (установку)",
                          "people_community_regular", typeof(JournalInstanceForCIHInstallerListViewModel)
                          ),
                          new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших изъятие (уничтожение)", "people_community_regular", typeof(JournalInstanceForCIHDestructorListViewModel)),
@@ -118,8 +141,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                     }),
                     new MenuItemViewModel("Прочее", "book_question_mark_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
-                         new SubMenuItemViewModel("Файлы", "document_regular", null),
-                         new SubMenuItemViewModel("Адреса", "location_regular", null),
+                         new SubMenuItemViewModel("Файлы", "document_regular", typeof(FileListViewModel)),
+                         new SubMenuItemViewModel("Адреса", "location_regular", typeof(AddressListViewModel)),
                     }),
                 }
             );
@@ -127,6 +150,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             Menu.SideMenuItemClicked += Menu_MenuButtonClicked;
             
             MessageBus.Current.Listen<StatusData>().Subscribe(x => Status = x);
+            NavigationService = navigationService;
         }
 
         private void Menu_MenuButtonClicked(object sender, SubMenuItemViewModel e)

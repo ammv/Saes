@@ -26,7 +26,7 @@ message OrganizationLookup
 	google.protobuf.StringValue ShortName = 4;
 	google.protobuf.StringValue INN = 5;
 	google.protobuf.StringValue DirectorFullName = 6;
-	string ChiefAccountantFullName = 7;
+	google.protobuf.StringValue ChiefAccountantFullName = 7;
 }
 
 // Add or Edit

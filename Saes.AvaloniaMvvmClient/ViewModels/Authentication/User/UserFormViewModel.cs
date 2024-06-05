@@ -15,22 +15,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
 {
     public class UserFormViewModel : ViewModelFormBase<UserDto, UserDataRequest>
     {
-        protected override async Task OnFormCommand()
+        protected override bool Validate()
         {
-            if (CurrentMode == Core.Enums.FormMode.Edit)
-            {
-                UserDto clone = Dto.Clone();
-
-                clone.Login = DataRequest.Login;
-
-                Callback(clone);
-            }
-            else
-            {
-                Callback(null);
-            }
-
-            await WindowManager.Close((w) => w.DataContext == this);
+            throw new NotImplementedException();
         }
 
         protected override void _Configure(UserDto dto)
@@ -39,6 +26,36 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
             {
                 DataRequest.Login = dto.Login;
             }
+        }
+
+        protected override void _ConfigureTitle()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task _Loaded()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task _OnAdd()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task _OnEdit()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task _OnPreFormCommand()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task _OnSee()
+        {
+            throw new NotImplementedException();
         }
     }
 }

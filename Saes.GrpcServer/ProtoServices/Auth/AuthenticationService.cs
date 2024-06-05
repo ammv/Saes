@@ -26,6 +26,7 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
             _tokenService = tokenService;
             _logAuthenticationService = logAuthenticationService;
             _logger = logger;
+            _logger.LogInformation($"Context Id: {0}", _ctx.ContextId);
         }
         public override async Task<FirstFactorAuthenticateResponse> FirstFactorAuthenticate(FirstFactorAuthenticateRequest request, ServerCallContext context)
         {

@@ -1,13 +1,14 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="450"
-			 xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication"
-			 x:DataType="vm:AuthenticationMainViewModel"
-		Width="250"
-		Height="450"
-			 Content="{Binding ContentViewModel}"
-             x:Class="Saes.AvaloniaMvvmClient.Views.Authentication.AuthenticationMainView"
-			>
-</UserControl>
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.Authentication.AuthenticationMainView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication"
+    Width="250"
+    Height="450"
+    d:DesignHeight="450"
+    d:DesignWidth="250"
+    x:DataType="vm:AuthenticationMainViewModel"
+    Content="{Binding Content}"
+    mc:Ignorable="d" />

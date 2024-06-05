@@ -30,15 +30,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             query = query.Where(x => x.SysIsDeleted == false);
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.KeyHolderID != null ? query.Where(x => x.KeyHolderId == request.KeyHolderID) : query;
-
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            query = request.KeyHolderID != null ? query.Where(x => x.KeyHolderId == request.KeyHolderID) : query;
+            query = request.SerialNumber != null ? query.Where(x => x.SerialNumber.Contains(request.SerialNumber)) : query;
+            query = request.TypeID != null ? query.Where(x => x.TypeId == request.TypeID) : query;
 
             var response = new KeyHolderLookupResponse();
 
@@ -51,12 +45,85 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
         public override async Task<KeyHolderLookupResponse> Add(KeyHolderDataRequest request, ServerCallContext context)
         {
-            return await base.Add(request, context);
+            if (string.IsNullOrEmpty(request.SerialNumber))
+            {
+                throw new ArgumentException($"{nameof(request.SerialNumber)} was null or empty");
+            }
+
+            if (!request.TypeID.HasValue)
+            {
+                throw new ArgumentException($"{nameof(request.TypeID)} was null");
+            }
+
+            if(await _ctx.KeyHolders.FirstOrDefaultAsync(x => x.SerialNumber == request.SerialNumber) != null)
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, request.SerialNumber));
+            }
+
+            var entity = new KeyHolder
+            {
+                SerialNumber = request.SerialNumber,
+                UserCpi = request.UserCPI,
+                TypeId = request.TypeID.Value
+            };
+
+            entity = (await _ctx.KeyHolders.AddAsync(entity)).Entity;
+
+            await _ctx.SaveChangesAsync();
+
+            var response = new KeyHolderLookupResponse();
+            response.Data.Add(entity.Adapt<KeyHolderDto>());
+
+            return response;
         }
 
         public override async Task<StatusResponse> Edit(KeyHolderDataRequest request, ServerCallContext context)
         {
-            return await base.Edit(request, context);
+            if (!request.KeyHolderID.HasValue)
+            {
+                throw new ArgumentException($"{nameof(request.KeyHolderID)} was null");
+            }
+
+            if (string.IsNullOrEmpty(request.SerialNumber))
+            {
+                throw new ArgumentException($"{nameof(request.SerialNumber)} was null or empty");
+            }
+
+            if (!request.TypeID.HasValue)
+            {
+                throw new ArgumentException($"{nameof(request.TypeID)} was null");
+            }
+
+            if (await _ctx.KeyHolders.AnyAsync(x => x.SerialNumber == request.SerialNumber && x.KeyHolderId != request.KeyHolderID))
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, request.SerialNumber));
+            }
+
+            var entity = await _ctx.KeyHolders.SingleAsync(x => x.KeyHolderId == request.KeyHolderID);
+
+            entity.SerialNumber = request.SerialNumber;
+            entity.TypeId = request.TypeID.Value;
+            entity.UserCpi = request.UserCPI.Value;
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
+        }
+
+        public override async Task<StatusResponse> Remove(KeyHolderLookup request, ServerCallContext context)
+        {
+            if (!request.KeyHolderID.HasValue)
+            {
+                throw new ArgumentNullException(nameof(request.KeyHolderID));
+            }
+
+            var entity = await _ctx.KeyHolders.SingleAsync(x => x.KeyHolderId == request.KeyHolderID);
+
+            _ctx.KeyHolders.Remove(entity);
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
         }
     }
 }

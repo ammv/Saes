@@ -2,6 +2,7 @@
 using Grpc.Core.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Saes.Models;
+using Saes.Models.Schemas;
 using Auth = Saes.Protos.Auth;
 
 namespace Saes.GrpcServer.Interceptors
@@ -24,11 +25,13 @@ namespace Saes.GrpcServer.Interceptors
         {
             _logger = logger;
             _ctx = ctx;
+            _logger.LogInformation($"Context Id: {0}", _ctx.ContextId);
+
         }
 
-        private void ValidateSessionAsync(ServerCallContext context)
+        private void ValidateSessionAsync(Metadata.Entry? headerSessionKey)
         {
-            var headerSessionKey = context.RequestHeaders.Get("SessionKey");
+            
             if (headerSessionKey == null)
             {
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "The session key is not specified in the request headers"));
@@ -58,7 +61,11 @@ namespace Saes.GrpcServer.Interceptors
         {
             if(!_nonInterceptableRequestTypes.Contains(typeof(TRequest)))
             {
-                ValidateSessionAsync(context);
+                var headerSessionKey = context.RequestHeaders.Get("SessionKey");
+                ValidateSessionAsync(headerSessionKey);
+
+                await _ctx.uspSetCurrentUserSessionIDAsync(headerSessionKey!.Value);
+                _logger.LogInformation($"Setted current user session"); 
             }
             
             try

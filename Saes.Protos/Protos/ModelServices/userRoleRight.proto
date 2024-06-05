@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package right;
+
+// NOT_IMPLEMENTED
+
+service UserRoleRightService {
+    rpc Search (UserRoleRightLookup) returns (UserRoleRightLookupResponse);
+    rpc Add (UserRoleRightDataRequest) returns (UserRoleRightLookupResponse);
+    rpc Remove (UserRoleRightLookup) returns (statuses.StatusResponse);
+    rpc Edit (UserRoleRightDataRequest) returns (statuses.StatusResponse);
+}
+
+message UserRoleRightLookup
+{
+    google.protobuf.Int32Value UserRoleRightId = 1;
+	google.protobuf.Int32Value UserRoleId = 2;
+	google.protobuf.Int32Value RightId = 3;
+}
+
+// Add or Edit
+message UserRoleRightDataRequest
+{
+    google.protobuf.Int32Value UserRoleRightId = 1;
+	google.protobuf.Int32Value UserRoleId = 2;
+	google.protobuf.Int32Value RightId = 3;
+}
+
+// Comment
+message UserRoleRightLookupResponse
+{
+    repeated models.UserRoleRightDto data = 1;
+}

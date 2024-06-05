@@ -21,9 +21,9 @@ message ErrorLogLookup
 	google.protobuf.Int32Value UserSessionID = 3;
 	google.protobuf.Int32Value ErrorNumber = 4;
 	google.protobuf.Int32Value ErrorState = 5;
-	string ErrorProcedure = 6;
+	google.protobuf.StringValue ErrorProcedure = 6;
 	google.protobuf.Int32Value ErrorLine = 7;
-	string ErrorMessage = 8;
+	google.protobuf.StringValue ErrorMessage = 8;
 }
 
 

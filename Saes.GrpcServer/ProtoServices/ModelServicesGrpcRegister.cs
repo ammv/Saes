@@ -26,7 +26,14 @@ namespace Saes.GrpcServer.ProtoServices
             app.MapGrpcService<BusinessEntityTypeService>();
             app.MapGrpcService<HardwareService>();
             app.MapGrpcService<RightService>();
+            app.MapGrpcService<RightGroupService>();
             app.MapGrpcService<UserSessionService>();
+            app.MapGrpcService<TableColumnDataService>();
+            app.MapGrpcService<TableDataService>();
+            app.MapGrpcService<LogService>();
+            app.MapGrpcService<LogChangeService>();
+            app.MapGrpcService<AddressService>();
+            app.MapGrpcService<FileService>();
         }
     }
 }

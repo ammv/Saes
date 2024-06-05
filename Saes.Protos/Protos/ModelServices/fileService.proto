@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option csharp_namespace = "Saes.Protos.ModelServices";
+
+import "google/protobuf/wrappers.proto";
+import "models.proto";
+import "statuses.proto";
+package file;
+
+// NOT_IMPLEMENTED
+
+service FileService {
+    rpc Search (FileLookup) returns (FileLookupResponse);
+    rpc Add (FileDataRequest) returns (FileLookupResponse);
+    rpc Remove (FileLookup) returns (statuses.StatusResponse);
+    rpc Edit (FileDataRequest) returns (statuses.StatusResponse);
+}
+
+message FileLookup
+{
+  google.protobuf.Int32Value fileId = 1;
+  google.protobuf.StringValue guid = 2;
+  google.protobuf.StringValue name = 3;
+  google.protobuf.StringValue contentType = 4;
+}
+
+// Add or Edit
+message FileDataRequest
+{
+  google.protobuf.Int32Value fileId = 1;
+  google.protobuf.StringValue guid = 2;
+  google.protobuf.BytesValue data = 3;
+  google.protobuf.StringValue name = 4;
+  google.protobuf.StringValue contentType = 5;
+}
+
+// Comment
+message FileLookupResponse
+{
+    repeated models.FileDto data = 1;
+}

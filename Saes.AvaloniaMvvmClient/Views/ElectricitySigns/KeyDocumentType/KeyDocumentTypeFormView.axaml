@@ -1,0 +1,60 @@
+<Window
+    x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.KeyDocumentType.KeyDocumentTypeFormView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType"
+    Title="{Binding Title}"
+    Width="300"
+    MinWidth="300"
+    HorizontalAlignment="Stretch"
+    x:DataType="vm:KeyDocumentTypeFormViewModel"
+    Background="White"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Window.Effect>
+        <DropShadowEffect />
+    </Window.Effect>
+    <StackPanel
+        Margin="8"
+        Orientation="Vertical"
+        Spacing="16">
+
+        <TextBlock
+            FontSize="24"
+            FontWeight="SemiBold"
+            Text="{Binding Title}"
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField">
+            <TextBlock FontSize="14" Text="№ п/п" />
+            <TextBox IsEnabled="False" Text="{Binding DataRequest.KeyDocumentTypeID, Mode=OneTime}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField">
+            <TextBlock FontSize="14" Text="Название" />
+            <TextBox IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.Name, Mode=TwoWay}" />
+        </StackPanel>
+
+        <Button
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="PrimaryButton"
+            Command="{Binding FormCommand}"
+            Content="{Binding CurrentMode, Converter={StaticResource FormModeToStringConverter}}"
+            IsVisible="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" />
+    </StackPanel>
+
+
+
+
+</Window>

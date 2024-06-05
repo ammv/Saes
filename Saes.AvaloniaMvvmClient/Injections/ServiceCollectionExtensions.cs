@@ -7,6 +7,7 @@ using Saes.AvaloniaMvvmClient.ViewModels;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.ErrorLog;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.Log;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.LogAuthentication;
+using Saes.AvaloniaMvvmClient.ViewModels.Audit.LogChange;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.TableData;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.TableDataColumn;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
@@ -33,6 +34,8 @@ using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Organization;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.OrganizationContact;
 using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
 using Saes.AvaloniaMvvmClient.ViewModels.Office.Hardware;
+using Saes.AvaloniaMvvmClient.ViewModels.Other.Address;
+using Saes.AvaloniaMvvmClient.ViewModels.Other.File;
 using Saes.AvaloniaMvvmClient.ViewModels.Person.ContactType;
 using System;
 using System.Collections.Generic;
@@ -50,6 +53,8 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddSingleton<ISessionKeyService, FileSessionKeyService>();
             collection.AddSingleton<IUserService, UserService>();
             collection.AddSingleton<IDialogService, DialogService>();
+            collection.AddSingleton<INavigationService, NavigationService>();
+            //collection.AddSingleton<IStatusService, StatusService>();
         }
 
         public static void AddGrpcServices(this IServiceCollection collection)
@@ -92,6 +97,10 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<KeyDocumentTypeListViewModel>();
             collection.AddTransient<KeyHolderTypeListViewModel>();
             collection.AddTransient<KeyHolderListViewModel>();
+
+            collection.AddTransient<KeyDocumentTypeFormViewModel>();
+            collection.AddTransient<KeyHolderTypeFormViewModel>();
+            collection.AddTransient<KeyHolderFormViewModel>();
         }
 
         public static void AddAuditViewModels(this IServiceCollection collection)
@@ -99,6 +108,7 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<ErrorLogListViewModel>();
             collection.AddTransient<LogAuthenticationListViewModel>();
             collection.AddTransient<LogListViewModel>();
+            collection.AddTransient<LogChangeListViewModel>();
             collection.AddTransient<TableDataListViewModel>();
             collection.AddTransient<TableDataColumnListViewModel>();
         }
@@ -119,6 +129,12 @@ namespace Saes.AvaloniaMvvmClient.Injections
         public static void AddPersonViewModels(this IServiceCollection collection)
         {
             collection.AddTransient<ContactTypeListViewModel>();
+        }
+
+        public static void AddOtherViewModels(this IServiceCollection collection)
+        {
+            collection.AddTransient<AddressListViewModel>();
+            collection.AddTransient<FileListViewModel>();
         }
 
         public static void AddHumanResourcesViewModels(this IServiceCollection collection)

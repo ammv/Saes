@@ -42,5 +42,67 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             return response;
         }
+
+        public override async Task<UserRoleLookupResponse> Add(UserRoleDataRequest request, ServerCallContext context)
+        {
+            if(string.IsNullOrEmpty(request.Name))
+            {
+                throw new ArgumentException($"{nameof(request.Name)} was null or empty");
+            }
+
+            UserRole userRole = new UserRole
+            {
+                Name = request.Name
+            };
+
+            userRole = (await _ctx.UserRoles.AddAsync(userRole)).Entity;
+
+            await _ctx.SaveChangesAsync();
+
+            var response = new UserRoleLookupResponse();
+            response.Data.Add(userRole.Adapt<UserRoleDto>());
+
+            return response;
+        }
+
+        public override async Task<StatusResponse> Edit(UserRoleDataRequest request, ServerCallContext context)
+        {
+            if(string.IsNullOrEmpty(request.Name))
+            {
+                throw new ArgumentException($"{nameof(request.Name)} was null or empty");
+            }
+
+            if(!request.UserRoleId.HasValue)
+            {
+                throw new ArgumentNullException(nameof(request.UserRoleId));
+            }
+
+            UserRole userRole = await _ctx.UserRoles.SingleAsync(x => x.UserRoleId == request.UserRoleId);
+
+            if(await _ctx.UserRoles.AnyAsync(x => x.Name == request.Name && x.UserRoleId != userRole.UserRoleId))
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, $"{request.Name}"));
+            }
+
+            userRole.Name = request.Name;
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
+        }
+
+        public override async Task<StatusResponse> Remove(UserRoleLookup request, ServerCallContext context)
+        {
+            if (!request.UserRoleId.HasValue)
+            {
+                throw new ArgumentNullException(nameof(request.UserRoleId));
+            }
+
+            UserRole userRole = await _ctx.UserRoles.SingleAsync(x => x.UserRoleId == request.UserRoleId);
+
+            _ctx.UserRoles.Remove(userRole);
+
+            return new StatusResponse { Result = true };
+        }
     }
 }

@@ -850,8 +850,8 @@ CREATE TABLE [AccountingCPI].[JournalInstanceForCIHRecord]
 
 	-- Блок: Отметка о подключении (установке СКЗИ) 
 	-- №9 [Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ,
-	-- произведших подключение (установку) таблица]: JournalInstanceAccountingCPIForCIHInstallers
-	-- №10 Дата подключения (установки) и подписи лиц, произведших подключение (установку) 
+	-- производивших подключение (установку) таблица]: JournalInstanceAccountingCPIForCIHInstallers
+	-- №10 Дата подключения (установки) и подписи лиц, производивших подключение (установку) 
 	[InstallationDateAndConfirmation] nvarchar(256) null,
 	-- №11 [Номера аппаратных средств, в которые установлены или к которым подключены СКЗИ 
 	-- таблица]: JournalInstanceAccountingCPIForCIHConnectedHardwares
@@ -880,7 +880,7 @@ CREATE TABLE [AccountingCPI].[JournalInstanceForCIHRecord]
 )
 
 -- Название: Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ,
--- произведших подключение (установку)
+-- производивших подключение (установку)
 -- Описание: Используется в журнале поэкземплярного учета скзи,
 -- эксплуатационной и технической документации к ним,
 -- ключевых документов (для обладателя конфиденциальной информации) 
@@ -2006,7 +2006,7 @@ EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'ReceivedFromID', 'Субъект от к
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DateAndNumberCoverLetterReceive', 'Дата и номер сопроводительного письма или дата изготовления ключевых документов и расписка в изготовлении в отметке о получении'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'CPIUserID', 'Идентификатор субъекта (пользователя) получившего СКЗИ в отметке о выдаче'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DateAndNumberConfirmationIssue', 'Дата и расписка в получении в отметке о выдаче'
-EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'InstallationDateAndConfirmation', 'Дата подключения (установки) и подписи лиц, произведших подключение (установку) в отметке о подключении (установке СКЗИ)'
+EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'InstallationDateAndConfirmation', 'Дата подключения (установки) и подписи лиц, производивших подключение (установку) в отметке о подключении (установке СКЗИ)'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DestructionDate', 'Дата изъятия (уничтожения) в отметка об изъятии СКЗИ из аппаратных средств, уничтожении ключевых документов'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'DestructionActNumber', 'Номер акта или расписка об уничтожении в отметка об изъятии СКЗИ из аппаратных средств, уничтожении ключевых документов'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'Note', 'Примечание'
@@ -2014,7 +2014,7 @@ EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'SignFileID', 'Идентификатор фа
 
 SET @csn = 'AccountingCPI'
 SET @ctn = 'JournalInstanceForCIHInstaller'
-INSERT INTO [Audit].[TableData] VALUES (@csn, @ctn, 'Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, произведших подключение (установку)')
+INSERT INTO [Audit].[TableData] VALUES (@csn, @ctn, 'Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших подключение (установку)')
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'JournalInstanceForCIHInstallerID', 'Идентификатор'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'RecordID', 'Идентификатор записи журнала поэкземплярного учета СКЗИ для обладателя конфиденциальной информации'
 EXEC [Audit].[uspAddTableColumnData] @csn, @ctn, 'InstallerID', 'Идентификатор субъекта журнала учета СКЗИ производившего установку СКЗИ'

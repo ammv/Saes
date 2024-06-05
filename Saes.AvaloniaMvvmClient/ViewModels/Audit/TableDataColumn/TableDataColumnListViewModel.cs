@@ -20,7 +20,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Audit.TableDataColumn
 
         public TableDataColumnListViewModel(IGrpcChannelFactory grpcChannelFactory)
         {
-            TabTitle = "Данные таблиц";
+            TabTitle = "Данные столбцов таблиц";
             _grpcChannel = grpcChannelFactory.CreateChannel();
         }
         public override async Task<bool> CloseAsync()

@@ -19,16 +19,16 @@ service EmployeePositionService {
 message EmployeePositionLookup
 {
     google.protobuf.Int32Value EmployeePositionID = 1;
-	string name = 2;
-	string Note = 3;
+	google.protobuf.StringValue name = 2;
+	google.protobuf.StringValue Note = 3;
 }
 
 // Add or Edit
 message EmployeePositionDataRequest
 {
     google.protobuf.Int32Value EmployeePositionID = 1;
-	string name = 2;
-	string Note = 3;
+	google.protobuf.StringValue name = 2;
+	google.protobuf.StringValue Note = 3;
 }
 
 // Comment

@@ -21,21 +21,21 @@ message JournalInstanceForCIHRecordLookup
 {
     google.protobuf.Int32Value OrganizationID = 1;
 
-	string NameCPI = 2;
-	string SerialCPI = 3;
+	google.protobuf.StringValue NameCPI = 2;
+	google.protobuf.StringValue SerialCPI = 3;
 	google.protobuf.Int32Value InstanceNumber = 4;
 
 	google.protobuf.Int32Value ReceivedFromID = 5;
 
-	string DateAndNumberCoverLetterReceive = 6;
+	google.protobuf.StringValue DateAndNumberCoverLetterReceive = 6;
 
 	google.protobuf.Int32Value CPIUserID = 7;
 
-	string DateAndNumberConfirmationIssue = 8;
-	string InstallationDateAndConfirmation = 9;
+	google.protobuf.StringValue DateAndNumberConfirmationIssue = 8;
+	google.protobuf.StringValue InstallationDateAndConfirmation = 9;
 	google.protobuf.Timestamp DestructionDate = 10;
-	string DestructionActNumber = 11;
-	string Note = 12;
+	google.protobuf.StringValue DestructionActNumber = 11;
+	google.protobuf.StringValue Note = 12;
 
 	google.protobuf.Int32Value JournalInstanceForCIHRecordId = 13;
 }
@@ -45,23 +45,23 @@ message JournalInstanceForCIHRecordDataRequest
 {
     google.protobuf.Int32Value OrganizationID = 1;
 
-	string NameCPI = 2;
-	string SerialCPI = 3;
+	google.protobuf.StringValue NameCPI = 2;
+	google.protobuf.StringValue SerialCPI = 3;
 	google.protobuf.Int32Value InstanceNumber = 4;
 
 	google.protobuf.Int32Value ReceivedFromID = 5;
 
-	string DateAndNumberCoverLetterReceive = 6;
+	google.protobuf.StringValue DateAndNumberCoverLetterReceive = 6;
 
 	google.protobuf.Int32Value CPIUserID = 7;
 
-	string DateAndNumberConfirmationIssue = 8;
-	string InstallationDateAndConfirmation = 9;
+	google.protobuf.StringValue DateAndNumberConfirmationIssue = 8;
+	google.protobuf.StringValue InstallationDateAndConfirmation = 9;
 	google.protobuf.Timestamp DestructionDate = 10;
-	string DestructionActNumber = 11;
-	string Note = 12;
+	google.protobuf.StringValue DestructionActNumber = 11;
+	google.protobuf.StringValue Note = 12;
 
-	models.FileDto SignFileDto = 13;
+	google.protobuf.Int32Value SignFileId = 13;
 
 	google.protobuf.Int32Value JournalInstanceForCIHRecordId = 14;
 
