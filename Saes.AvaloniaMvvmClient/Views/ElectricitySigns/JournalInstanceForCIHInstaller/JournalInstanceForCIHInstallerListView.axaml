@@ -17,13 +17,6 @@
             <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-
-    <UserControl.Resources>
-        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
-            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
-        </DataTemplate>
-    </UserControl.Resources>
-
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
             <StackPanel Margin=""
@@ -36,15 +29,15 @@
                     <TextBlock Width="200"
                                FontSize="14"
                                Text="№ п/п" />
-                    <TextBox Text="{Binding Lookup.JournalInstanceForCIHInstallerId, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Lookup.JournalInstanceForCIHInstallerId, Mode=TwoWay}" Classes="primary"/>
                     <TextBlock Width="200"
                                FontSize="14"
                                Text="Название" />
-                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" Classes="primary"/>
                 </StackPanel>
 
                 <Button VerticalAlignment="Bottom"
-                        Classes="PrimaryButton"
+                        Classes="primary"
                         Command="{Binding SearchCommand}"
                         Content="Поиск" />
             </StackPanel>
@@ -54,11 +47,11 @@
                         Orientation="Horizontal"
                         Spacing="16">
                 <Button VerticalAlignment="Bottom"
-                        Classes="SecondaryButton"
+                        Classes="secondary"
                         Command="{Binding AddCommand}"
                         Content="Добавить" />
                 <Button VerticalAlignment="Bottom"
-                        Classes="SecondaryButton"
+                        Classes="secondary"
                         Command="{Binding ExportCommand}"
                         Content="Экспорт" />
             </StackPanel>

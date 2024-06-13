@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,13 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             response.Data.AddRange(dtos);
 
             return response;
+        }
+
+        public override async Task<GetUserByCurrentSessionResponse> GetUserByCurrentSession(Empty request, ServerCallContext context)
+        {
+            string? sessionKey = context.RequestHeaders.GetValue("SessionKey");
+            UserSession userSession = await _ctx.UserSessions.Include(x => x.User).SingleAsync(x => x.SessionKey == sessionKey);
+            return new GetUserByCurrentSessionResponse { User = userSession.User.Adapt<UserDto>(_mapper.Config) };
         }
     }
 }

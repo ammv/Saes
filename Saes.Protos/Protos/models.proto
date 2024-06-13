@@ -246,7 +246,7 @@ message JournalInstanceForCPARecordDto
 
 	google.protobuf.StringValue NameCPI = 4;
 	google.protobuf.StringValue SerialCPI = 5;
-	google.protobuf.StringValue InstanceNumber = 6;
+	google.protobuf.Int32Value InstanceNumber = 6;
 
 	google.protobuf.Int32Value ReceivedFromId = 7;
 	BusinessEntityDto BusinessEntityDto = 8;
@@ -263,10 +263,12 @@ message JournalInstanceForCPARecordDto
 
 	google.protobuf.Timestamp DestructionDate = 16;
 
-	google.protobuf.StringValue Note = 17;
+	google.protobuf.StringValue DestructionActNumber = 17;
 
-	google.protobuf.Int32Value SignFileId = 18;
-	FileDto SignFileDto = 19;
+	google.protobuf.StringValue Note = 18;
+
+	google.protobuf.Int32Value SignFileId = 19;
+	FileDto SignFileDto = 20;
 }
 
 message JournalInstanceCPAReceiverDto

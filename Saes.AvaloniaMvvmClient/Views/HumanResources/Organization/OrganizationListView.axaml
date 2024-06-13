@@ -19,11 +19,7 @@
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
-    <UserControl.Resources>
-        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
-            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
-        </DataTemplate>
-    </UserControl.Resources>
+ 
 
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
@@ -40,17 +36,17 @@
                         Width="200"
                         FontSize="14"
                         Text="№ п/п" />
-                    <TextBox Text="{Binding Lookup.OrganizationId, Mode=TwoWay}" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.OrganizationId, Mode=TwoWay}" />
                     <TextBlock
                         Width="200"
                         FontSize="14"
                         Text="Название" />
-                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.Name, Mode=TwoWay}" />
                 </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="PrimaryButton"
+                    Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
             </StackPanel>
@@ -62,12 +58,12 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
             </StackPanel>

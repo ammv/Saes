@@ -18,11 +18,7 @@
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
-    <UserControl.Resources>
-        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
-            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
-        </DataTemplate>
-    </UserControl.Resources>
+
 
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
@@ -37,8 +33,8 @@
                     <TextBlock
                         Width="150"
                         FontSize="14"
-                        Text="Название" />
-                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                        Text="Серийный номер" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.SerialNumber, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel
@@ -47,20 +43,21 @@
                     Classes="ComboboxField">
                     <TextBlock FontSize="14" Text="Тип ключевого носителя" />
                     <ComboBox
+					Classes="primary"
                         Width="200"
                         DisplayMemberBinding="{Binding Name}"
                         ItemsSource="{Binding KeyHolderTypeCollection.Items}"
-                        SelectedItem="{Binding KeyHolderTypeCollection.Selected}"
-                        SelectedValueBinding="{Binding Lookup.TypeID}" />
+                        SelectedValue="{Binding Lookup.TypeID, Mode=TwoWay}"
+                        SelectedValueBinding="{Binding KeyHolderTypeId}" />
                 </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="PrimaryButton"
+                    Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
 
-                <Button VerticalAlignment="Bottom" Classes="IconButton">
+                <Button VerticalAlignment="Bottom" Classes="secondary">
                     <Button.Content>
                         <PathIcon Data="{StaticResource filter_regular}" />
                     </Button.Content>
@@ -68,18 +65,21 @@
                         <Flyout Placement="BottomEdgeAlignedLeft">
                             <StackPanel
                                 VerticalAlignment="Stretch"
-                                Orientation="Horizontal"
+                                Orientation="Vertical"
                                 Spacing="16">
+
                                 <StackPanel
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     Classes="TextField">
                                     <TextBlock
-                                        Width="75"
-                                        FontSize="12"
+                                        Width="200"
+                                        FontSize="14"
                                         Text="№ п/п" />
-                                    <TextBox Text="{Binding Lookup.KeyHolderID, Mode=TwoWay, Converter={StaticResource StringToIntConverter}}" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.KeyHolderID, Mode=TwoWay, Converter={StaticResource StringToIntConverter}}" />
                                 </StackPanel>
+
+
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
@@ -94,12 +94,12 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
             </StackPanel>
@@ -163,8 +163,8 @@
                         Header="Тип ключевого носителя"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
-                        Binding="{Binding UserCPI}"
-                        Header="№ п/п пользователя СКЗИ"
+                        Binding="{Binding UserCPIDto, Converter={StaticResource BusinessEntityToStringConverter}}"
+                        Header="Пользователь СКЗИ"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                 </DataGrid.Columns>
             </DataGrid>

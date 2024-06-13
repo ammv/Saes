@@ -7,11 +7,15 @@
     <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
     <Application.DataTemplates>
         <local:ViewLocator />
+
     </Application.DataTemplates>
     <Application.Styles>
         <!--<StyleInclude Source="/Styles/IncludeStyles.axaml"/>-->
         <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
         <StyleInclude Source="avares://Saes.AvaloniaMvvmClient/Assets/Icons.axaml" />
+        <StyleInclude Source="avares://Saes.AvaloniaMvvmClient/Styles/GeneralStyles.axaml" />
+        <StyleInclude Source="avares://Saes.AvaloniaMvvmClient/Styles/TabControlStyle.axaml" />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
         <StyleInclude Source="avares://Notification.Avalonia/Themes/Generic.xaml" />
     </Application.Styles>
@@ -22,5 +26,16 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         <FontFamily x:Key="IbmPlexMonoFont">avares://Saes.AvaloniaMvvmClient/Assets/Fonts#IBM Plex Mono</FontFamily>
+
+        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
+            <TextBlock
+                FontSize="14"
+                FontWeight="SemiBold"
+                Foreground="Black"
+                Opacity="1"
+                Text="{Binding}"
+                TextAlignment="Center"
+                TextWrapping="Wrap" />
+        </DataTemplate>
     </Application.Resources>
 </Application>

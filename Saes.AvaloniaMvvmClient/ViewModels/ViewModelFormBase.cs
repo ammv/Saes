@@ -36,7 +36,7 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelBase
     protected ViewModelFormBase()
     {
     
-        FormCommand = ReactiveCommand.CreateFromTask(OnFormCommand, this.WhenAnyValue(x => x.FormCommandIsExecuting, x => x.TabIsLoading, (x,y) => !x && !y && Validate()));
+        FormCommand = ReactiveCommand.CreateFromTask(OnFormCommand, this.WhenAnyValue(x => x.FormCommandIsExecuting, x => x.TabIsLoading, (x,y) => !x && !y));
     }
     public ReactiveCommand<Unit, Unit> FormCommand { get; set; }
 
@@ -98,13 +98,13 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _callback, value);
     }
 
-    protected abstract void _Configure(TDto dto);
+    protected abstract TDataRequest _Configure(TDto dto);
 
     public void Configure(FormMode formMode, Action<TDto> callback, TDto dto = null)
     {
         CurrentMode = formMode;
         Callback = callback;
-        _Configure(dto);
+        Dto = dto;
     }
 
     protected abstract Task _OnEdit();
@@ -126,6 +126,8 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelBase
         TabIsLoading = true;
 
         await _Loaded();
+
+        DataRequest = _Configure(Dto);
 
         TabIsLoading = false;
     }

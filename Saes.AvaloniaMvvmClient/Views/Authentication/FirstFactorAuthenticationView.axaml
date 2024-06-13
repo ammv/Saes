@@ -1,70 +1,70 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication"
-			 x:DataType="vm:FirstFactorAuthenticationViewModel"
-             x:Class="Saes.AvaloniaMvvmClient.Views.Authentication.FirstFactorAuthenticationView">
-	<UserControl.Styles>
-		<Style Selector="TextBlock.h1">
-			<Setter Property="FontSize" Value="24"/>
-			<Setter Property="FontWeight" Value="SemiBold"/>
-		</Style>
-		<Style Selector="TextBlock.h2">
-			<Setter Property="FontSize" Value="16"/>
-			<Setter Property="FontWeight" Value="Regular"/>
-		</Style>
-		<Style Selector="TextBlock.h3">
-			<Setter Property="FontSize" Value="12"/>
-			<Setter Property="FontWeight" Value="Regular"/>
-		</Style>
-		<Style Selector="TextBox.input">
-			<Setter Property="FontSize" Value="16"/>
-			<Setter Property="Margin" Value="0 0 0 16"/>
-		</Style>
-		<Style Selector="Button.primary">
-			<Setter Property="Background" Value="#3366FF"/>
-			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="FontSize" Value="16"/>
-			<Setter Property="Margin" Value="0"/>
-		</Style>
-		<Style Selector="Button:pointerover.primary /template/ ContentPresenter"
-			   >
-			<Setter Property="Background" Value="#4477FF" />
-			<Setter Property="Foreground" Value="White" />
-		</Style>
-	</UserControl.Styles>
-	<DockPanel Margin="8">
-		<StackPanel  DockPanel.Dock="Top">
-			<TextBlock Text="Аутенфикация"
-					   Classes="h1"
-					   Margin="0 0 0 32"
-					   HorizontalAlignment="Center"/>
-			<TextBlock Text="Логин" Classes="h2"/>
-			<TextBox Classes="input" Text="{Binding Login}"/>
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.Authentication.FirstFactorAuthenticationView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:FirstFactorAuthenticationViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext />
+    <UserControl.Styles>
+        <Style Selector="TextBlock.h1">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="TextBlock.h2">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Regular" />
+        </Style>
+        <Style Selector="TextBlock.h3">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Regular" />
+        </Style>
+        <Style Selector="TextBox.input">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="0 0 0 16" />
+        </Style>
+    </UserControl.Styles>
+    <DockPanel Margin="8">
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock
+                Margin="0,0,0,32"
+                HorizontalAlignment="Center"
+                Classes="h1"
+                Text="Аутенфикация" />
+            <TextBlock Classes="h2" Text="Логин" />
+            <TextBox Classes="primary input" Text="{Binding Login}" />
 
-			<TextBlock Text="Пароль" Classes="h2"/>
+            <TextBlock Classes="h2" Text="Пароль" />
 
-			<TextBox PasswordChar="*" Classes="input"
-					 Text="{Binding Password}"/>
+            <TextBox
+                Classes="primary input"
+                PasswordChar="*"
+                Text="{Binding Password}" />
 
-			<Button Content="Войти"
-					Command="{Binding AuthCommand}"
-					Classes="primary"
-					Margin="0 0 0 32"
-					HorizontalAlignment="Center"/>
+            <Button
+                Margin="0,0,0,32"
+                HorizontalAlignment="Center"
+                Classes="primary"
+                Command="{Binding AuthCommand}"
+                Content="Войти" />
 
-			<TextBlock Text="{Binding Status, StringFormat={}Статус: {0}}" Classes="h3"
-					   TextWrapping="Wrap"/>
+            <TextBlock
+                Classes="h3"
+                Text="{Binding Status, StringFormat={}Статус: {0}}"
+                TextWrapping="Wrap" />
 
-		</StackPanel>
-		<TextBlock Text="{Binding Status}" FontSize="12"
-				   DockPanel.Dock="Bottom"
-				   Foreground="Gray"
-				   TextWrapping="Wrap"
-				   HorizontalAlignment="Center"
-				/>
-	</DockPanel>
+        </StackPanel>
+        <TextBlock
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Bottom"
+            FontSize="12"
+            Foreground="Gray"
+            Text="{Binding Status}"
+            TextWrapping="Wrap" />
+    </DockPanel>
 
 </UserControl>

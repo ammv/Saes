@@ -20,24 +20,30 @@
         <vm:MainMenuViewModel />
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector="MenuItem">
-            <!--<Setter Property="Margin" Value="0" />-->
+        <Style Selector="MenuItem.MainMenuButton:selected TextBlock.MainMenuButton_TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="MenuItem.MainMenuButton:selected PathIcon.MainMenuButton_Icon">
+            <Setter Property="Width" Value="20.8" />
+            <Setter Property="Height" Value="20.8" />
+        </Style>
+
+        <Style Selector="MenuItem.MainMenuButton > MenuItem:selected TextBlock">
+            <Setter Property="FontWeight" Value="Medium" />
         </Style>
     </UserControl.Styles>
     <UserControl.DataTemplates>
         <DataTemplate x:DataType="vmOther:SubMenuItemViewModel">
-            <Grid x:Name="grid" Width="{Binding $parent[MenuItem].Width}">
+            <Grid
+                x:Name="grid"
+                Width="{Binding $parent[MenuItem].Width}"
+                Background="{Binding $parent[MenuItem].Background}"
+                Classes="SubMenuItemViewModel">
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="PointerPressed" SourceObject="{Binding #grod}">
                         <ia:InvokeCommandAction Command="{Binding ClickCommand}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
-                <!--<Button
-                    Margin="-10,-5,-32,-5"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Command="{Binding ClickCommand}"
-                    Opacity="0" />-->
                 <StackPanel
                     Width="{Binding $parent[MenuItem].Width}"
                     Margin="0,0,0,0"
@@ -47,6 +53,7 @@
                     <PathIcon
                         Width="18"
                         Height="18"
+                        Classes="SubMenuItemViewModel_Icon"
                         Data="{Binding Icon}" />
                     <TextBlock
                         Width="{Binding $parent[MenuItem].Width}"
@@ -59,18 +66,19 @@
                 </StackPanel>
             </Grid>
 
-
         </DataTemplate>
         <DataTemplate x:DataType="vmOther:MenuItemViewModel">
             <StackPanel
                 Margin="-2,0,0,0"
                 HorizontalAlignment="Stretch"
+                Classes="MenuItemViewModel"
                 Orientation="Horizontal"
                 Spacing="15">
-                <PathIcon Data="{Binding Icon}" />
+                <PathIcon Classes="MainMenuButton_Icon" Data="{Binding Icon}" />
                 <TextBlock
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
+                    Classes="MainMenuButton_TextBlock"
                     FontSize="20"
                     Text="{Binding Title}" />
             </StackPanel>
@@ -81,13 +89,14 @@
             <Image Source="avares://Saes.AvaloniaMvvmClient/Assets/Images/Logo/logo64x64.png" />
             <TabStrip
                 Grid.Column="1"
-                Margin="16,0,0,0"
+                Margin="6,0,0,0"
+                HorizontalAlignment="Left"
                 ItemsSource="{Binding TabStrip.Tabs}"
                 SelectedIndex="{Binding TabStrip.SelectedIndex, Mode=TwoWay}"
                 SelectedItem="{Binding TabStrip.SelectedTab, Mode=TwoWay}">
                 <TabStrip.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="1" />
+                        <UniformGrid HorizontalAlignment="Left" Rows="1" />
                     </ItemsPanelTemplate>
                 </TabStrip.ItemsPanel>
             </TabStrip>
@@ -100,160 +109,186 @@
             CompactPaneLength="48"
             DisplayMode="CompactInline"
             IsPaneOpen="{Binding Menu.IsOpen}"
-            OpenPaneLength="300">
+            OpenPaneLength="300"
+            PaneBackground="Transparent">
             <SplitView.Pane>
-                <Grid Margin="5" RowDefinitions="Auto, *">
-                    <StackPanel Spacing="5">
-                        <StackPanel Orientation="Horizontal">
-                            <Button
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Command="{Binding Menu.TriggerPaneCommand}">
-                                <PathIcon Data="{StaticResource line_horizontal_3_regular}" />
-                            </Button>
-                            <TextBlock
-                                Margin="8,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontSize="20"
-                                Text="Главное меню" />
-                        </StackPanel>
-
-                        <ItemsControl ItemsSource="{Binding Menu.Items}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Menu Height="40" Margin="0,8">
-                                        <MenuItem
-                                            Width="300"
-                                            Classes="MainMenuButton"
-                                            Header="{Binding}"
-                                            ItemsSource="{Binding Items}">
-                                            <MenuItem.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <VirtualizingStackPanel Orientation="Vertical" />
-                                                </ItemsPanelTemplate>
-                                            </MenuItem.ItemsPanel>
-                                        </MenuItem>
-                                    </Menu>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel Orientation="Vertical" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </StackPanel>
-                    <Button
-                        Grid.Row="1"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Bottom"
-                        Background="Transparent"
-                        Command="{Binding ExitCommand}">
-                        <Grid>
-                            <StackPanel
-                                Margin="0,0,0,0"
-                                HorizontalAlignment="Stretch"
-                                Orientation="Horizontal"
-                                Spacing="15">
-                                <PathIcon
-                                    Width="22"
-                                    Height="22"
-                                    Data="{StaticResource sign_out_regular}">
-                                    <PathIcon.RenderTransform>
-                                        <RotateTransform Angle="180" />
-                                    </PathIcon.RenderTransform>
-                                </PathIcon>
+                <Border
+                    BorderBrush="#e0e0e0"
+                    BorderThickness="0,1,1,0"
+                    CornerRadius="0 4 0 0">
+                    <Grid Margin="5" RowDefinitions="Auto, *">
+                        <StackPanel Spacing="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Button
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Background="#e9e9e9"
+                                    Command="{Binding Menu.TriggerPaneCommand}">
+                                    <PathIcon Data="{StaticResource line_horizontal_3_regular}" />
+                                </Button>
                                 <TextBlock
-                                    MaxWidth="350"
+                                    Margin="8,0,0,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
-                                    Text="Выйти из аккаунта"
-                                    TextWrapping="Wrap" />
+                                    Text="Главное меню" />
                             </StackPanel>
-                        </Grid>
-                    </Button>
-                </Grid>
+
+                            <ItemsControl ItemsSource="{Binding Menu.Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Menu Height="40" Margin="0,8">
+                                            <MenuItem
+                                                Width="300"
+                                                Classes="MainMenuButton"
+                                                Header="{Binding}"
+                                                ItemsSource="{Binding Items}">
+                                                <MenuItem.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel Orientation="Vertical" />
+                                                    </ItemsPanelTemplate>
+                                                </MenuItem.ItemsPanel>
+                                            </MenuItem>
+                                        </Menu>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                        <Button
+                            Grid.Row="1"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Background="Transparent"
+                            Command="{Binding ExitCommand}">
+                            <Grid>
+                                <StackPanel
+                                    Margin="0,0,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    Orientation="Horizontal"
+                                    Spacing="15">
+                                    <PathIcon
+                                        Width="22"
+                                        Height="22"
+                                        Data="{StaticResource sign_out_regular}">
+                                        <PathIcon.RenderTransform>
+                                            <RotateTransform Angle="180" />
+                                        </PathIcon.RenderTransform>
+                                    </PathIcon>
+                                    <TextBlock
+                                        MaxWidth="350"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="Выйти из аккаунта"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+                    </Grid>
+                </Border>
+
 
             </SplitView.Pane>
             <SplitView.Content>
-                <Grid Margin="8,16,8,8" RowDefinitions="Auto,24,*">
-                    <TextBlock
-                        FontSize="20"
-                        FontWeight="SemiBold"
-                        Text="{Binding TabStrip.SelectedTab.Content.TabTitle}"
-                        TextWrapping="Wrap" />
+                <Grid Margin="8,0,8,8" RowDefinitions="Auto,16,*">
+                    <Border
+                        Background="White"
+                        BorderBrush="#e0e0e0"
+                        BorderThickness="0"
+                        CornerRadius="4">
+                        <!--<TextBlock
+                            Margin="4"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="{Binding TabStrip.SelectedTab.Content.TabTitle}"
+                            TextWrapping="Wrap" />-->
+                        <TextBlock
+                            Margin="4"
+                            FontSize="18"
+                            FontWeight="Normal"
+                            Foreground="#FF0099CC"
+                            Text="{Binding TabStrip.SelectedTab.Content.TabTitle}"
+                            TextWrapping="Wrap" />
+                    </Border>
+
                     <ContentControl
                         Grid.Row="2"
+                        Margin="4"
                         HorizontalContentAlignment="Stretch"
-                        Content="{Binding TabStrip.SelectedTab.Content}" />
+                        Content="{Binding TabStrip.SelectedTab.Content}"
+                        Effect="{x:Null}" />
                 </Grid>
             </SplitView.Content>
         </SplitView>
 
-        <StackPanel
+        <Border
             Grid.Row="2"
-            Background="#f2f2f2"
-            Orientation="Horizontal"
-            Spacing="4"
-            ToolTip.Placement="TopEdgeAlignedLeft">
-            <StackPanel.Styles>
-                <Style Selector="Button:pointerover /template/ ContentPresenter">
-                    <Setter Property="Background" Value="Transparent" />
-                </Style>
-                <Style Selector="Button:pointerover > TextBlock">
-                    <Setter Property="TextDecorations" Value="Underline" />
-                </Style>
-            </StackPanel.Styles>
-            <PathIcon
-                Width="16"
-                Height="16"
-                Margin="4,0,0,0"
-                VerticalAlignment="Center"
-                Data="{Binding Status.Icon}"
-                Opacity=".8" />
-            <Button
-                Margin="4,0,0,0"
-                Padding="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                Background="Transparent"
-                Opacity=".8">
-                <Button.Content>
-                    <TextBlock Text="{Binding Status.Message}" />
-                </Button.Content>
-                <Button.Flyout>
-                    <Flyout Placement="TopEdgeAlignedLeft" VerticalOffset="-8">
-                        <Border
-                            MaxWidth="450"
-                            VerticalAlignment="Stretch"
-                            CornerRadius="10">
-                            <Grid Margin="4" RowDefinitions="24,Auto">
-                                <PathIcon
-                                    Width="24"
-                                    Height="24"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Data="{Binding Status.Icon}" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Margin="0,4,0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    FontSize="16"
-                                    Text="{Binding Status.Message}"
-                                    TextWrapping="Wrap" />
-                            </Grid>
-                        </Border>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-            <!--<TextBlock Margin="4,0,0,0"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Opacity=".8"
-                       Text="{Binding Status.Message}" />-->
-        </StackPanel>
+            BorderBrush="#e0e0e0"
+            BorderThickness="0,1,0,0">
+            <StackPanel
+                Background="White"
+                Orientation="Horizontal"
+                Spacing="4"
+                ToolTip.Placement="TopEdgeAlignedLeft">
+                <StackPanel.Styles>
+                    <Style Selector="Button:pointerover /template/ ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                    <Style Selector="Button:pointerover > TextBlock">
+                        <Setter Property="TextDecorations" Value="Underline" />
+                    </Style>
+                </StackPanel.Styles>
+                <PathIcon
+                    Width="16"
+                    Height="16"
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Data="{Binding Status.Icon}"
+                    Opacity=".8" />
+                <Button
+                    Margin="4,0,0,0"
+                    Padding="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    Classes="status_button"
+                    Opacity=".8">
+                    <Button.Content>
+                        <TextBlock Text="{Binding Status.Message}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="TopEdgeAlignedLeft" VerticalOffset="-8">
+                            <Border
+                                MaxWidth="450"
+                                VerticalAlignment="Stretch"
+                                CornerRadius="10">
+                                <Grid Margin="4" RowDefinitions="24,Auto">
+                                    <PathIcon
+                                        Width="24"
+                                        Height="24"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="{Binding Status.Icon}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Margin="0,4,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        FontSize="16"
+                                        Text="{Binding Status.Message}"
+                                        TextWrapping="Wrap" />
+                                </Grid>
+                            </Border>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+        </Border>
+
     </Grid>
 </UserControl>

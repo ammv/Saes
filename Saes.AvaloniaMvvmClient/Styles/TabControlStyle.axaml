@@ -1,52 +1,174 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <Border Padding="20">
-			<TabControl>
-				<TabItem Header="Tab 1"/>
-				<TabItem Header="Tab 2"/>
-				<TabItem Header="Tab erfefer 3"/>
-				<TabItem Header="Tab ergrtetertertetet 4"/>
-			</TabControl>
+        <Border Padding="16">
+            <TabStrip>
+                <TabStrip.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" />
+                    </ItemsPanelTemplate>
+                </TabStrip.ItemsPanel>
+                <TabStripItem>
+                    <Grid
+                        Height="24"
+                        HorizontalAlignment="Stretch"
+                        ColumnDefinitions="*, 8, Auto"
+                        ToolTip.Tip="{Binding Content.TabTitle}">
+
+                        <TextBlock
+                            Margin="0"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Text="3436 34634 3463 34534 3gr r 34534 334534534 23452 23 52352 5 124224 44" />
+                        <Button
+                            Grid.Column="2"
+                            Padding="8,2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            Classes="close_tab"
+                            Content="X"
+                            FontSize="14"
+                            FontWeight="SemiBold" />
+
+                    </Grid>
+                </TabStripItem>
+                <TabStripItem>
+                    <Grid
+                        Height="24"
+                        HorizontalAlignment="Stretch"
+                        ColumnDefinitions="*, 8, Auto"
+                        ToolTip.Tip="{Binding Content.TabTitle}">
+
+                        <TextBlock
+                            Margin="0"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Text="3436 34634 34634" />
+                        <Button
+                            Grid.Column="2"
+                            Padding="8,2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            Classes="close_tab"
+                            Content="X"
+                            FontSize="14"
+                            FontWeight="SemiBold" />
+
+                    </Grid>
+                </TabStripItem>
+                <TabStripItem>
+                    <Grid
+                        Height="24"
+                        HorizontalAlignment="Stretch"
+                        ColumnDefinitions="*, 8, Auto"
+                        ToolTip.Tip="{Binding Content.TabTitle}">
+
+                        <TextBlock
+                            Margin="0"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Text="3436 34634 34634" />
+                        <Button
+                            Grid.Column="2"
+                            Padding="8,2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            Classes="close_tab"
+                            Content="X"
+                            FontSize="14"
+                            FontWeight="SemiBold" />
+
+                    </Grid>
+                </TabStripItem>
+            </TabStrip>
         </Border>
     </Design.PreviewWith>
 
-	<Style Selector="TabStrip">
-		<Setter Property="Background" Value="#F0F0F0"/>
-		<Setter Property="Height" Value="120"/>
-	</Style>
-	<Style Selector="TabStrip WrapPanel">
-		<Setter Property="Background" Value="#2B579A"/>
-	</Style>
+    <Style Selector="Button.close_tab">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style Selector="Button.close_tab:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#05BCF9" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.close_tab:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="#FF00C5FF" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.close_tab:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
 
-	<Style Selector="TabItem">
-		<Setter Property="FontSize" Value="12"/>
-		<Setter Property="Height" Value="34"/>
-		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="Background" Value="#2B579A"/>
-		<Setter Property="Foreground" Value="#F0F0F0"/>
-		<Setter Property="Margin" Value="0 0 0 0"/>
-		<Setter Property="Padding" Value="10 0"/>
-	</Style>
-	<Style Selector="TabItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-		<Setter Property="Background" Value="#124078"/>
-	</Style>
+    <Style Selector="TabStrip">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TabStrip WrapPanel">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
 
-	<Style Selector="TabItem:focus">
-		<Setter Property="Foreground" Value="#2B579A"/>
-		<Setter Property="Margin" Value="0 0 0 0"/>
-		<Setter Property="Padding" Value="10 0"/>
-	</Style>
-	<Style Selector="TabItem:focus /template/ ContentPresenter#PART_ContentPresenter">
-		<Setter Property="Background" Value="#f0f0f0"/>
-	</Style>
+    <Style Selector="TabStripItem">
+        <Setter Property="MaxWidth" Value="300" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="#005875" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Margin" Value="0 0 2 0" />
+        <Setter Property="Padding" Value="10 0" />
+        <Setter Property="CornerRadius" Value="4" />
 
-	<Style Selector="TabItem:selected">
-		<Setter Property="Foreground" Value="#2B579A"/>
-		<Setter Property="Margin" Value="0 0 0 0"/>
-		<Setter Property="Padding" Value="10 0"/>
-	</Style>
-	<Style Selector="TabItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-		<Setter Property="Background" Value="#f0f0f0"/>
-	</Style>
+    </Style>
+
+    <Style Selector="TabStripItem Button.close_tab">
+        <Setter Property="Opacity" Value="0" />
+    </Style>
+
+    <Style Selector="TabStripItem:pointerover Button.close_tab">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="TabStripItem:pointerover /template/ Border">
+        <Setter Property="Background" Value="#007DA7" />
+        <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+
+    <!--  Ни на что не влияет  -->
+    <!--<Style Selector="TabStripItem:focus">
+        <Setter Property="Foreground" Value="Green" />
+    </Style>-->
+
+    <Style Selector="TabStripItem:selected">
+        <Setter Property="Background" Value="#05BCF9" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Margin" Value="0 0 2 0" />
+        <Setter Property="Padding" Value="10 0" />
+
+    </Style>
+
+    <Style Selector="TabStripItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="TabStripItem:selected /template/ Border#PART_SelectedPipe">
+        <Setter Property="Background" Value="White" />
+    </Style>
+    <!--<Style Selector="TabStripItem:pointerover /template/ Border#PART_SelectedPipe">
+        <Setter Property="Background" Value="White" />
+    </Style>-->
+    <!--<Style Selector="TabStripItem:focus /template/  Border#PART_SelectedPipe">
+        <Setter Property="Background" Value="#FF0099CC" />
+    </Style>-->
+
 </Styles>

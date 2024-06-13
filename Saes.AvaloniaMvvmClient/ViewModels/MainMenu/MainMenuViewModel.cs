@@ -54,11 +54,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
 {
     public class MainMenuViewModel: ViewModelBase
     {
+        private readonly ISessionKeyService _sessionKeyService;
 
-        public ReactiveCommand<Unit, Unit> ExitCommand { get; }
+        public ReactiveCommand<Unit, Unit> ExitCommand { get; set; }
 
-        public TabStripViewModel TabStrip { get; }
-        public SideMenuViewModel Menu { get; }
+        public TabStripViewModel TabStrip { get; set; }
+        public SideMenuViewModel Menu { get; set; }
 
         [Reactive]
         public StatusData Status { get; set; }
@@ -69,12 +70,25 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             var result = await MessageBoxHelper.Question("Вопрос", "Вы уверены, что хотите выйти из аккаунта?");
             if(result)
             {
+                _sessionKeyService.RemoveSessionKey();
                 NavigationService.NavigateTo(App.ServiceProvider.GetService<AuthenticationMainViewModel>());
             }
 
         }
 
-        public MainMenuViewModel(INavigationService navigationService)
+        public MainMenuViewModel()
+        {
+            LoadMenu();
+        }
+
+        public MainMenuViewModel(INavigationService navigationService, ISessionKeyService sessionKeyService)
+        {
+            LoadMenu();
+            NavigationService = navigationService;
+            _sessionKeyService = sessionKeyService;
+        }
+
+        private void LoadMenu()
         {
             ExitCommand = ReactiveCommand.CreateFromTask(OnExitCommand);
 
@@ -99,7 +113,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                         new SubMenuItemViewModel("Права", "book_regular", typeof(RightListViewModel)),
                         new SubMenuItemViewModel("Права ролей", "book_regular", typeof(UserRoleRightListViewModel)),
                         new SubMenuItemViewModel("Сессии", "share_screen_regular", typeof(UserSessionListViewModel)),
-                        
+
                     }),
                     new MenuItemViewModel("Аутенфикация", "fingerprint_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
@@ -117,7 +131,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                     new MenuItemViewModel("Личная информация", "contact_card_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
                          new SubMenuItemViewModel("Типы контактов", "book_regular", typeof(ContactTypeListViewModel)),
-                         
+
                     }),
                     new MenuItemViewModel("Электронные подписи", "signature_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
@@ -148,9 +162,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             );
 
             Menu.SideMenuItemClicked += Menu_MenuButtonClicked;
-            
+
             MessageBus.Current.Listen<StatusData>().Subscribe(x => Status = x);
-            NavigationService = navigationService;
         }
 
         private void Menu_MenuButtonClicked(object sender, SubMenuItemViewModel e)

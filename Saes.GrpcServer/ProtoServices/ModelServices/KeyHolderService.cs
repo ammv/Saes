@@ -33,6 +33,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             query = request.KeyHolderID != null ? query.Where(x => x.KeyHolderId == request.KeyHolderID) : query;
             query = request.SerialNumber != null ? query.Where(x => x.SerialNumber.Contains(request.SerialNumber)) : query;
             query = request.TypeID != null ? query.Where(x => x.TypeId == request.TypeID) : query;
+            query = request.UserCPI != null ? query.Where(x => x.UserCpi == request.UserCPI) : query;
 
             var response = new KeyHolderLookupResponse();
 

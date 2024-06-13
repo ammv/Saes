@@ -8,7 +8,6 @@
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHRecord"
-    Width="1440"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="vm:JournalInstanceForCIHRecordListViewModel"
@@ -19,11 +18,7 @@
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
-    <UserControl.Resources>
-        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
-            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
-        </DataTemplate>
-    </UserControl.Resources>
+
 
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
@@ -40,7 +35,7 @@
                         Width="200"
                         FontSize="14"
                         Text="Название СКЗИ" />
-                    <TextBox Text="{Binding Lookup.NameCPI, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Lookup.NameCPI, Mode=TwoWay}" Classes="primary"/>
                 </StackPanel>
 
                 <StackPanel
@@ -49,43 +44,39 @@
                     Classes="ComboboxField">
                     <TextBlock FontSize="14" Text="Организация" />
                     <ComboBox
+					Classes="primary"
                         Width="150"
                         DisplayMemberBinding="{Binding ShortName}"
                         ItemsSource="{Binding OrganizationCollection.Items}"
                         SelectedItem="{Binding OrganizationCollection.Selected}"
+                        SelectedValue="{Binding Lookup.OrganizationID}"
                         SelectedValueBinding="{Binding BusinessEntityId}" />
                 </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="PrimaryButton"
+                    Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
 
-                <Button VerticalAlignment="Bottom" Classes="IconButton">
+                <!--<Button VerticalAlignment="Bottom" Classes="IconButton">
                     <Button.Content>
                         <PathIcon Data="{StaticResource filter_regular}" />
                     </Button.Content>
                     <Button.Flyout>
                         <Flyout Placement="BottomEdgeAlignedLeft">
-                            <!--<StackPanel VerticalAlignment="Stretch"
-                                        Orientation="Horizontal"
-                                        Spacing="16">
-                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                                    <TextBlock Width="75"
-                                               FontSize="12"
-                                               Text="№ п/п" />
-                                    <TextBox Height="24" Text="{Binding Lookup.UserId, Mode=TwoWay}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                                    <TextBlock Width="75"
-                                               FontSize="12"
-                                               Text="№ п/п роли" />
-                                    <TextBox Height="24" Text="{Binding Lookup.UserRoleId, Mode=TwoWay}" />
-                                </StackPanel>
-                            </StackPanel>-->
+
                         </Flyout>
                     </Button.Flyout>
+                </Button>-->
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ClearCommand}">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_dismiss_regular}" />
+                    </Button.Content>
                 </Button>
             </StackPanel>
 
@@ -96,12 +87,12 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
             </StackPanel>
@@ -120,12 +111,12 @@
                 CanUserReorderColumns="True"
                 CanUserResizeColumns="True"
                 CanUserSortColumns="False"
+                ColumnWidth="200"
                 GridLinesVisibility="All"
                 HorizontalScrollBarVisibility="Auto"
                 IsReadOnly="True"
                 IsVisible="{Binding !TabIsLoading}"
                 ItemsSource="{Binding Entities}"
-                ColumnWidth="200"
                 SelectedItem="{Binding SelectedEntity}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -173,32 +164,36 @@
                         Header="Номера экземпляров (криптографические номера) ключевых документов "
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
-                        Binding="{Binding ReceivedFromID}"
-                        Header="№ п/п Отправителя"
+                        Binding="{Binding ReceivedFromDto, Converter={StaticResource BusinessEntityToStringConverter}, Mode=OneTime}"
+                        Header="От кого получены в отметке о получени"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberCoverLetterReceive}"
-                        Header="Дата и номер сопроводительного письма"
+                        Header="Дата и номер сопроводительного письма в отметке о получении"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
-                        Binding="{Binding CPIUserID}"
-                        Header=" № п/п пользователя СКЗИ"
+                        Binding="{Binding CPIUserDto, Converter={StaticResource BusinessEntityEmployeeToInitialsConverter}, Mode=OneTime}"
+                        Header="ФИО пользователя СКЗИ в отметке о выдаче"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberConfirmationIssue}"
-                        Header="Дата и номер сопроводительного письма"
+                        Header="Дата и расписка в получении в отметке о выдаче"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding InstallationDateAndConfirmation}"
-                        Header="Дата подключения (установки) и подписи лиц, производивших подключение (установку)"
+                        Header="Дата подключения (установки) и подписи лиц, производивших подключение (установку) в отметке о подключении"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DestructionDate}"
-                        Header="Дата изъятия (уничтожения)"
+                        Header="Дата изъятия (уничтожения) в отметке об изъятии"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DestructionActNumber}"
-                        Header="Номер акта или расписка об уничтожении"
+                        Header="Номер акта или расписка об уничтожении в отметке об изъятии"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding Note}"
+                        Header="Примечание"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                 </DataGrid.Columns>
             </DataGrid>

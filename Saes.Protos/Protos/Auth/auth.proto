@@ -13,6 +13,7 @@ service Authentication {
     rpc FirstFactorAuthenticate (FirstFactorAuthenticateRequest) returns (FirstFactorAuthenticateResponse);
     // Аутенфикация по второму фактору (Фактору знания TOTP пароля)
     rpc SecondFactorAuthenticate (SecondFactorAuthenticateRequest) returns (SecondFactorAuthenticateResponse);
+    rpc ValidateSessionKey (ValidateSessionKeyRequest) returns (ValidateSessionKeyResponse);
 }
 
 
@@ -50,10 +51,21 @@ message SecondFactorAuthenticateRequest {
     string otpPassword = 2;
     // Время отправления
     google.protobuf.Timestamp sendTime = 3;
-
 }
 
 // Ответ на запроспо аутенфикации по второму фактору
 message SecondFactorAuthenticateResponse {
     string sessionKey = 1;
 }
+
+message ValidateSessionKeyRequest
+{
+    string sessionKey = 1;
+}
+
+message ValidateSessionKeyResponse
+{
+    bool result = 1;
+    string message = 2;
+}
+    

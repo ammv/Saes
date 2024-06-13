@@ -17,7 +17,7 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
         {
             if (!File.Exists(_sessionKeyFileName))
             {
-                throw new FileNotFoundException("File with session key not found");
+                return null;
             }
             if(_sessionKey != null && _changedSessionKey == false)
             {
@@ -31,6 +31,15 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
         {
             File.WriteAllText(_sessionKeyFileName, sessionKey);
             _changedSessionKey = true;
+        }
+
+        public void RemoveSessionKey()
+        {
+            _sessionKey = null;
+            if (File.Exists(_sessionKeyFileName))
+            {
+                File.Delete(_sessionKeyFileName);
+            }
         }
     }
 }

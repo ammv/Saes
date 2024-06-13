@@ -16,38 +16,50 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
+namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCPARecord
 {
-    public class KeyHolderFormViewModel : ViewModelFormBase<KeyHolderDto, KeyHolderDataRequest>
+    public class JournalInstanceForCPARecordFormViewModel : ViewModelFormBase<JournalInstanceForCPARecordDto, JournalInstanceForCPARecordDataRequest>
     {
         private CallInvoker _grpcChannel;
 
-        public KeyHolderFormViewModel(IGrpcChannelFactory grpcChannelFactory)
+        public JournalInstanceForCPARecordFormViewModel(IGrpcChannelFactory grpcChannelFactory)
         {
             _grpcChannel = grpcChannelFactory.CreateChannel();
-            KeyHolderTypeCollection = new CollectionWithSelection<KeyHolderTypeDto>();
-            UserCpiCollection = new CollectionWithSelection<BusinessEntityDto>();
+            //JournalInstanceForCPARecordTypeCollection = new CollectionWithSelection<JournalInstanceForCPARecordTypeDto>();
+            ReceiverCollection = new CollectionWithSelection<BusinessEntityDto>();
+            OrganizationCollection = new CollectionWithSelection<OrganizationDto>();
         }
 
-        protected override KeyHolderDataRequest _Configure(KeyHolderDto dto)
+        protected override JournalInstanceForCPARecordDataRequest _Configure(JournalInstanceForCPARecordDto dto)
         {
             if (_currentMode == Core.Enums.FormMode.See || CurrentMode == Core.Enums.FormMode.Edit)
             {
-                return new KeyHolderDataRequest
+                return new JournalInstanceForCPARecordDataRequest
                 {
-                    KeyHolderID = dto.KeyHolderId,
-                    SerialNumber = dto.SerialNumber,
-                    UserCPI = dto.UserCPI,
-                    TypeID = dto.TypeId,
-                    SignFileId = dto.SignFileId
+                    JournalInstanceForCPARecordID = dto.JournalInstanceForCPARecordId,
+                    OrganizationID = dto.OrganizationId,
+                    NameCPI = dto.NameCPI,
+                    SerialCPI = dto.SerialCPI,
+                    InstanceNumber = dto.InstanceNumber,
+                    ReceivedFromID = dto.ReceivedFromId,
+                    DateAndNumberCoverLetterReceive = dto.DateAndNumberCoverLetterReceive,
+                    DateAndNumberCoverLetterSend = dto.DateAndNumberCoverLetterSend,
+                    DateAndNumberConfirmationSend = dto.DateAndNumberConfirmationSend,
+                    DateAndNumberCoverLetterReturn = dto.DateAndNumberCoverLetterReturn,
+                    DateAndNumberConfirmationReturn = dto.DateAndNumberConfirmationReturn,
+                    CommissioningDate = dto.CommissioningDate,
+                    DecommissioningDate = dto.DecommissioningDate,
+                    DestructionDate = dto.DestructionDate,
+                    DestructionActNumber = dto.DestructionActNumber,
+                    Note = dto.Note
                 };
-                
+
             }
             else
             {
-                return new KeyHolderDataRequest
+                return new JournalInstanceForCPARecordDataRequest
                 {
-                    KeyHolderID = 0
+                    JournalInstanceForCPARecordID = 0
                 };
             }
         }
@@ -57,36 +69,35 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
             switch (_currentMode)
             {
                 case Core.Enums.FormMode.See:
-                    Title = "Просмотр ключевого носителя";
+                    Title = "Просмотр записи журнала поэкземплярного учета СКЗИ для ОКЗ";
                     break;
                 case Core.Enums.FormMode.Edit:
-                    Title = "Редактирование ключевого носителя";
+                    Title = "Редактирование записи журнала поэкземплярного учета СКЗИ для ОКЗ";
                     break;
                 case Core.Enums.FormMode.Add:
-                    Title = "Добавление ключевого носителя";
+                    Title = "Добавление записи журнала поэкземплярного учета СКЗИ для ОКЗ";
                     break;
             }
         }
 
         [Reactive]
-        public CollectionWithSelection<KeyHolderTypeDto> KeyHolderTypeCollection { get; set; }
+        public CollectionWithSelection<OrganizationDto> OrganizationCollection { get; set; }
         [Reactive]
-        public CollectionWithSelection<BusinessEntityDto> UserCpiCollection { get; set; }
+        public CollectionWithSelection<BusinessEntityDto> ReceiverCollection { get; set; }
 
         protected override async Task _Loaded()
         {
             try
             {
-                var client = new KeyHolderTypeService.KeyHolderTypeServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение записей типов ключевых носителей"));
-                var response = await client.SearchAsync(new KeyHolderTypeLookup());
+                var client = new OrganizationService.OrganizationServiceClient(_grpcChannel);
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение организаций"));
+                var response = await client.SearchAsync(new OrganizationLookup());
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+                OrganizationCollection.Items.Add(null);
                 foreach (var item in response.Data)
                 {
-                    KeyHolderTypeCollection.Items.Add(item);
+                    OrganizationCollection.Items.Add(item);
                 }
-
-                //KeyHolderTypeCollection.Selected = KeyHolderTypeCollection.Items.FirstOrDefault(x => x.KeyHolderTypeId == _dataRequest.TypeID);
 
                 MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
             }
@@ -101,12 +112,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
                 MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение записей бизнес-сущностей"));
                 var response = await client.SearchAsync(new BusinessEntityLookup());
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+                ReceiverCollection.Items.Add(null);
                 foreach (var item in response.Data)
                 {
-                    UserCpiCollection.Items.Add(item);
+                    ReceiverCollection.Items.Add(item);
                 }
-
-                //UserCpiCollection.Selected = UserCpiCollection.Items.FirstOrDefault(x => x.BusinessEntityId == _dataRequest.UserCPI);
 
                 MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
             }
@@ -120,8 +130,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
         {
             try
             {
-                var service = new KeyHolderService.KeyHolderServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на добавление ключевого носителя"));
+                var service = new JournalInstanceForCPARecordService.JournalInstanceForCPARecordServiceClient(_grpcChannel);
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на добавление новой записи журнала поэкземплярного учета СКЗИ для ОКЗ"));
                 var response = await service.AddAsync(DataRequest);
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
                 Callback(response.Data.FirstOrDefault());
@@ -138,8 +148,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
         {
             try
             {
-                var service = new KeyHolderService.KeyHolderServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на редактирование ключевого носителя"));
+                var service = new JournalInstanceForCPARecordService.JournalInstanceForCPARecordServiceClient(_grpcChannel);
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на редактирование записи журнала поэкземплярного учета СКЗИ для ОКЗ"));
                 var response = await service.EditAsync(DataRequest);
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
                 if (response.Result)
@@ -170,7 +180,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
 
         protected override bool Validate()
         {
-            return DataRequest.TypeID != null && !string.IsNullOrEmpty(DataRequest.SerialNumber);
+            return true;
+            //return DataRequest.TypeID != null && !string.IsNullOrEmpty(DataRequest.SerialNumber);
         }
     }
 }

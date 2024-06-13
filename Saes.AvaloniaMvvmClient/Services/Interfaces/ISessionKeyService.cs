@@ -10,5 +10,6 @@ namespace Saes.AvaloniaMvvmClient.Services.Interfaces
     {
         string GetSessionKey();
         void SaveSessionKey(string sessionKey);
+        void RemoveSessionKey();
     }
 }

@@ -4,6 +4,7 @@ option csharp_namespace = "Saes.Protos.ModelServices";
 
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 import "models.proto";
 import "statuses.proto";
 package userSession;
@@ -12,6 +13,7 @@ package userSession;
 
 service UserSessionService {
     rpc Search (UserSessionLookup) returns (UserSessionLookupResponse);
+    rpc GetUserByCurrentSession (google.protobuf.Empty) returns (GetUserByCurrentSessionResponse);
 }
 
 message UserSessionLookup
@@ -26,6 +28,11 @@ message UserSessionLookup
 	google.protobuf.BoolValue IsExpired = 9;
 
 	reserved "SessionKey";
+}
+
+message GetUserByCurrentSessionResponse
+{
+	models.UserDto user =  1;
 }
 
 // Comment

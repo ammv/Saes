@@ -42,8 +42,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
             }, SelectedEntity);
 
             _dialogService.ShowDialog(vm);
-
-            await _Search();
         }
 
         protected override async Task OnCopyCommand()
@@ -93,8 +91,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
             }, SelectedEntity);
 
             _dialogService.ShowDialog(vm);
-
-            await _Search();
         }
 
         [Reactive]
@@ -109,8 +105,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
             }, SelectedEntity);
 
             _dialogService.ShowDialog(vm);
-
-            await _Search();
         }
 
         protected override async Task _Export()

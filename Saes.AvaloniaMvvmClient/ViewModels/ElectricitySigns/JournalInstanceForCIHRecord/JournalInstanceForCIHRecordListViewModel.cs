@@ -1,7 +1,9 @@
 ﻿using Grpc.Core;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Helpers;
+using Saes.AvaloniaMvvmClient.Services.Impementations;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.Protos;
 using Saes.Protos.ModelServices;
@@ -17,21 +19,29 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
     public class JournalInstanceForCIHRecordListViewModel : ViewModelTabListBase<JournalInstanceForCIHRecordDto, JournalInstanceForCIHRecordLookup>
     {
         private CallInvoker _grpcChannel;
+        private readonly IDialogService _dialogService;
 
-        public JournalInstanceForCIHRecordListViewModel(IGrpcChannelFactory grpcChannelFactory)
+        public JournalInstanceForCIHRecordListViewModel(IGrpcChannelFactory grpcChannelFactory, IDialogService dialogService)
         {
             TabTitle = "Журнал поэкземплярного учета СКЗИ, эксплуатационной и технической документации к ним, ключевых документов (для обладателя конфиденциальной информации)";
             _grpcChannel = grpcChannelFactory.CreateChannel();
             OrganizationCollection = new CollectionWithSelection<OrganizationDto>();
+            _dialogService = dialogService;
         }
         public override async Task<bool> CloseAsync()
         {
             return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
         }
 
-        protected override Task OnAddCommand()
+        protected override async Task OnAddCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<JournalInstanceForCIHRecordFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Add, async (f) => {
+                await MessageBoxHelper.Question("Вопрос", $"{f.JournalInstanceForCIHRecordId} - Вы довольны результатом?");
+            }, SelectedEntity);
+
+            _dialogService.ShowDialog(vm);
         }
 
         protected override Task OnCopyCommand()
@@ -44,14 +54,26 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             throw new NotImplementedException();
         }
 
-        protected override Task OnEditCommand()
+        protected override async Task OnEditCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<JournalInstanceForCIHRecordFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Edit, async (f) => {
+                await MessageBoxHelper.Question("Вопрос", $"{f.JournalInstanceForCIHRecordId} - Вы довольны результатом?");
+            }, SelectedEntity);
+
+            _dialogService.ShowDialog(vm);
         }
 
-        protected override Task OnSeeCommand()
+        protected override async Task OnSeeCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<JournalInstanceForCIHRecordFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.See, async (f) => {
+                await MessageBoxHelper.Question("Вопрос", $"{f.JournalInstanceForCIHRecordId} - Вы довольны результатом?");
+            }, SelectedEntity);
+
+            _dialogService.ShowDialog(vm);
         }
 
         protected override Task _Export()

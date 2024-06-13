@@ -12,9 +12,8 @@
   <ItemGroup>
     <Content Include="logo256x256.ico" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
   </ItemGroup>
 
   <ItemGroup>

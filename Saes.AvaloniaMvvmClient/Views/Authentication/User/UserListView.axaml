@@ -32,7 +32,7 @@
                         Width="150"
                         FontSize="14"
                         Text="Логин" />
-                    <TextBox Text="{Binding Lookup.Login, Mode=TwoWay}" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.Login, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel
@@ -41,6 +41,7 @@
                     Classes="ComboboxField">
                     <TextBlock FontSize="14" Text="Роль" />
                     <ComboBox
+						Classes="primary"
                         Width="150"
                         DisplayMemberBinding="{Binding Name}"
                         ItemsSource="{Binding UserRoleCollection.Items}"
@@ -50,11 +51,11 @@
 
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="PrimaryButton"
+                    Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
 
-                <Button VerticalAlignment="Bottom" Classes="IconButton">
+                <Button VerticalAlignment="Bottom" Classes="secondary">
                     <Button.Content>
                         <PathIcon Data="{StaticResource filter_regular}" />
                     </Button.Content>
@@ -76,7 +77,10 @@
                                         Width="75"
                                         FontSize="12"
                                         Text="№ п/п роли" />
-                                    <TextBox Height="24" Text="{Binding Lookup.UserRoleId, Mode=TwoWay}" />
+                                    <TextBox
+                                        Height="24"
+                                        Classes="primary"
+                                        Text="{Binding Lookup.UserRoleId, Mode=TwoWay}" />
                                 </StackPanel>
                             </StackPanel>
                         </Flyout>
@@ -91,12 +95,12 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
             </StackPanel>

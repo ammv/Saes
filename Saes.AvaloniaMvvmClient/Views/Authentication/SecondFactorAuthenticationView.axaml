@@ -15,9 +15,10 @@
 			<TextBlock Text="Одноразовый пароль"
 					   FontSize="16"
 					   Margin="0 0 0 4"/>
-			<TextBox Text="{Binding TotpPassword}"
+			<TextBox Text="{Binding TotpPassword}" Classes="primary"
 					 Margin="0 0 0 16"/>
-			<Button Content="Готово" Command="{Binding SuccessCommand}"/>
+			<Button Content="Готово" Command="{Binding SuccessCommand}"
+			Classes="primary"/>
 		</StackPanel>
 		<TextBlock Text="{Binding Status}" FontSize="12"
 				   DockPanel.Dock="Bottom"

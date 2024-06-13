@@ -3,6 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder"
     Title="{Binding Title}"
@@ -14,9 +16,15 @@
     SizeToContent="Height"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
     <Window.Effect>
         <DropShadowEffect />
     </Window.Effect>
+
     <StackPanel
         Margin="8"
         Orientation="Vertical"
@@ -34,7 +42,7 @@
             VerticalAlignment="Bottom"
             Classes="TextField">
             <TextBlock FontSize="14" Text="№ п/п" />
-            <TextBox IsEnabled="False" Text="{Binding DataRequest.KeyHolderID, Mode=OneTime}" />
+            <TextBox Classes="primary" IsEnabled="False" Text="{Binding DataRequest.KeyHolderID, Mode=OneTime}" />
         </StackPanel>
 
         <StackPanel
@@ -42,21 +50,24 @@
             VerticalAlignment="Bottom"
             Classes="TextField">
             <TextBlock FontSize="14" Text="Серийный номер" />
-            <TextBox IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.SerialNumber, Mode=TwoWay}" />
+            <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.SerialNumber, Mode=TwoWay}" />
         </StackPanel>
 
         <StackPanel
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
             Classes="ComboboxField">
-            <TextBlock FontSize="14" Text="Тип" />
+            <TextBlock FontSize="14" Text="Пользователь СКЗИ" />
             <ComboBox
-                Width="200"
+			Classes="primary"
+                HorizontalAlignment="Stretch"
                 DisplayMemberBinding="{Binding, Converter={StaticResource BusinessEntityToStringConverter}}"
                 ItemsSource="{Binding UserCpiCollection.Items}"
                 SelectedItem="{Binding UserCpiCollection.Selected}"
-                SelectedValueBinding="{Binding DataRequest.UserCPI, Mode=TwoWay}" />
+                SelectedValue="{Binding DataRequest.UserCPI, Mode=TwoWay}"
+                SelectedValueBinding="{Binding BusinessEntityId}" />
             <Button
+				Classes="background_less"
                 Background="Transparent"
                 Command="{Binding UserCpiCollection.ClearSelectedCommand}"
                 Content="Очистить выбор"
@@ -64,17 +75,20 @@
         </StackPanel>
 
         <StackPanel
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
             Classes="ComboboxField">
             <TextBlock FontSize="14" Text="Тип" />
             <ComboBox
-                Width="200"
+			Classes="primary"
+                HorizontalAlignment="Stretch"
                 DisplayMemberBinding="{Binding Name}"
                 ItemsSource="{Binding KeyHolderTypeCollection.Items}"
-                SelectedItem="{Binding KeyHolderTypeCollection.Selected}"
-                SelectedValueBinding="{Binding DataRequest.TypeID, Mode=TwoWay}" />
+                SelectedItem="{Binding KeyHolderTypeCollection.Selected, Mode=TwoWay}"
+                SelectedValue="{Binding DataRequest.TypeID, Mode=TwoWay}"
+                SelectedValueBinding="{Binding KeyHolderTypeId}" />
             <Button
+				Classes="background_less"
                 Background="Transparent"
                 Command="{Binding KeyHolderTypeCollection.ClearSelectedCommand}"
                 Content="Очистить выбор"

@@ -54,6 +54,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 
         public FirstFactorAuthenticationViewModel(IGrpcChannelFactory grpcChannelFactory)
         {
+            AuthCommandExecuting = false;
             var isValidObservable = this.WhenAnyValue(x => x.Login, x => x.Password, x =>x.AuthCommandExecuting,
                 (login, password, executing) => !string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password) && !executing);
             AuthCommand = ReactiveCommand.CreateFromTask(AuthCommandOnExecute, isValidObservable);

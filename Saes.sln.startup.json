@@ -101,6 +101,13 @@
       "SolutionConfiguration": "Debug",
       "SolutionPlatform": "x64"
     },
+    "Release Desktop": {
+      "Projects": {
+        "Saes.AvaloniaMvvmClient.Desktop": {}
+      },
+      "SolutionConfiguration": "Release",
+      "SolutionPlatform": "x64"
+    },
     "Debug Console": {
       "Projects": {
         "Saes.ConsoleTest": {}

@@ -50,15 +50,15 @@ message JournalInstanceForCIHRecordDataRequest
 	google.protobuf.Int32Value InstanceNumber = 4;
 
 	google.protobuf.Int32Value ReceivedFromID = 5;
-
 	google.protobuf.StringValue DateAndNumberCoverLetterReceive = 6;
 
 	google.protobuf.Int32Value CPIUserID = 7;
-
 	google.protobuf.StringValue DateAndNumberConfirmationIssue = 8;
+
 	google.protobuf.StringValue InstallationDateAndConfirmation = 9;
 	google.protobuf.Timestamp DestructionDate = 10;
 	google.protobuf.StringValue DestructionActNumber = 11;
+
 	google.protobuf.StringValue Note = 12;
 
 	google.protobuf.Int32Value SignFileId = 13;

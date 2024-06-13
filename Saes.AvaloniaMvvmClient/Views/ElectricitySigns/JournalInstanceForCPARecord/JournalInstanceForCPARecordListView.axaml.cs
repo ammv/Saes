@@ -7,7 +7,6 @@ namespace Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalInstanceForCPARe
         public JournalInstanceForCPARecordListView()
         {
             InitializeComponent();
-
         }
     }
 }

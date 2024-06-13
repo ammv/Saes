@@ -101,6 +101,8 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<KeyDocumentTypeFormViewModel>();
             collection.AddTransient<KeyHolderTypeFormViewModel>();
             collection.AddTransient<KeyHolderFormViewModel>();
+            collection.AddTransient<JournalInstanceForCPARecordFormViewModel>();
+            collection.AddTransient<JournalInstanceForCIHRecordFormViewModel>();
         }
 
         public static void AddAuditViewModels(this IServiceCollection collection)

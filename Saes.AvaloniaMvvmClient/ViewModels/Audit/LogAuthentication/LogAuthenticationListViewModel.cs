@@ -69,7 +69,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Audit.LogAuthentication
 
             try
             {
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение записей"));
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение логов аутенфикаций"));
                 var response = await client.SearchAsync(Lookup);
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
                 Entities = new ObservableCollection<LogAuthenticationDto>(response.Data);

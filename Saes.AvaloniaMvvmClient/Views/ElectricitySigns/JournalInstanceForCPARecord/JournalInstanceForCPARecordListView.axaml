@@ -8,7 +8,6 @@
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCPARecord"
-    Width="1440"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="vm:JournalInstanceForCPARecordListViewModel"
@@ -18,12 +17,6 @@
             <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-
-    <UserControl.Resources>
-        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
-            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
-        </DataTemplate>
-    </UserControl.Resources>
 
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
@@ -40,7 +33,7 @@
                         Width="200"
                         FontSize="14"
                         Text="Название СКЗИ" />
-                    <TextBox Text="{Binding Lookup.NameCPI, Mode=TwoWay}" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.NameCPI, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel
@@ -50,42 +43,38 @@
                     <TextBlock FontSize="14" Text="Организация" />
                     <ComboBox
                         Width="150"
+                        Classes="primary"
                         DisplayMemberBinding="{Binding ShortName}"
                         ItemsSource="{Binding OrganizationCollection.Items}"
                         SelectedItem="{Binding OrganizationCollection.Selected}"
+                        SelectedValue="{Binding Lookup.OrganizationID}"
                         SelectedValueBinding="{Binding BusinessEntityId}" />
                 </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="PrimaryButton"
+                    Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
 
-                <Button VerticalAlignment="Bottom" Classes="IconButton">
+                <!--<Button VerticalAlignment="Bottom" Classes="IconButton">
                     <Button.Content>
                         <PathIcon Data="{StaticResource filter_regular}" />
                     </Button.Content>
                     <Button.Flyout>
                         <Flyout Placement="BottomEdgeAlignedLeft">
-                            <!--<StackPanel VerticalAlignment="Stretch"
-                                        Orientation="Horizontal"
-                                        Spacing="16">
-                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                                    <TextBlock Width="75"
-                                               FontSize="12"
-                                               Text="№ п/п" />
-                                    <TextBox Height="24" Text="{Binding Lookup.UserId, Mode=TwoWay}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                                    <TextBlock Width="75"
-                                               FontSize="12"
-                                               Text="№ п/п роли" />
-                                    <TextBox Height="24" Text="{Binding Lookup.UserRoleId, Mode=TwoWay}" />
-                                </StackPanel>
-                            </StackPanel>-->
+
                         </Flyout>
                     </Button.Flyout>
+                </Button>-->
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ClearCommand}">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_dismiss_regular}" />
+                    </Button.Content>
                 </Button>
             </StackPanel>
 
@@ -96,12 +85,12 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
             </StackPanel>
@@ -156,7 +145,10 @@
                         Binding="{Binding JournalInstanceForCPARecordId}"
                         Header="№ п/п"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
-                    <DataGridTextColumn Binding="{Binding OrganizationDto.ShortName}" Header="Организация" />
+                    <DataGridTextColumn
+                        Binding="{Binding OrganizationDto.ShortName}"
+                        Header="Организация"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding NameCPI}"
                         Header="Наименование СКЗИ, эксплуатационной и технической документации к ним, ключевых документов"
@@ -169,26 +161,30 @@
                         Binding="{Binding InstanceNumber}"
                         Header="Номера экземпляров (криптографические номера) ключевых документов "
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding BusinessEntityDto, Converter={StaticResource BusinessEntityToStringConverter}}"
+                        Header="От кого получены или Ф.И.О. сотрудника органа криптографической защиты, изготовившего ключевые документы"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <!--<DataGridTextColumn Binding="{Binding BusinessEntityId}" Header="Номера экземпляров (криптографические номера) ключевых документов " />-->
                     <DataGridTextColumn
-                        Binding="{Binding DateAndNumberCoverLetterReceive, Converter={StaticResource TimestampToDateTimeConverter}, StringFormat=D, Mode=OneTime}"
-                        Header="Дата и номер сопроводительного письма"
+                        Binding="{Binding DateAndNumberCoverLetterReceive}"
+                        Header="Дата и номер сопроводительного письма или дата изготовления ключевых документов и расписка в изготовлении "
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberCoverLetterSend}"
-                        Header="Дата и номер сопроводительного письма"
+                        Header="Дата и номер сопроводительного письма в отметке о рассылке"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberConfirmationSend}"
-                        Header="Дата и номер подтверждения или расписка в получении"
+                        Header="Дата и номер подтверждения или расписка в получении в отметке о рассылке"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberCoverLetterReturn}"
-                        Header="Дата и номер сопроводительного письма "
+                        Header="Дата и номер сопроводительного письма в отметке о возврате"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberConfirmationReturn}"
-                        Header="Дата и номер подтверждения  "
+                        Header="Дата и номер подтверждения в отметке о возврате"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding CommissioningDate, Converter={StaticResource TimestampToDateTimeConverter}, StringFormat=D, Mode=OneTime}"
@@ -203,7 +199,7 @@
                         Header="Дата уничтожения "
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
-                        Binding="{Binding DestructionActNumber, Converter={StaticResource TimestampToDateTimeConverter}, StringFormat=D, Mode=OneTime}"
+                        Binding="{Binding DestructionActNumber}"
                         Header="Номер акта или расписка об уничтожении"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                 </DataGrid.Columns>

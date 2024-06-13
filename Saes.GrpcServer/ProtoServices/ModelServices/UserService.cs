@@ -122,5 +122,30 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             return new StatusResponse { Result = true };
         }
+
+        public override async Task<UserGetRightsResponse> GetRights(UserLookup request, ServerCallContext context)
+        {
+            if (request.UserId == null || request.UserId <= 0)
+            {
+                throw new ArgumentNullException(nameof(request.UserId));
+            }
+
+            User user = await _ctx.Users.FirstOrDefaultAsync(x => x.UserId == request.UserId);
+
+            if(user == null)
+            {
+                throw new ArgumentNullException(nameof(request.UserId));
+            }
+
+            List<string> rights = await _ctx.UserRoleRights.Where(x => x.UserRoleId == user.UserRoleId).Select(x => x.Right.Code).ToListAsync();
+
+            var response = new UserGetRightsResponse();
+
+            response.Data.AddRange(rights);
+
+            return response;
+
+
+        }
     }
 }

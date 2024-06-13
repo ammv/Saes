@@ -9,9 +9,7 @@ namespace Saes.AvaloniaMvvmClient.Services.Interfaces
 {
     internal interface IUserService
     {
-        public UserDto CurrentUser { get; set; }
-
-        public bool HasRight(string rightCode);
-        public void UpdateCache();
+        public void LoadRights();
+        public IReadOnlyCollection<string> GetRights();
     }
 }

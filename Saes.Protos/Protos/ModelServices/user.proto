@@ -15,6 +15,7 @@ service UserService {
     rpc Add (UserDataRequest) returns (UserLookupResponse);
     rpc Remove (UserLookup) returns (statuses.StatusResponse);
     rpc Edit (UserDataRequest) returns (statuses.StatusResponse);
+    rpc GetRights (UserLookup) returns (UserGetRightsResponse);
 }
 
 message UserLookup
@@ -38,4 +39,9 @@ message UserDataRequest
 message UserLookupResponse
 {
     repeated models.UserDto data = 1;
+}
+
+message UserGetRightsResponse
+{
+    repeated string data = 1;
 }

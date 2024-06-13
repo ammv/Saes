@@ -31,16 +31,23 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType
             return !string.IsNullOrEmpty(DataRequest.Name);
         }
 
-        protected override void _Configure(KeyDocumentTypeDto dto)
+        protected override KeyDocumentTypeDataRequest _Configure(KeyDocumentTypeDto dto)
         {
             if (_currentMode == Core.Enums.FormMode.See || CurrentMode == Core.Enums.FormMode.Edit)
             {
-                DataRequest.Name = dto.Name;
-                DataRequest.KeyDocumentTypeID = dto.KeyDocumentTypeId;
+                return new KeyDocumentTypeDataRequest
+                {
+                    Name = dto.Name,
+                    KeyDocumentTypeID = dto.KeyDocumentTypeId
+                };
+                
             }
             else
             {
-                DataRequest.KeyDocumentTypeID = 0;
+                return new KeyDocumentTypeDataRequest
+                {
+                    KeyDocumentTypeID = 0
+                };
             }
         }
 

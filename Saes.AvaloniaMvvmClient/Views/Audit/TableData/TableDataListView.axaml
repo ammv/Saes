@@ -19,12 +19,6 @@
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
-    <UserControl.Resources>
-        <DataTemplate x:Key="DataGridColumnHeaderWrappingTemplate">
-            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
-        </DataTemplate>
-    </UserControl.Resources>
-
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
             <StackPanel
@@ -47,7 +41,7 @@
 
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="PrimaryButton"
+                    Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
             </StackPanel>
@@ -59,7 +53,7 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
-                    Classes="SecondaryButton"
+                    Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
             </StackPanel>

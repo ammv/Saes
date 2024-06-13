@@ -14,8 +14,9 @@
 
     <StackPanel>
         <TextBlock Text="Логин" />
-        <TextBox Text="{Binding DataRequest.Login, Mode=TwoWay}" />
-        <Button Command="{Binding FormCommand}" Content="Accept" />
+        <TextBox Text="{Binding DataRequest.Login, Mode=TwoWay}" Classes="primary" />
+        <Button Command="{Binding FormCommand}" Content="Accept"
+				Classes="primary"/>
     </StackPanel>
 
 

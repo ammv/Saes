@@ -6,6 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia;
+using Saes.AvaloniaMvvmClient.Core.AttachedProperties;
+using Avalonia.VisualTree;
+using Avalonia.Threading;
+using Saes.AvaloniaMvvmClient.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Saes.AvaloniaMvvmClient
 {
@@ -20,11 +26,54 @@ namespace Saes.AvaloniaMvvmClient
 
             if (type != null)
             {
-                return (Control)Activator.CreateInstance(type);
+                var control = (Control)Activator.CreateInstance(type);
+                if(control is Window window)
+                {
+                    window.Loaded += Control_ConfigureRights_Loaded;
+                }
+                else if(control is UserControl userControl)
+                {
+                    userControl.Loaded += Control_ConfigureRights_Loaded;
+                }
+                return control;
             }
             else
             {
                 return new TextBlock { Text = "Not Found: " + name };
+            }
+        }
+
+        private async void Control_ConfigureRights_Loaded(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            Control controlSender = (Control)sender;
+            await CheckRights(controlSender, App.ServiceProvider.GetService<IUserService>().GetRights());
+        }
+
+        private async Task CheckRights(Visual controlSender, IReadOnlyCollection<string> rights)
+        {
+            foreach (var child in controlSender.GetVisualChildren())
+            {
+                if (child is Control control)
+                {
+                    var propValue = control.GetValue(RightBehav.RightCodeProperty);
+                    if (propValue != AvaloniaProperty.UnsetValue && !string.IsNullOrEmpty(propValue))
+                    {
+                        if(!rights.Contains(propValue))
+                        {
+                            await Dispatcher.UIThread.InvokeAsync(() =>
+                            {
+                                control.IsVisible = false;
+                            });
+                        }
+                        
+                    }
+                }
+
+                // Рекурсивный вызов для проверки всех дочерних элементов
+                if (child is Visual visualChild)
+                {
+                    await CheckRights(visualChild, rights);
+                }
             }
         }
 

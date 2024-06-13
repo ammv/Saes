@@ -132,5 +132,26 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
 
             return response;
         }
+
+        public override async Task<ValidateSessionKeyResponse> ValidateSessionKey(ValidateSessionKeyRequest request, ServerCallContext context)
+        {
+            if (string.IsNullOrEmpty(request.SessionKey))
+            {
+                return new ValidateSessionKeyResponse { Result = false, Message = "Invalid session key" };
+            }
+
+            var userSession = await _ctx.UserSessions.FirstOrDefaultAsync(x => x.SessionKey == request.SessionKey);
+            if (userSession == null)
+            {
+                return new ValidateSessionKeyResponse { Result = false, Message = "Invalid session key" };
+            }
+
+            if (userSession.IsExpired == true)
+            {
+                return new ValidateSessionKeyResponse { Result = false, Message = "Session key was expired" };
+            }
+
+            return new ValidateSessionKeyResponse { Result = true };
+        }
     }
 }

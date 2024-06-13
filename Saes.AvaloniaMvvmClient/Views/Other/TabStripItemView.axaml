@@ -1,36 +1,42 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Other"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 x:DataType="vm:TabStripItemViewModel"
-             x:Class="Saes.AvaloniaMvvmClient.Views.Other.TabStripItemView">
-	<Design.DataContext>
-		<vm:TabStripItemViewModel/>
-	</Design.DataContext>
-	<UserControl.Styles>
-		<Style Selector="Button:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="Gray"/>
-			<Setter Property="Foreground" Value="White"/>
-		</Style>
-	</UserControl.Styles>
-	<Grid ColumnDefinitions="40, *" MinWidth="40" ToolTip.Tip="{Binding Content.TabTitle}"
-		  Height="24"
-							  
-								HorizontalAlignment="Center">
-		<Button Content="X" Background="Transparent"
-				FontSize="12"
-				Padding="4 2"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-				Command="{Binding CloseCommand}"
-				FontWeight="Black"/>
-		<TextBlock Text="{Binding Content.TabTitle}"
-				   Grid.Column="1"
-				   FontSize="14"
-				   HorizontalAlignment="Left"
-				   VerticalAlignment="Center"/>
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.Other.TabStripItemView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Other"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:TabStripItemViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:TabStripItemViewModel />
+    </Design.DataContext>
+    <Grid
+        Height="24"
+        HorizontalAlignment="Stretch"
+        ColumnDefinitions="*, 8, Auto"
+        ToolTip.Tip="{Binding Content.TabTitle}">
 
-	</Grid>
+        <TextBlock
+            Margin="0"
+            Padding="0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Classes="text_tab"
+            FontSize="14"
+            Text="{Binding Content.TabTitle}" />
+        <Button
+            Grid.Column="2"
+            Padding="8,2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Background="Transparent"
+            Classes="close_tab"
+            Command="{Binding CloseCommand}"
+            Content="X"
+            FontSize="14"
+            FontWeight="SemiBold" />
+
+    </Grid>
 </UserControl>
