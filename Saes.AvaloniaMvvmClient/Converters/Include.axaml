@@ -7,4 +7,6 @@
     <conv:StringToIntConverter x:Key="StringToIntConverter" />
     <conv:FormModeToVisibilityConverter x:Key="FormModeToVisibilityConverter" />
     <conv:BusinessEntityToStringConverter x:Key="BusinessEntityToStringConverter" />
+    <conv:HardwareToStringConverter x:Key="HardwareToStringConverter" />
+    <conv:BusinessEntityEmployeeToInitialsConverter x:Key="BusinessEntityEmployeeToInitialsConverter" />
 </ResourceDictionary>

@@ -64,6 +64,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) return BindingOperations.DoNothing;
             if(value is not BusinessEntityDto businessEntityDto)
             {
                 return "Неправильный тип данных";
@@ -83,7 +84,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return BindingOperations.DoNothing;
         }
     }
 }

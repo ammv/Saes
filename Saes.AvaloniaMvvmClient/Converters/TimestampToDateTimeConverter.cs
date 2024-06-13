@@ -15,11 +15,25 @@ namespace Saes.AvaloniaMvvmClient.Converters
         {
             if((value is Google.Protobuf.WellKnownTypes.Timestamp timestamp) && timestamp != null)
             {
-                return timestamp.ToDateTime().ToLocalTime().ToString();
+
+                if(targetType == typeof(DateTime))
+                {
+                    return timestamp.ToDateTime().ToLocalTime();
+                }
+                if (targetType == typeof(DateTimeOffset))
+                {
+                    return new DateTimeOffset(timestamp.ToDateTime().ToLocalTime());
+                }
+                if (targetType == typeof(DateTimeOffset?))
+                {
+                    return new DateTimeOffset?(timestamp.ToDateTime().ToLocalTime());
+                }
+                return timestamp.ToDateTime().ToLocalTime();
+
             }
             if(value == null)
             {
-                return BindingOperations.DoNothing;
+                return null;
             }
             return new BindingNotification(new InvalidCastException($"Cant casting {value?.GetType().Name} to DateTime"), BindingErrorType.Error);
         }
@@ -30,9 +44,13 @@ namespace Saes.AvaloniaMvvmClient.Converters
             {
                 return Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(dateTime.ToUniversalTime());
             }
-            if(value is null)
+            if ((value is DateTimeOffset dateTimeOffset) && dateTimeOffset != null)
             {
-                return BindingOperations.DoNothing;
+                return Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(dateTimeOffset.DateTime.ToUniversalTime());
+            }
+            if (value is null)
+            {
+                return null;
             }
             return new BindingNotification(new InvalidCastException($"Cant casting {value.GetType().Name} to Timestamp"), BindingErrorType.Error);
         }
