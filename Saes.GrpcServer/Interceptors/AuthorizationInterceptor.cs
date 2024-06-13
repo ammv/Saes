@@ -3,6 +3,7 @@ using Grpc.Core.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Saes.Models;
 using Saes.Models.Schemas;
+using Saes.Protos.Auth;
 using Auth = Saes.Protos.Auth;
 
 namespace Saes.GrpcServer.Interceptors
@@ -16,8 +17,9 @@ namespace Saes.GrpcServer.Interceptors
         static AuthorizationInterceptor()
         {
             _nonInterceptableRequestTypes = new HashSet<Type> {
-                typeof(Auth.FirstFactorAuthenticateRequest),
-                typeof(Auth.SecondFactorAuthenticateRequest)
+                typeof(FirstFactorAuthenticateRequest),
+                typeof(SecondFactorAuthenticateRequest),
+                typeof(ValidateSessionKeyRequest)
             };
         }
 

@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.Protos;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.Audit.TableDataColumn
 {
+    [RightScope("table_column_data_see")]
     public class TableDataColumnListViewModel : ViewModelTabListBase<TableColumnDataDto, TableColumnDataLookup>
     {
         private CallInvoker _grpcChannel;

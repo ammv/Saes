@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.Protos;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHInstaller
 {
+    [RightScope("journal_instance_for_cih_installer_see")]
     public class JournalInstanceForCIHInstallerListViewModel : ViewModelTabListBase<JournalInstanceForCIHInstallerDto, JournalInstanceForCIHInstallerLookup>
     {
         private CallInvoker _grpcChannel;

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Avalonia.Xaml.Interactivity"
     xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+    xmlns:local="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.MainMenu"
     xmlns:vmOther="using:Saes.AvaloniaMvvmClient.ViewModels.Other"

@@ -1,1 +1,1 @@
-dotnet run --no-build --launch-profile https
+dotnet run --no-build --launch-profile https -c Release

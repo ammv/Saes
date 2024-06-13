@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Impementations;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHRecord
 {
+    [RightScope("journal_instance_for_cih_record_see")]
     public class JournalInstanceForCIHRecordListViewModel : ViewModelTabListBase<JournalInstanceForCIHRecordDto, JournalInstanceForCIHRecordLookup>
     {
         private CallInvoker _grpcChannel;

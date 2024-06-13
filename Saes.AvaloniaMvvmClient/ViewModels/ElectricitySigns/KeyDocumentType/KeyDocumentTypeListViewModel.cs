@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType
 {
+    [RightScope("key_document_type_see")]
     public class KeyDocumentTypeListViewModel : ViewModelTabListBase<KeyDocumentTypeDto, KeyDocumentTypeLookup>
     {
         private readonly IDialogService _dialogService;

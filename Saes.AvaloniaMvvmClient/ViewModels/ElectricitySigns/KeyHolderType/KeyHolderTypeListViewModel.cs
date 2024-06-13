@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
 {
+    [RightScope("key_holder_type_see")]
     public class KeyHolderTypeListViewModel : ViewModelTabListBase<KeyHolderTypeDto, KeyHolderTypeLookup>
     {
         private readonly IDialogService _dialogService;

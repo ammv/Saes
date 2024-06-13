@@ -16,9 +16,11 @@ using System.Reactive.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Saes.AvaloniaMvvmClient.Views.Authentication.User;
 using System.Linq;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
 {
+    [RightScope("user_see")]
     public class UserListViewModel : ViewModelTabListBase<UserDto, UserLookup>
     {
         public UserListViewModel(IGrpcChannelFactory grpcChannelFactory, IDialogService dialogService) : base()

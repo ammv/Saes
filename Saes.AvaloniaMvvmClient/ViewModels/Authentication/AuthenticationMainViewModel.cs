@@ -18,6 +18,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
         private readonly IGrpcChannelFactory _grpcChannelFactory;
         private readonly FirstFactorAuthenticationViewModel _firstFactorAuthenticationViewModel;
         private readonly ISessionKeyService _sessionKeyService;
+        private readonly IUserService _userService;
         private SecondFactorAuthenticationViewModel _secondFactorAuthenticationViewModel;
 
         [Reactive]
@@ -28,6 +29,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 
         protected virtual void OnAuthenticationCompleted()
         {
+            _userService.LoadRights();
             if (DialogMode)
             {
                 CompleteCallback?.Invoke();
@@ -38,11 +40,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
         [Reactive]
         public ViewModelBase Content { get; set; }
 
-        public AuthenticationMainViewModel(FirstFactorAuthenticationViewModel firstFactorAuthenticationViewModel, ISessionKeyService sessionKeyService, INavigationService navigationService)
+        public AuthenticationMainViewModel(FirstFactorAuthenticationViewModel firstFactorAuthenticationViewModel, ISessionKeyService sessionKeyService, INavigationService navigationService, IUserService userService)
         {
             _firstFactorAuthenticationViewModel = firstFactorAuthenticationViewModel;
             _sessionKeyService = sessionKeyService;
             NavigationService = navigationService;
+            _userService = userService;
             _firstFactorAuthenticationViewModel.AuthCommand.Subscribe(FirstFactorCommandOnExecute);
 
             Content = _firstFactorAuthenticationViewModel;

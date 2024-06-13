@@ -17,7 +17,7 @@ public class MainViewModel : ViewModelBase
 
     public INavigationService NavigationService { get; }
 
-    public MainViewModel(AuthenticationMainViewModel authenticationMainViewModel, INavigationService navigationService, ISessionKeyService sessionKeyService, IGrpcChannelFactory grpcChannelFactory)
+    public MainViewModel(AuthenticationMainViewModel authenticationMainViewModel, INavigationService navigationService, ISessionKeyService sessionKeyService, IGrpcChannelFactory grpcChannelFactory, IUserService userService)
     {
         NavigationService = navigationService;
 #if !DEBUG
@@ -29,6 +29,8 @@ public class MainViewModel : ViewModelBase
 
         try
         {
+            userService.LoadRights();
+
             var authService = new Protos.Auth.Authentication.AuthenticationClient(grpcChannelFactory.CreateChannel());
 
             var request = new ValidateSessionKeyRequest { SessionKey = sessionKeyService.GetSessionKey() };

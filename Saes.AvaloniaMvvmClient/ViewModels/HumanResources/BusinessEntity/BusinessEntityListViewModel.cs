@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.Protos;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.HumanResources.BusinessEntity
 {
+    [RightScope("business_entity_see")]
     public class BusinessEntityListViewModel : ViewModelTabListBase<BusinessEntityDto, BusinessEntityLookup>
     {
         private CallInvoker _grpcChannel;

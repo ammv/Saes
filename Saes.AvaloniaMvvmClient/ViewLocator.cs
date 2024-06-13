@@ -12,11 +12,14 @@ using Avalonia.VisualTree;
 using Avalonia.Threading;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Saes.AvaloniaMvvmClient.Views;
+using Saes.AvaloniaMvvmClient.Views.Authentication;
 
 namespace Saes.AvaloniaMvvmClient
 {
     public class ViewLocator : IDataTemplate
     {
+        private static List<Type> _exceptTypes = new List<Type> { typeof(MainWindow), typeof(AuthenticationMainView), typeof(FirstFactorAuthenticationView), typeof(SecondFactorAuthenticationView) }; 
         public bool SupportsRecycling => false;
 
         public Control Build(object data)
@@ -27,14 +30,19 @@ namespace Saes.AvaloniaMvvmClient
             if (type != null)
             {
                 var control = (Control)Activator.CreateInstance(type);
-                if(control is Window window)
+
+                if(!_exceptTypes.Contains(type))
                 {
-                    window.Loaded += Control_ConfigureRights_Loaded;
+                    if (control is Window window)
+                    {
+                        window.Loaded += Control_ConfigureRights_Loaded;
+                    }
+                    else if (control is UserControl userControl)
+                    {
+                        userControl.Loaded += Control_ConfigureRights_Loaded;
+                    }
                 }
-                else if(control is UserControl userControl)
-                {
-                    userControl.Loaded += Control_ConfigureRights_Loaded;
-                }
+                
                 return control;
             }
             else
@@ -45,6 +53,7 @@ namespace Saes.AvaloniaMvvmClient
 
         private async void Control_ConfigureRights_Loaded(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
+            
             Control controlSender = (Control)sender;
             await CheckRights(controlSender, App.ServiceProvider.GetService<IUserService>().GetRights());
         }

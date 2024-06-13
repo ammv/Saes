@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.Services.Interfaces
 {
-    internal interface IUserService
+    public interface IUserService
     {
         public void LoadRights();
         public IReadOnlyCollection<string> GetRights();

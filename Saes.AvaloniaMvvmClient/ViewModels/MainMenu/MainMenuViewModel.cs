@@ -49,12 +49,14 @@ using Saes.AvaloniaMvvmClient.ViewModels.Other.File;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.Log;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using Saes.AvaloniaMvvmClient.Core.Attributes;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
 {
     public class MainMenuViewModel: ViewModelBase
     {
         private readonly ISessionKeyService _sessionKeyService;
+        private readonly IUserService _userService;
 
         public ReactiveCommand<Unit, Unit> ExitCommand { get; set; }
 
@@ -81,11 +83,13 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             LoadMenu();
         }
 
-        public MainMenuViewModel(INavigationService navigationService, ISessionKeyService sessionKeyService)
+        public MainMenuViewModel(INavigationService navigationService, ISessionKeyService sessionKeyService, IUserService userService)
         {
-            LoadMenu();
             NavigationService = navigationService;
             _sessionKeyService = sessionKeyService;
+            _userService = userService;
+            LoadMenu();
+            
         }
 
         private void LoadMenu()
@@ -160,10 +164,57 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                     }),
                 }
             );
+#if !DEBUG
+            ConfigureMenuRights();
+#endif
 
             Menu.SideMenuItemClicked += Menu_MenuButtonClicked;
 
             MessageBus.Current.Listen<StatusData>().Subscribe(x => Status = x);
+        }
+
+        private void ConfigureMenuRights()
+        {
+            var rights = _userService.GetRights();
+            //var rights = new string[] { "user_see", "log_see", "key_holder_type_see"};
+
+            List<MenuItemViewModel> menuItemsToDelete = new();
+
+            foreach (var menuItem in Menu.Items)
+            {
+                List<SubMenuItemViewModel> subMenuItemsToDelete = new();
+                foreach (var subMenuItem in menuItem.Items)
+                {
+                    var rightScopeAttribute = subMenuItem.ViewModelType.GetCustomAttributes(false).FirstOrDefault(x => x is RightScopeAttribute) as RightScopeAttribute;
+                    if(rightScopeAttribute == null)
+                    {
+                        throw new Exception($"RightScopeAttribute not applied to type {subMenuItem.ViewModelType}");
+                    }
+                    foreach(var right in rightScopeAttribute.RightScope.AsEnumerable())
+                    {
+                        if(!rights.Contains(right))
+                        {
+                            subMenuItemsToDelete.Add(subMenuItem);
+                            break;
+                        }
+                        
+                    }
+                }
+                foreach (var toDeleteSubMenuItem in subMenuItemsToDelete)
+                {
+                    menuItem.Items.Remove(toDeleteSubMenuItem);
+                }
+
+                if(menuItem.Items.Count == 0)
+                {
+                    menuItemsToDelete.Add(menuItem);
+                }
+            }
+
+            foreach (var menuItemToDelete in menuItemsToDelete)
+            {
+                Menu.Items.Remove(menuItemToDelete);
+            }
         }
 
         private void Menu_MenuButtonClicked(object sender, SubMenuItemViewModel e)
