@@ -15,6 +15,10 @@ namespace Saes.AvaloniaMvvmClient.Core
         [Reactive]
         public T Selected { get; set; }
 
+        [Reactive]
+        public int SelectedIndex { get; set; }
+
+
 
         [Reactive]
         public ICollection<T> Items {get; set;}
@@ -25,7 +29,7 @@ namespace Saes.AvaloniaMvvmClient.Core
             Items = items ?? new ObservableCollection<T>();
             Selected = selected;
 
-            ClearSelectedCommand = ReactiveCommand.Create(() => { Selected = default;  });
+            ClearSelectedCommand = ReactiveCommand.Create(() => { Selected = default; SelectedIndex = -1; });
         }
 
         public CollectionWithSelection<T> Clone()
