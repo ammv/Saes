@@ -55,5 +55,48 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             return base.Remove(request, context);
         }
+
+        public override async Task<StatusResponse> BulkUpdate(JournalInstanceForCIHDestructorBulkUpdateRequest request, ServerCallContext context)
+        {
+            var record = await _ctx.JournalInstanceForCihrecords.Include(x => x.JournalInstanceForCihdestructors).FirstOrDefaultAsync(x => x.JournalInstanceForCihrecordId == request.RecordID);
+
+            if (request == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"Specified Record ID {request.RecordID} not found"));
+            }
+
+            using var transaction = await _ctx.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Adding new destructors
+                foreach (var destructorId in request.DestructorsIds)
+                {
+                    if (record.JournalInstanceForCihdestructors.FirstOrDefault(x => x.DestructorId == destructorId) == null)
+                    {
+                        record.JournalInstanceForCihdestructors.Add(new JournalInstanceForCihdestructor { DestructorId = destructorId });
+                    }
+                }
+
+                foreach (var destructor in record.JournalInstanceForCihdestructors)
+                {
+                    if (request.DestructorsIds.FirstOrDefault(x => x == destructor.DestructorId) == null)
+                    {
+                        record.JournalInstanceForCihdestructors.Remove(destructor);
+                    }
+                }
+
+                await _ctx.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return new StatusResponse { Result = true };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new StatusResponse { Result = false };
+            }
+        }
     }
 }

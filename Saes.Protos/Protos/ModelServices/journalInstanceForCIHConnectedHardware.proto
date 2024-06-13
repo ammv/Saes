@@ -14,6 +14,7 @@ service JournalInstanceForCIHConnectedHardwareService {
     rpc Add (JournalInstanceForCIHConnectedHardwareDataRequest) returns (JournalInstanceForCIHConnectedHardwareLookupResponse);
     rpc Remove (JournalInstanceForCIHConnectedHardwareLookup) returns (statuses.StatusResponse);
     rpc Edit (JournalInstanceForCIHConnectedHardwareDataRequest) returns (statuses.StatusResponse);
+    rpc BulkUpdate (JournalInstanceForCIHConnectedHardwareBulkUpdateRequest) returns (statuses.StatusResponse);
 }
 
 message JournalInstanceForCIHConnectedHardwareLookup
@@ -39,4 +40,10 @@ message JournalInstanceForCIHConnectedHardwareDataRequest
 message JournalInstanceForCIHConnectedHardwareLookupResponse
 {
     repeated models.JournalInstanceForCIHConnectedHardwareDto data = 1;
+}
+
+message JournalInstanceForCIHConnectedHardwareBulkUpdateRequest
+{
+    int32 RecordID = 1;
+    repeated int32 ConnectedHardwaresIds = 2;
 }

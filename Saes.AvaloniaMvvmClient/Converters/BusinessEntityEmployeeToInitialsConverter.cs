@@ -46,7 +46,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
             if (value == null) return BindingOperations.DoNothing;
             if (value is not BusinessEntityDto businessEntityDto)
             {
-                return "Неправильный тип данных";
+                throw new Exception($"Invalid value type - {value.GetType()}");
             }
 
             switch (businessEntityDto.BusinessEntityTypeDto.BusinessEntityTypeId)

@@ -55,5 +55,48 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             return base.Remove(request, context);
         }
+
+        public override async Task<StatusResponse> BulkUpdate(JournalInstanceForCIHConnectedHardwareBulkUpdateRequest request, ServerCallContext context)
+        {
+            var record = await _ctx.JournalInstanceForCihrecords.Include(x => x.JournalInstanceForCihconnectedHardwares).FirstOrDefaultAsync(x => x.JournalInstanceForCihrecordId == request.RecordID);
+
+            if (request == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"Specified Record ID {request.RecordID} not found"));
+            }
+
+            using var transaction = await _ctx.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Adding new connected hardwares
+                foreach (var hardwareId in request.ConnectedHardwaresIds)
+                {
+                    if (record.JournalInstanceForCihconnectedHardwares.FirstOrDefault(x => x.HardwareId == hardwareId) == null)
+                    {
+                        record.JournalInstanceForCihconnectedHardwares.Add(new JournalInstanceForCihconnectedHardware { HardwareId = hardwareId });
+                    }
+                }
+
+                foreach (var hardware in record.JournalInstanceForCihconnectedHardwares)
+                {
+                    if (request.ConnectedHardwaresIds.FirstOrDefault(x => x == hardware.HardwareId) == null)
+                    {
+                        record.JournalInstanceForCihconnectedHardwares.Remove(hardware);
+                    }
+                }
+
+                await _ctx.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return new StatusResponse { Result = true };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new StatusResponse { Result = false };
+            }
+        }
     }
 }

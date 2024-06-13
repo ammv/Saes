@@ -14,6 +14,7 @@ service JournalInstanceForCIHDestructorService {
     rpc Add (JournalInstanceForCIHDestructorDataRequest) returns (JournalInstanceForCIHDestructorLookupResponse);
     rpc Remove (JournalInstanceForCIHDestructorLookup) returns (statuses.StatusResponse);
     rpc Edit (JournalInstanceForCIHDestructorDataRequest) returns (statuses.StatusResponse);
+    rpc BulkUpdate (JournalInstanceForCIHDestructorBulkUpdateRequest) returns (statuses.StatusResponse);
 }
 
 message JournalInstanceForCIHDestructorLookup
@@ -39,4 +40,11 @@ message JournalInstanceForCIHDestructorDataRequest
 message JournalInstanceForCIHDestructorLookupResponse
 {
     repeated models.JournalInstanceForCIHDestructorDto data = 1;
+}
+
+message JournalInstanceForCIHDestructorBulkUpdateRequest
+{
+    int32 RecordID = 1;
+
+    repeated int32 DestructorsIds = 2;
 }

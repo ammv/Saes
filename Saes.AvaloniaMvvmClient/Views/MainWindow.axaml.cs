@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
+using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Helpers;
@@ -19,6 +20,16 @@ public partial class MainWindow : Window
         WindowManager.Add(this);
         //this.WhenActivated(action =>
         //        action(ViewModel!.ShowDialog.RegisterHandler(DoShowDialogAsync)));
+    }
+
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+
+        int x = (int)(Screens.Primary.WorkingArea.Width - this.Bounds.Width) / 2;
+        int y = (int)(Screens.Primary.WorkingArea.Height - this.Bounds.Height) / 2;
+
+        this.Position = new Avalonia.PixelPoint(x,y);
     }
 
     //private async Task DoShowDialogAsync(InteractionContext<UserFormViewModel,

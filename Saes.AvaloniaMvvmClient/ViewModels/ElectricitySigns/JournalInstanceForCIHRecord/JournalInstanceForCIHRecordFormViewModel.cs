@@ -10,6 +10,7 @@ using Saes.Protos;
 using Saes.Protos.ModelServices;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
@@ -35,9 +36,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             InstallerCollection = new CollectionWithSelection<EmployeeDto>();
             DestructorCollection = new CollectionWithSelection<EmployeeDto>();
 
-            LinkedInstallers = new CollectionWithSelection<EmployeeDto>();
-            LinkedDestructors = new CollectionWithSelection<EmployeeDto>();
-            LinkedHardwares = new CollectionWithSelection<HardwareDto>();
+            LinkedInstallers = new ObservableCollection<EmployeeDto>();
+            LinkedDestructors = new ObservableCollection<EmployeeDto>();
+            LinkedHardwares = new ObservableCollection<HardwareDto>();
 
             InitiliazeCommands();
         }
@@ -92,28 +93,55 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
         private void InitiliazeCommands()
         {
             AddInstallerCommand = ReactiveCommand.Create(
-                () => LinkedInstallers.Items.Add(InstallerCollection.Selected),
-                InstallerCollection.WhenAnyValue(x => x.Selected, x => !LinkedInstallers.Items.Contains(x) && InstallerCollection.Selected != null)
+                () => 
+                { 
+                    LinkedInstallers.Add(InstallerCollection.Selected);
+                    InstallerCollection.Items.Remove(InstallerCollection.Selected);
+                },
+                InstallerCollection.WhenAnyValue(x => x.Selected, x => !LinkedInstallers.Contains(x) && InstallerCollection.Selected != null)
                 );
             DeleteInstallerCommand = ReactiveCommand.Create(
-                () => { LinkedInstallers.Items.Remove(SelectedLinkedInstaller); },
-                this.WhenAnyValue(x => x.SelectedLinkedInstaller, LinkedInstallers.Items.Contains));
+                () =>
+                {
+                    InstallerCollection.Items.Add(SelectedLinkedInstaller);
+                    InstallerCollection.SelectedIndex = 0;
+                    LinkedInstallers.Remove(SelectedLinkedInstaller);
+                },
+                this.WhenAnyValue(x => x.SelectedLinkedInstaller, LinkedInstallers.Contains));
 
             AddDestructorCommand = ReactiveCommand.Create(
-                () => LinkedDestructors.Items.Add(DestructorCollection.Selected),
-                DestructorCollection.WhenAnyValue(x => x.Selected, x => !LinkedDestructors.Items.Contains(x) && DestructorCollection.Selected != null)
+                () => 
+                {
+                    LinkedDestructors.Add(DestructorCollection.Selected);
+                    DestructorCollection.Items.Remove(DestructorCollection.Selected);
+                },
+                DestructorCollection.WhenAnyValue(x => x.Selected, x => !LinkedDestructors.Contains(x) && DestructorCollection.Selected != null)
                 );
             DeleteDestructorCommand = ReactiveCommand.Create(
-                () => { LinkedDestructors.Items.Remove(SelectedLinkedDestructor); },
-                this.WhenAnyValue(x => x.SelectedLinkedDestructor, LinkedDestructors.Items.Contains));
+                () => 
+                {
+                    DestructorCollection.Items.Add(SelectedLinkedDestructor);
+                    DestructorCollection.SelectedIndex = 0;
+                    LinkedDestructors.Remove(SelectedLinkedDestructor);
+                },
+                this.WhenAnyValue(x => x.SelectedLinkedDestructor, LinkedDestructors.Contains));
 
             AddHardwareCommand = ReactiveCommand.Create(
-                () => LinkedHardwares.Items.Add(HardwareCollection.Selected),
-                HardwareCollection.WhenAnyValue(x => x.Selected, x => !LinkedHardwares.Items.Contains(x) && HardwareCollection.Selected != null)
+                () => 
+                {
+                    LinkedHardwares.Add(HardwareCollection.Selected);
+                    HardwareCollection.Items.Remove(HardwareCollection.Selected);
+                },
+                HardwareCollection.WhenAnyValue(x => x.Selected, x => !LinkedHardwares.Contains(x) && HardwareCollection.Selected != null)
                 );
             DeleteHardwareCommand = ReactiveCommand.Create(
-                () => { LinkedHardwares.Items.Remove(SelectedLinkedHardware); },
-                this.WhenAnyValue(x => x.SelectedLinkedHardware, LinkedHardwares.Items.Contains));
+                () =>
+                {
+                    HardwareCollection.Items.Add(SelectedLinkedHardware);
+                    HardwareCollection.SelectedIndex = 0;
+                    LinkedHardwares.Remove(SelectedLinkedHardware);
+                },
+                this.WhenAnyValue(x => x.SelectedLinkedHardware, LinkedHardwares.Contains));
         }
 
         public ReactiveCommand<Unit, Unit> AddInstallerCommand { get; set; }
@@ -141,11 +169,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
 
 
         [Reactive]
-        public CollectionWithSelection<EmployeeDto> LinkedInstallers { get; set; }
+        public ObservableCollection<EmployeeDto> LinkedInstallers { get; set; }
         [Reactive]
-        public CollectionWithSelection<HardwareDto> LinkedHardwares { get; set; }
+        public ObservableCollection<HardwareDto> LinkedHardwares { get; set; }
         [Reactive]
-        public CollectionWithSelection<EmployeeDto> LinkedDestructors { get; set; }
+        public ObservableCollection<EmployeeDto> LinkedDestructors { get; set; }
 
         [Reactive]
         public EmployeeDto SelectedLinkedInstaller { get; set; }
@@ -170,7 +198,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение аппаратуры"));
                 var response = await client.SearchAsync(new HardwareLookup { OrganizationID = DataRequest.OrganizationID });
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
-                HardwareCollection.Items.Add(null);
                 foreach (var item in response.Data)
                 {
                     HardwareCollection.Items.Add(item);
@@ -257,15 +284,48 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 var service = new JournalInstanceForCIHRecordService.JournalInstanceForCIHRecordServiceClient(_grpcChannel);
                 MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на добавление новой записи журнала поэкземплярного учета СКЗИ для ОКИ"));
                 var response = await service.AddAsync(DataRequest);
-                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
-                Callback(response.Data.FirstOrDefault());
-                MessageBus.Current.SendMessage(StatusData.Ok("Обработка результатов"));
+                await UpdateBulkRecordData(response.Data.First().JournalInstanceForCIHRecordId);
+
+                MessageBus.Current.SendMessage(StatusData.Ok("Успешный успех"));
+
+                Callback?.Invoke(response.Data.FirstOrDefault());
 
             }
             catch (Exception ex)
             {
                 MessageBus.Current.SendMessage(StatusData.Error(ex));
             }
+        }
+
+        private async Task UpdateBulkRecordData(int journalInstanceForCIHRecordId)
+        {
+            var installerService = new JournalInstanceForCIHInstallerService.JournalInstanceForCIHInstallerServiceClient(_grpcChannel);
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на изменение установщиков в записи журнала поэкземплярного учета СКЗИ для ОКИ"));
+            var installerRequest = new JournalInstanceForCIHInstallerBulkUpdateRequest
+            {
+                RecordID = journalInstanceForCIHRecordId,
+            };
+            installerRequest.InstallersIds.AddRange(LinkedInstallers.Select(x => x.BusinessEntityId));
+            await installerService.BulkUpdateAsync(installerRequest);
+
+
+            var destructorService = new JournalInstanceForCIHDestructorService.JournalInstanceForCIHDestructorServiceClient(_grpcChannel);
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на изменение изъятелей в записи журнала поэкземплярного учета СКЗИ для ОКИ"));
+            var destructorRequest = new JournalInstanceForCIHDestructorBulkUpdateRequest
+            {
+                RecordID = journalInstanceForCIHRecordId,
+            };
+            destructorRequest.DestructorsIds.AddRange(LinkedDestructors.Select(x => x.BusinessEntityId));
+            await destructorService.BulkUpdateAsync(destructorRequest);
+
+            var connectedhardwareService = new JournalInstanceForCIHConnectedHardwareService.JournalInstanceForCIHConnectedHardwareServiceClient(_grpcChannel);
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на изменение подключенных устройств в записи журнала поэкземплярного учета СКЗИ для ОКИ"));
+            var connectedhardwareRequest = new JournalInstanceForCIHConnectedHardwareBulkUpdateRequest
+            {
+                RecordID = journalInstanceForCIHRecordId,
+            };
+            connectedhardwareRequest.ConnectedHardwaresIds.AddRange(LinkedHardwares.Select(x => x.HardwareId));
+            await connectedhardwareService.BulkUpdateAsync(connectedhardwareRequest);
         }
 
         protected override async Task _OnEdit()
@@ -275,6 +335,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 var service = new JournalInstanceForCIHRecordService.JournalInstanceForCIHRecordServiceClient(_grpcChannel);
                 MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на редактирование записи журнала поэкземплярного учета СКЗИ для ОКИ"));
                 var response = await service.EditAsync(DataRequest);
+                await UpdateBulkRecordData(DataRequest.JournalInstanceForCIHRecordId.Value);
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
                 if (response.Result)
                 {

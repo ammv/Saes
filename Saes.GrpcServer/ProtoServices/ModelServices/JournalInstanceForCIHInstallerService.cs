@@ -55,5 +55,49 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             return base.Remove(request, context);
         }
+
+        public override async Task<StatusResponse> BulkUpdate(JournalInstanceForCIHInstallerBulkUpdateRequest request, ServerCallContext context)
+        {
+            var record = await _ctx.JournalInstanceForCihrecords.Include(x => x.JournalInstanceForCihinstallers).FirstOrDefaultAsync(x => x.JournalInstanceForCihrecordId == request.RecordID);
+
+            if(request == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"Specified Record ID {request.RecordID} not found"));
+            }
+
+            using var transaction = await _ctx.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Adding new installers
+                foreach (var installerId in request.InstallersIds)
+                {
+                    if (record.JournalInstanceForCihinstallers.FirstOrDefault(x => x.InstallerId == installerId) == null)
+                    {
+                        record.JournalInstanceForCihinstallers.Add(new JournalInstanceForCihinstaller { InstallerId = installerId });
+                    }
+                }
+
+                foreach(var installer in record.JournalInstanceForCihinstallers)
+                {
+                    if(request.InstallersIds.FirstOrDefault(x => x == installer.InstallerId) == null)
+                    {
+                        record.JournalInstanceForCihinstallers.Remove(installer);
+                    }
+                }
+
+                await _ctx.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return new StatusResponse { Result = true };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new StatusResponse { Result = false };
+            }
+
+        }
     }
 }

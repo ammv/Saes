@@ -14,6 +14,7 @@ service JournalInstanceForCIHInstallerService {
     rpc Add (JournalInstanceForCIHInstallerDataRequest) returns (JournalInstanceForCIHInstallerLookupResponse);
     rpc Remove (JournalInstanceForCIHInstallerLookup) returns (statuses.StatusResponse);
     rpc Edit (JournalInstanceForCIHInstallerDataRequest) returns (statuses.StatusResponse);
+    rpc BulkUpdate (JournalInstanceForCIHInstallerBulkUpdateRequest) returns (statuses.StatusResponse);
 }
 
 message JournalInstanceForCIHInstallerLookup
@@ -39,4 +40,11 @@ message JournalInstanceForCIHInstallerDataRequest
 message JournalInstanceForCIHInstallerLookupResponse
 {
     repeated models.JournalInstanceForCIHInstallerDto data = 1;
+}
+
+message JournalInstanceForCIHInstallerBulkUpdateRequest
+{
+	int32 RecordID = 1;
+
+	repeated int32 InstallersIds = 2;
 }

@@ -48,6 +48,8 @@
                     </Button>
                 </StackPanel>
 
+                <DatePicker Classes="primary" />
+
 
                 <DataGrid>
                     <DataGrid.Columns>
@@ -67,7 +69,12 @@
         </Border>
     </Design.PreviewWith>
 
-
+    <Styles.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush">#FF0099CC</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryBrushPointOver">#FF00B3E8</SolidColorBrush>
+        <SolidColorBrush x:Key="TextPrimaryBrush">White</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryBrushDisabled">#6664B2C9</SolidColorBrush>
+    </Styles.Resources>
 
     <Style Selector="DataGrid">
         <Setter Property="CornerRadius" Value="4" />
@@ -94,21 +101,21 @@
 
 
     <Style Selector="Button.primary">
-        <Setter Property="Background" Value="#FF0099CC" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
         <Setter Property="FontSize" Value="16" />
     </Style>
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="#FF00B3E8" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource PrimaryBrushPointOver}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="Button.primary:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="#FF00C5FF" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="Button.primary:disabled /template/ ContentPresenter">
-        <Setter Property="Background" Value="#6664B2C9" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource PrimaryBrushDisabled}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
     </Style>
 
 
@@ -116,46 +123,46 @@
 
     <Style Selector="Button.secondary">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="#FF0099CC" />
-        <Setter Property="BorderBrush" Value="#FF0099CC" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="BorderThickness" Value="1.5" />
         <Setter Property="FontSize" Value="16" />
     </Style>
 
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="#1800B3E8" />
-        <Setter Property="Foreground" Value="#FF0099CC" />
-        <Setter Property="BorderBrush" Value="#FF0099CC" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
     </Style>
     <Style Selector="Button.secondary:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="#3500B3E8" />
-        <Setter Property="Foreground" Value="#FF0099CC" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
     </Style>
     <Style Selector="Button.secondary:disabled /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="#6664B2C9" />
-        <Setter Property="BorderBrush" Value="#6664B2C9" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrushDisabled}" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushDisabled}" />
     </Style>
 
     <!--  For icon buttons  -->
     <Style Selector="Button.secondary PathIcon">
-        <Setter Property="Foreground" Value="#FF0099CC" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
     </Style>
 
     <Style Selector="Button.secondary:disabled PathIcon">
-        <Setter Property="Foreground" Value="#6664B2C9" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrushDisabled}" />
     </Style>
 
 
 
 
     <Style Selector="TextBox.primary">
-        <Setter Property="BorderBrush" Value="#FF0099CC" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="BorderThickness" Value="1.5" />
     </Style>
 
     <Style Selector="TextBox.primary:pointerover /template/ Border#PART_BorderElement">
-        <Setter Property="BorderBrush" Value="#FF00B3E8" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushPointOver}" />
     </Style>
 
     <Style Selector="TextBox.primary:focus /template/ Border#PART_BorderElement">
@@ -164,33 +171,37 @@
     </Style>
     <Style Selector="TextBox.primary:disabled /template/ Border#PART_BorderElement">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="#6664B2C9" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushDisabled}" />
     </Style>
     <Style Selector="TextBox.primary:disabled">
         <Setter Property="Foreground" Value="Gray" />
     </Style>
 
 
+    <Style Selector="DatePicker.primary">
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+    </Style>
 
 
 
     <Style Selector="ComboBox.primary">
-        <Setter Property="BorderBrush" Value="#FF0099CC" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="BorderThickness" Value="1.5" />
     </Style>
 
     <Style Selector="ComboBox.primary:pointerover /template/ Border#Background">
-        <Setter Property="BorderBrush" Value="#FF0099CC" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="BorderThickness" Value="1.5" />
     </Style>
 
     <Style Selector="ComboBox.primary /template/ Border#PopupBorder">
-        <Setter Property="BorderBrush" Value="#FF0099CC" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="Background" Value="#deeff4" />
     </Style>
 
     <Style Selector="ComboBox.primary /template/ PathIcon#DropDownGlyph">
-        <Setter Property="Foreground" Value="#FF0099CC" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
     </Style>
 
     <Style Selector="ComboBox.primary:pressed /template/ Border#Background">
@@ -201,7 +212,7 @@
     <Style Selector="ComboBox.primary:disabled">
         <Style Selector="^ /template/ Border#Background">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="#6664B2C9" />
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushDisabled}" />
         </Style>
         <Style Selector="^ /template/ ContentControl#ContentPresenter">
             <Setter Property="Foreground" Value="Gray" />
@@ -210,7 +221,7 @@
             <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundDisabled}" />
         </Style>
         <Style Selector="^ /template/ PathIcon#DropDownGlyph">
-            <Setter Property="Foreground" Value="#6664B2C9" />
+            <Setter Property="Foreground" Value="{StaticResource PrimaryBrushDisabled}" />
         </Style>
     </Style>
 </Styles>
