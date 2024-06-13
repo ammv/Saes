@@ -32,6 +32,24 @@ namespace Saes.AvaloniaMvvmClient.Helpers
                     MsBox.Avalonia.Enums.ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Question).ShowWindowDialogAsync(window);
         }
 
+        public static async Task Exception(string title, string message, Window window = null)
+        {
+            window = window ?? WindowManager.Windows.First();
+
+            var result = await MessageBoxManager.GetMessageBoxStandard(
+                    title, message,
+                    MsBox.Avalonia.Enums.ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error).ShowWindowDialogAsync(window);
+        }
+
+        public static async Task Success(string title, string message, Window window = null)
+        {
+            window = window ?? WindowManager.Windows.First();
+
+            var result = await MessageBoxManager.GetMessageBoxStandard(
+                    title, message,
+                    MsBox.Avalonia.Enums.ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Success).ShowWindowDialogAsync(window);
+        }
+
         public static async Task NotImplementedError(Window window = null)
         {
             window = window ?? WindowManager.Windows.First();
