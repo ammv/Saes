@@ -79,7 +79,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var addedUser = await _ctx.Users.SingleAsync(x => x.Login == request.Login);
 
-            response.Data.Add(addedUser.Adapt<UserDto>());
+            response.Data.Add(addedUser.Adapt<UserDto>(_mapper.Config));
 
             return response;
         }

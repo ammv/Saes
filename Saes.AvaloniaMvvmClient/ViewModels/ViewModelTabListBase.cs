@@ -139,16 +139,22 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
             ExportCommandIsExecuting = false;
         }
 
+        public bool TabIsLoaded { get; private set; } = false;
+
         protected abstract Task _Search();
         protected abstract Task _Export();
         protected abstract Task _Loaded();
         public virtual async void Loaded()
         {
+            if (TabIsLoaded) return;
+
             TabIsLoading = true;
 
             await _Loaded();
 
             TabIsLoading = false;
+
+            TabIsLoaded = true;
         }
     }
 }

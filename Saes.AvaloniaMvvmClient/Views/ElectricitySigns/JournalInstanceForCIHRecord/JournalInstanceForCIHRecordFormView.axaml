@@ -2,6 +2,7 @@
     x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalInstanceForCIHRecord.JournalInstanceForCIHRecordFormView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="using:AnimatedImage.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
@@ -36,7 +37,12 @@
             TextAlignment="Center"
             TextWrapping="Wrap" />
 
-        <TabControl x:Name="tabControl">
+        <Image
+            Height="80"
+            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            IsVisible="{Binding TabIsLoading}" />
+
+        <TabControl x:Name="tabControl" IsVisible="{Binding !TabIsLoading}">
             <TabItem Header="Общее">
                 <StackPanel Orientation="Vertical" Spacing="16">
                     <!--  1 Строка  -->
@@ -50,7 +56,7 @@
                             <TextBox
                                 Classes="primary"
                                 IsEnabled="False"
-                                Text="{Binding DataRequest.JournalInstanceForCIHRecordID, Mode=OneTime}" />
+                                Text="{Binding DataRequest.JournalInstanceForCIHRecordId, Mode=OneTime}" />
                         </StackPanel>
 
                         <StackPanel
@@ -119,6 +125,21 @@
                                 Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
                         </StackPanel>
                     </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="1032"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="Примечание" />
+                            <TextBox
+                                Height="108"
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
 
@@ -138,6 +159,7 @@
                                 Width="516"
                                 Classes="primary"
                                 DisplayMemberBinding="{Binding, Converter={StaticResource BusinessEntityToStringConverter}}"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
                                 ItemsSource="{Binding ReceivedFromCollection.Items}"
                                 SelectedItem="{Binding ReceivedFromCollection.Selected}"
                                 SelectedValue="{Binding DataRequest.ReceivedFromID}"
@@ -181,6 +203,7 @@
                                 Width="516"
                                 Classes="primary"
                                 DisplayMemberBinding="{Binding, Converter={StaticResource EmployeeToStringConverter}}"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
                                 ItemsSource="{Binding UserCpiCollection.Items}"
                                 SelectedItem="{Binding UserCpiCollection.Selected}"
                                 SelectedValue="{Binding DataRequest.CPIUserID}"
@@ -243,6 +266,7 @@
                                         Width="416"
                                         Classes="primary"
                                         DisplayMemberBinding="{Binding, Converter={StaticResource EmployeeToStringConverter}}"
+                                        IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
                                         ItemsSource="{Binding InstallerCollection.Items}"
                                         SelectedItem="{Binding InstallerCollection.Selected}" />
                                 </StackPanel>
@@ -266,7 +290,7 @@
                                     ItemsSource="{Binding LinkedInstallers}"
                                     SelectedItem="{Binding SelectedLinkedInstaller}">
                                     <ListBox.ContextMenu>
-                                        <ContextMenu>
+                                        <ContextMenu IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}">
                                             <MenuItem Command="{Binding DeleteInstallerCommand}" Header="Удалить">
                                                 <MenuItem.Icon>
                                                     <PathIcon Data="{StaticResource delete_regular}" />
@@ -298,6 +322,7 @@
                                         Width="416"
                                         Classes="primary"
                                         DisplayMemberBinding="{Binding, Converter={StaticResource HardwareToStringConverter}}"
+                                        IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
                                         ItemsSource="{Binding HardwareCollection.Items}"
                                         SelectedItem="{Binding HardwareCollection.Selected}" />
                                 </StackPanel>
@@ -321,7 +346,7 @@
                                     ItemsSource="{Binding LinkedHardwares}"
                                     SelectedItem="{Binding SelectedLinkedHardware}">
                                     <ListBox.ContextMenu>
-                                        <ContextMenu>
+                                        <ContextMenu IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}">
                                             <MenuItem Command="{Binding DeleteHardwareCommand}" Header="Удалить">
                                                 <MenuItem.Icon>
                                                     <PathIcon Data="{StaticResource delete_regular}" />
@@ -392,6 +417,7 @@
                                         Width="416"
                                         Classes="primary"
                                         DisplayMemberBinding="{Binding, Converter={StaticResource EmployeeToStringConverter}}"
+                                        IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
                                         ItemsSource="{Binding DestructorCollection.Items}"
                                         SelectedItem="{Binding DestructorCollection.Selected}"
                                         SelectedValueBinding="{Binding BusinessEntityId}" />
@@ -416,7 +442,7 @@
                                     ItemsSource="{Binding LinkedDestructors}"
                                     SelectedItem="{Binding SelectedLinkedDestructor}">
                                     <ListBox.ContextMenu>
-                                        <ContextMenu>
+                                        <ContextMenu IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}">
                                             <MenuItem Command="{Binding DeleteDestructorCommand}" Header="Удалить">
                                                 <MenuItem.Icon>
                                                     <PathIcon Data="{StaticResource delete_regular}" />
@@ -433,18 +459,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <StackPanel
-                            Width="516"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Top"
-                            Classes="TextField">
-                            <TextBlock FontSize="14" Text="Примечание" />
-                            <TextBox
-                                Height="108"
-                                Classes="primary"
-                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
-                                Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
-                        </StackPanel>
+
                     </StackPanel>
                 </StackPanel>
             </TabItem>

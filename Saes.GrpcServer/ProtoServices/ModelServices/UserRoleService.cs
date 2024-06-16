@@ -60,7 +60,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             await _ctx.SaveChangesAsync();
 
             var response = new UserRoleLookupResponse();
-            response.Data.Add(userRole.Adapt<UserRoleDto>());
+            response.Data.Add(userRole.Adapt<UserRoleDto>(_mapper.Config));
 
             return response;
         }

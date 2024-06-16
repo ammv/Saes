@@ -14,6 +14,7 @@ service JournalInstanceCPAReceiverService {
     rpc Add (JournalInstanceCPAReceiverDataRequest) returns (JournalInstanceCPAReceiverLookupResponse);
     rpc Remove (JournalInstanceCPAReceiverLookup) returns (statuses.StatusResponse);
     rpc Edit (JournalInstanceCPAReceiverDataRequest) returns (statuses.StatusResponse);
+    rpc BulkUpdate (JournalInstanceCPAReceiverBulkUpdateRequest) returns (statuses.StatusResponse);
 }
 
 message JournalInstanceCPAReceiverLookup
@@ -39,4 +40,11 @@ message JournalInstanceCPAReceiverDataRequest
 message JournalInstanceCPAReceiverLookupResponse
 {
     repeated models.JournalInstanceCPAReceiverDto data = 1;
+}
+
+message JournalInstanceCPAReceiverBulkUpdateRequest
+{
+    int32 RecordID = 1;
+
+    repeated int32 ReceiversIds = 2;
 }

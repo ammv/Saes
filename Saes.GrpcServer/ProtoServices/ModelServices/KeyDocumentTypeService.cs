@@ -59,7 +59,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             await _ctx.SaveChangesAsync();
 
             var response = new KeyDocumentTypeLookupResponse();
-            response.Data.Add(entity.Adapt<KeyDocumentTypeDto>());
+            response.Data.Add(entity.Adapt<KeyDocumentTypeDto>(_mapper.Config));
 
             return response;
         }

@@ -94,6 +94,13 @@
       "SolutionConfiguration": "Debug",
       "SolutionPlatform": "x64"
     },
+    "Release Server": {
+      "Projects": {
+        "Saes.GrpcServer": {}
+      },
+      "SolutionConfiguration": "Release",
+      "SolutionPlatform": "x64"
+    },
     "Debug Desktop": {
       "Projects": {
         "Saes.AvaloniaMvvmClient.Desktop": {}

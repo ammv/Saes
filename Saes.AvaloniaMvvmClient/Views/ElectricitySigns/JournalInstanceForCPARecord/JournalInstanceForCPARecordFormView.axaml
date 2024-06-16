@@ -2,13 +2,14 @@
     x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalInstanceForCPARecord.JournalInstanceForCPARecordFormView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="using:AnimatedImage.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCPARecord"
     Title="{Binding Title}"
-    Width="1064"
+    Width="1250"
     x:DataType="vm:JournalInstanceForCPARecordFormViewModel"
     Background="White"
     SizeToContent="WidthAndHeight"
@@ -36,236 +37,351 @@
             TextAlignment="Center"
             TextWrapping="Wrap" />
 
-        <!--  1 Строка  -->
-        <StackPanel Orientation="Horizontal" Spacing="16">
-            <StackPanel
-                Width="250"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock FontSize="14" Text="№ п/п" />
-                <TextBox IsEnabled="False" Text="{Binding DataRequest.JournalInstanceForCPARecordID, Mode=OneTime}" Classes="primary"/>
-            </StackPanel>
+        <Image
+            Height="80"
+            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            IsVisible="{Binding TabIsLoading}" />
 
-            <StackPanel
-                Width="250"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="ComboboxField">
-                <TextBlock FontSize="14" Text="Организация" />
-                <ComboBox
-				Classes="primary"
-                    Width="250"
-                    DisplayMemberBinding="{Binding ShortName}"
-                    ItemsSource="{Binding OrganizationCollection.Items}"
-                    SelectedItem="{Binding OrganizationCollection.Selected}"
-                    SelectedValue="{Binding DataRequest.OrganizationID}"
-                    SelectedValueBinding="{Binding OrganizationId}" />
-
-            </StackPanel>
-
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Номера экземпляров (криптографические номера) ключевых документов"
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.InstanceNumber, Mode=TwoWay, Converter={StaticResource StringToIntConverter}}" />
-            </StackPanel>
-
-        </StackPanel>
-
-        <!--  2 Строка  -->
-        <StackPanel Orientation="Horizontal" Spacing="16">
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Наименование СКЗИ, эксплуатационной и технической документации к ним, ключевых документов"
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary"
-                    Height="100"
+        <TabControl x:Name="tabControl" IsVisible="{Binding !TabIsLoading}">
+            <TabItem Header="Общее">
+                <StackPanel
                     IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
-                    Text="{Binding DataRequest.NameCPI, Mode=TwoWay}" />
-            </StackPanel>
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <!--  1 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="№ п/п" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="False"
+                                Text="{Binding DataRequest.JournalInstanceForCPARecordID, Mode=OneTime}" />
+                        </StackPanel>
 
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock FontSize="14" Text="Серийные номера СКЗИ" />
-                <TextBox Classes="primary"
-                    Height="100"
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="ComboboxField">
+                            <TextBlock FontSize="14" Text="Организация" />
+                            <ComboBox
+                                Width="250"
+                                Classes="primary"
+                                DisplayMemberBinding="{Binding ShortName}"
+                                ItemsSource="{Binding OrganizationCollection.Items}"
+                                SelectedItem="{Binding OrganizationCollection.Selected}"
+                                SelectedValue="{Binding DataRequest.OrganizationID}"
+                                SelectedValueBinding="{Binding OrganizationId}" />
+
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Номера экземпляров (криптографические номера) ключевых документов"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.InstanceNumber, Mode=TwoWay, Converter={StaticResource StringToIntConverter}}" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <!--  2 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Наименование СКЗИ, эксплуатационной и технической документации к ним, ключевых документов"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Height="100"
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.NameCPI, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="Серийные номера СКЗИ" />
+                            <TextBox
+                                Height="100"
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="300"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата ввода в действие"
+                                TextWrapping="Wrap" />
+                            <DatePicker SelectedDate="{Binding DataRequest.CommissioningDate, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="300"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата вывода из действия"
+                                TextWrapping="Wrap" />
+                            <DatePicker SelectedDate="{Binding DataRequest.DecommissioningDate, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="1032"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="Примечание" />
+                            <TextBox
+                                Height="108"
+                                Classes="primary"
+                                Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Отметка о получении">
+                <StackPanel
                     IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
-                    Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
-            </StackPanel>
-        </StackPanel>
-
-
-        <!--  3 Строка  -->
-
-
-        <StackPanel Orientation="Horizontal" Spacing="16">
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Classes="ComboboxField">
-                <TextBlock
-                    FontSize="14"
-                    Text="От кого получены или Ф.И.О. сотрудника органа криптографической защиты, изготовившего ключевые документы"
-                    TextWrapping="Wrap" />
-                <ComboBox
-				Classes="primary"
-                    Width="516"
-                    DisplayMemberBinding="{Binding, Converter={StaticResource BusinessEntityToStringConverter}}"
-                    ItemsSource="{Binding ReceiverCollection.Items}"
-                    SelectedItem="{Binding ReceiverCollection.Selected}"
-                    SelectedValue="{Binding DataRequest.ReceivedFromID}"
-                    SelectedValueBinding="{Binding BusinessEntityId}" />
-            </StackPanel>
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <!--  3 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="ComboboxField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="От кого получены или Ф.И.О. сотрудника органа криптографической защиты, изготовившего ключевые документы"
+                                TextWrapping="Wrap" />
+                            <ComboBox
+                                Width="516"
+                                Classes="primary"
+                                DisplayMemberBinding="{Binding, Converter={StaticResource BusinessEntityToStringConverter}}"
+                                ItemsSource="{Binding ReceivedFromCollection.Items}"
+                                SelectedItem="{Binding ReceivedFromCollection.Selected}"
+                                SelectedValue="{Binding DataRequest.ReceivedFromID}"
+                                SelectedValueBinding="{Binding BusinessEntityId}" />
+                        </StackPanel>
 
 
 
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата и номер сопроводительного письма или дата изготовления ключевых документов и расписка в изготовлении "
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
-            </StackPanel>
-        </StackPanel>
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата и номер сопроводительного письма или дата изготовления ключевых документов и расписка в изготовлении "
+                                TextWrapping="Wrap" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
 
-        <!--  4 Строка  -->
-        <StackPanel Orientation="Horizontal" Spacing="16">
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата и номер сопроводительного письма в отметке о рассылке"
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.DateAndNumberCoverLetterSend, Mode=TwoWay}" />
-            </StackPanel>
+            <TabItem Header="Отметка о рассылке">
+                <StackPanel
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата и номер сопроводительного письма в отметке о рассылке"
+                                TextWrapping="Wrap" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.DateAndNumberCoverLetterSend, Mode=TwoWay}" />
+                        </StackPanel>
 
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата и номер подтверждения или расписка в получении в отметке о рассылке"
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.DateAndNumberConfirmationSend, Mode=TwoWay}" />
-            </StackPanel>
-        </StackPanel>
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата и номер подтверждения или расписка в получении в отметке о рассылке"
+                                TextWrapping="Wrap" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.DateAndNumberConfirmationSend, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <Grid
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            RowDefinitions="Auto, 8, *">
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal"
+                                Spacing="16">
+                                <StackPanel VerticalAlignment="Bottom" Classes="TextField">
+                                    <TextBlock
+                                        Width="416"
+                                        FontSize="14"
+                                        Text="Кому разосланы (переданы)"
+                                        TextWrapping="Wrap" />
+                                    <ComboBox
+                                        Width="416"
+                                        Classes="primary"
+                                        DisplayMemberBinding="{Binding ShortName}"
+                                        ItemsSource="{Binding RecipientCollection.Items}"
+                                        SelectedItem="{Binding RecipientCollection.Selected}" />
+                                </StackPanel>
+                                <Button
+                                    VerticalAlignment="Bottom"
+                                    Classes="secondary"
+                                    Command="{Binding AddRecipientCommand}"
+                                    Content="Добавить" />
+                            </StackPanel>
 
-        <!--  4.1 Строка  -->
-        <StackPanel Orientation="Horizontal" Spacing="16">
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата и номер сопроводительного письма в отметке о возврате"
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.DateAndNumberCoverLetterReturn, Mode=TwoWay}" />
-            </StackPanel>
+                            <StackPanel
+                                Grid.Row="2"
+                                VerticalAlignment="Bottom"
+                                Classes="ListBoxField"
+                                Orientation="Vertical">
+                                <ListBox
+                                    Width="516"
+                                    MinHeight="32"
+                                    MaxHeight="128"
+                                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                    ItemsSource="{Binding LinkedRecipients}"
+                                    SelectedItem="{Binding SelectedLinkedRecipient}">
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}">
+                                            <MenuItem Command="{Binding DeleteRecipientCommand}" Header="Удалить">
+                                                <MenuItem.Icon>
+                                                    <PathIcon Data="{StaticResource delete_regular}" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </ListBox.ContextMenu>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ShortName}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
 
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата и номер подтверждения или расписка в получении в отметке о возврате"
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.DateAndNumberConfirmationReturn, Mode=TwoWay}" />
-            </StackPanel>
-        </StackPanel>
+            <TabItem Header="Отметка о возврате">
+                <StackPanel
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <!--  3 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата и номер сопроводительного письма"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.DateAndNumberCoverLetterReturn, Mode=TwoWay}" />
+                        </StackPanel>
 
-        <!--  5 Строка  -->
-        <StackPanel
-            HorizontalAlignment="Center"
-            Orientation="Horizontal"
-            Spacing="16">
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата ввода в действие"
-                    TextWrapping="Wrap" />
-                <DatePicker IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" SelectedDate="{Binding DataRequest.CommissioningDate, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
-            </StackPanel>
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата и номер подтверждения или расписка в получении"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.DateAndNumberConfirmationReturn, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Отметка об уничтожении">
+                <StackPanel
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <!--  3 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="300"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата уничтожения"
+                                TextWrapping="Wrap" />
+                            <DatePicker IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" SelectedDate="{Binding DataRequest.DestructionDate, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
+                        </StackPanel>
 
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата вывода из действия"
-                    TextWrapping="Wrap" />
-                <DatePicker IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" SelectedDate="{Binding DataRequest.DecommissioningDate, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
-            </StackPanel>
-
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Дата уничтожения в отметке об уничтожении"
-                    TextWrapping="Wrap" />
-                <DatePicker IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" SelectedDate="{Binding DataRequest.DestructionDate, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
-            </StackPanel>
-        </StackPanel>
-
-        <!--  6 Строка  -->
-        <StackPanel Orientation="Horizontal" Spacing="16">
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock
-                    FontSize="14"
-                    Text="Номер акта или расписка об уничтожении в отметке об уничтожении"
-                    TextWrapping="Wrap" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.DestructionActNumber, Mode=TwoWay}" />
-            </StackPanel>
-
-            <StackPanel
-                Width="516"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Classes="TextField">
-                <TextBlock FontSize="14" Text="Заметка" />
-                <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.SerialCPI, Mode=TwoWay}" />
-            </StackPanel>
-        </StackPanel>
-
-        <!--  7 Строка  -->
-        <StackPanel Orientation="Horizontal" Spacing="16" />
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Номер акта или расписка об уничтожении "
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.DestructionActNumber, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
 
         <Button
             HorizontalAlignment="Center"

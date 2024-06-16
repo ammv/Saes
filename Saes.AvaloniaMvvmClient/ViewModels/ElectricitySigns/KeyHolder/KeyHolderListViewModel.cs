@@ -43,7 +43,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
                 await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
             }, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
         }
 
         protected override async Task OnCopyCommand()
@@ -92,7 +92,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
                 await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
             }, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
         }
 
         [Reactive]
@@ -106,7 +106,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
                 await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
             }, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
         }
 
         protected override async Task _Export()

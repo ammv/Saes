@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCPARecord"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1000"
     x:DataType="vm:JournalInstanceForCPARecordListViewModel"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
@@ -22,6 +22,7 @@
         <Grid>
             <StackPanel
                 Margin=""
+                IsEnabled="{Binding !TabIsLoading}"
                 Orientation="Horizontal"
                 Spacing="16">
 
@@ -42,7 +43,7 @@
                     Classes="ComboboxField">
                     <TextBlock FontSize="14" Text="Организация" />
                     <ComboBox
-                        Width="150"
+                        Width="200"
                         Classes="primary"
                         DisplayMemberBinding="{Binding ShortName}"
                         ItemsSource="{Binding OrganizationCollection.Items}"
@@ -57,16 +58,14 @@
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
 
-                <!--<Button VerticalAlignment="Bottom" Classes="IconButton">
+                <Button VerticalAlignment="Bottom" Classes="secondary">
                     <Button.Content>
                         <PathIcon Data="{StaticResource filter_regular}" />
                     </Button.Content>
                     <Button.Flyout>
-                        <Flyout Placement="BottomEdgeAlignedLeft">
-
-                        </Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft" />
                     </Button.Flyout>
-                </Button>-->
+                </Button>
 
                 <Button
                     VerticalAlignment="Bottom"
@@ -86,8 +85,33 @@
                 <Button
                     VerticalAlignment="Bottom"
                     Classes="secondary"
-                    Command="{Binding AddCommand}"
-                    Content="Добавить" />
+                    Content="Добавить">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Width="200" Spacing="8">
+                                <TextBlock Text="Выберите организацию для которой создается запись" TextWrapping="Wrap" />
+                                <StackPanel
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Classes="ComboboxField">
+                                    <TextBlock FontSize="14" Text="Организация" />
+                                    <ComboBox
+                                        Width="200"
+                                        Classes="primary"
+                                        DisplayMemberBinding="{Binding ShortName}"
+                                        ItemsSource="{Binding OrganizationAddCollection.Items}"
+                                        SelectedItem="{Binding OrganizationAddCollection.Selected, Mode=TwoWay}"
+                                        SelectedValueBinding="{Binding BusinessEntityId}" />
+                                </StackPanel>
+                                <Button
+                                    VerticalAlignment="Bottom"
+                                    Classes="primary"
+                                    Command="{Binding AddCommand}"
+                                    Content="Продолжить" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
                 <Button
                     VerticalAlignment="Bottom"
                     Classes="secondary"
@@ -169,6 +193,10 @@
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberCoverLetterReceive}"
                         Header="Дата и номер сопроводительного письма или дата изготовления ключевых документов и расписка в изготовлении "
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding, Converter={StaticResource JournalCpaRecordToReceiversStringConverter}}"
+                        Header="Кому разосланы (переданы)"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DateAndNumberCoverLetterSend}"

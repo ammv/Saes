@@ -9,5 +9,6 @@
     <conv:BusinessEntityToStringConverter x:Key="BusinessEntityToStringConverter" />
     <conv:HardwareToStringConverter x:Key="HardwareToStringConverter" />
     <conv:EmployeeToStringConverter x:Key="EmployeeToStringConverter" />
+    <conv:ActionCodeToStringConverter x:Key="ActionCodeToStringConverter" />
     <conv:BusinessEntityEmployeeToInitialsConverter x:Key="BusinessEntityEmployeeToInitialsConverter" />
 </ResourceDictionary>

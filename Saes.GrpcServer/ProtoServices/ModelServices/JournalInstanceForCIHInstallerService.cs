@@ -26,7 +26,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             query = query.Where(x => x.SysIsDeleted == false);
 
-            // Тут фильтрация
+            query = request.InstallerID != null ? query.Where(x => x.InstallerId == request.InstallerID) : query;
+            query = request.JournalInstanceForCIHInstallerID != null ? query.Where(x => x.JournalInstanceForCihinstallerId == request.JournalInstanceForCIHInstallerID) : query;
+            query = request.RecordID != null ? query.Where(x => x.RecordId == request.RecordID) : query;
 
             //query = query
             //    .Include(x => x.SignFile)
@@ -60,7 +62,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var record = await _ctx.JournalInstanceForCihrecords.Include(x => x.JournalInstanceForCihinstallers).FirstOrDefaultAsync(x => x.JournalInstanceForCihrecordId == request.RecordID);
 
-            if(request == null)
+            if(record == null)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, $"Specified Record ID {request.RecordID} not found"));
             }
@@ -72,7 +74,16 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 // Adding new installers
                 foreach (var installerId in request.InstallersIds)
                 {
-                    if (record.JournalInstanceForCihinstallers.FirstOrDefault(x => x.InstallerId == installerId) == null)
+                    var installer = record.JournalInstanceForCihinstallers.FirstOrDefault(x => x.InstallerId == installerId);
+                    if (installer != null)
+                    {
+                        if(installer.SysIsDeleted)
+                        {
+                            installer.SysIsDeleted = false; 
+
+                        }
+                    }
+                    else
                     {
                         record.JournalInstanceForCihinstallers.Add(new JournalInstanceForCihinstaller { InstallerId = installerId });
                     }
@@ -80,7 +91,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
                 foreach(var installer in record.JournalInstanceForCihinstallers)
                 {
-                    if(request.InstallersIds.FirstOrDefault(x => x == installer.InstallerId) == null)
+                    if (request.InstallersIds.FirstOrDefault(x => x == installer.InstallerId) == 0)
                     {
                         record.JournalInstanceForCihinstallers.Remove(installer);
                     }

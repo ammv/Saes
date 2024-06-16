@@ -31,7 +31,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
             return !string.IsNullOrEmpty(DataRequest.Name);
         }
 
-        protected override KeyHolderTypeDataRequest _Configure(KeyHolderTypeDto dto)
+        protected override KeyHolderTypeDataRequest _ConfigureDataRequest(KeyHolderTypeDto dto)
         {
             if (_currentMode == Core.Enums.FormMode.See || CurrentMode == Core.Enums.FormMode.Edit)
             {

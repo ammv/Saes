@@ -71,6 +71,7 @@
   <ItemGroup>
     <Folder Include="Core\Interfaces\" />
     <Folder Include="DataModel\" />
+    <Folder Include="Dialogs\" />
     <Folder Include="Infastructure\" />
   </ItemGroup>
 

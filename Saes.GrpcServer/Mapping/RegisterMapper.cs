@@ -99,6 +99,7 @@ namespace Saes.GrpcServer.Mapping
                 .PreserveReference(preserveRef)
                 .Map(dest => dest.LogAuthenticationDto, src => src.LogAuthentication)
                 .Map(dest => dest.CreatedAt, src => DtoT(src.CreatedAt))
+                .Map(dest => dest.UserDto, src => src.User)
                 .Map(dest => dest.ExpiredAt, src => DtoT(src.ExpiredAt));
             config.NewConfig<ErrorLog, ErrorLogDto>()
                 .RequireDestinationMemberSource(requireDms)
@@ -113,6 +114,8 @@ namespace Saes.GrpcServer.Mapping
                 .Map(dest => dest.GUID, src => src.Guid)
                 .Map(dest => dest.UserSessionDto, src => src.UserSession);
             config.NewConfig<LogChange, LogChangeDto>()
+                .Map(dest => dest.AuditLogId, src => src.AuditLogId)
+                .Map(dest => dest.AuditLogDto, src => src.AuditLog)
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef).Map(dest => dest.TableColumnDataDto, src => src.TableColumnData);
             config.NewConfig<JournalInstanceForCparecord, JournalInstanceForCPARecordDto>()
@@ -124,6 +127,7 @@ namespace Saes.GrpcServer.Mapping
                 //.Map(dest => dest.SignFileDto, src => src.SignFile)
                 .Map(dest => dest.BusinessEntityDto, src => src.ReceivedFrom)
                 .Map(dest => dest.OrganizationDto, src => src.Organization)
+                .Map(dest => dest.OrganizationId, src => src.OrganizationId)
                 .Map(dest => dest.JournalInstanceForCPARecordId, src => src.JournalInstanceForCparecordId)
                 .Map(dest => dest.NameCPI, src => src.NameCpi)
                 .Map(dest => dest.SerialCPI, src => src.SerialCpi)
@@ -146,6 +150,7 @@ namespace Saes.GrpcServer.Mapping
                .Map(dest => dest.JournalInstanceForCIHRecordId, src => src.JournalInstanceForCihrecordId)
                .Map(dest => dest.CPIUserDto, src => src.Cpiuser)
                .Map(dest => dest.OrganizationDto, src => src.Organization)
+               .Map(dest => dest.OrganizationId, src => src.OrganizationId)
                .Map(dest => dest.NameCPI, src => src.NameCpi)
                .Map(dest => dest.CPIUserId, src => src.CpiuserId)
                 .Map(dest => dest.SerialCPI, src => src.SerialCpi)

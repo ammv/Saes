@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHRecord"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1000"
     x:DataType="vm:JournalInstanceForCIHRecordListViewModel"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
@@ -18,12 +18,11 @@
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
-
-
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
             <StackPanel
                 Margin=""
+                IsEnabled="{Binding !TabIsLoading}"
                 Orientation="Horizontal"
                 Spacing="16">
 
@@ -35,7 +34,7 @@
                         Width="200"
                         FontSize="14"
                         Text="Название СКЗИ" />
-                    <TextBox Text="{Binding Lookup.NameCPI, Mode=TwoWay}" Classes="primary"/>
+                    <TextBox Classes="primary" Text="{Binding Lookup.NameCPI, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel
@@ -44,8 +43,8 @@
                     Classes="ComboboxField">
                     <TextBlock FontSize="14" Text="Организация" />
                     <ComboBox
-					Classes="primary"
-                        Width="150"
+                        Width="200"
+                        Classes="primary"
                         DisplayMemberBinding="{Binding ShortName}"
                         ItemsSource="{Binding OrganizationCollection.Items}"
                         SelectedItem="{Binding OrganizationCollection.Selected}"
@@ -59,16 +58,17 @@
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
 
-                <!--<Button VerticalAlignment="Bottom" Classes="IconButton">
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    ToolTip.Tip="Фильтры">
                     <Button.Content>
                         <PathIcon Data="{StaticResource filter_regular}" />
                     </Button.Content>
                     <Button.Flyout>
-                        <Flyout Placement="BottomEdgeAlignedLeft">
-
-                        </Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft" />
                     </Button.Flyout>
-                </Button>-->
+                </Button>
 
                 <Button
                     VerticalAlignment="Bottom"
@@ -88,8 +88,33 @@
                 <Button
                     VerticalAlignment="Bottom"
                     Classes="secondary"
-                    Command="{Binding AddCommand}"
-                    Content="Добавить" />
+                    Content="Добавить">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Width="200" Spacing="8">
+                                <TextBlock Text="Выберите организацию для которой создается запись" TextWrapping="Wrap" />
+                                <StackPanel
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Classes="ComboboxField">
+                                    <TextBlock FontSize="14" Text="Организация" />
+                                    <ComboBox
+                                        Width="200"
+                                        Classes="primary"
+                                        DisplayMemberBinding="{Binding ShortName}"
+                                        ItemsSource="{Binding OrganizationAddCollection.Items}"
+                                        SelectedItem="{Binding OrganizationAddCollection.Selected, Mode=TwoWay}"
+                                        SelectedValueBinding="{Binding BusinessEntityId}" />
+                                </StackPanel>
+                                <Button
+                                    VerticalAlignment="Bottom"
+                                    Classes="primary"
+                                    Command="{Binding AddCommand}"
+                                    Content="Продолжить" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
                 <Button
                     VerticalAlignment="Bottom"
                     Classes="secondary"

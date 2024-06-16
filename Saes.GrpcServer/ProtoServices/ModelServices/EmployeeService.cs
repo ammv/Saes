@@ -28,15 +28,12 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var query = _ctx.Employees.AsQueryable();
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.EmployeeID != null ? query.Where(x => x.EmployeeId == request.EmployeeID) : query;
-
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
+            query = request.EmployeeID != null ? query.Where(x => x.EmployeeId == request.EmployeeID) : query;
+            query = request.EmployeePositionID != null ? query.Where(x => x.EmployeePositionId == request.EmployeePositionID) : query;
+            query = request.FirstName != null ? query.Where(x => x.FirstName.Contains(request.FirstName)) : query;
+            query = request.MiddleName != null ? query.Where(x => x.MiddleName.Contains(request.MiddleName)) : query;
+            query = request.LastName != null ? query.Where(x => x.LastName.Contains(request.LastName)) : query;
 
             var response = new EmployeeLookupResponse();
 
@@ -45,6 +42,21 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             response.Data.AddRange(dtos);
 
             return response;
+        }
+
+        public override Task<EmployeeLookupResponse> Add(EmployeeDataRequest request, ServerCallContext context)
+        {
+            return base.Add(request, context);
+        }
+
+        public override Task<StatusResponse> Edit(EmployeeDataRequest request, ServerCallContext context)
+        {
+            return base.Edit(request, context);
+        }
+
+        public override Task<StatusResponse> Remove(EmployeeLookup request, ServerCallContext context)
+        {
+            return base.Remove(request, context);
         }
     }
 }

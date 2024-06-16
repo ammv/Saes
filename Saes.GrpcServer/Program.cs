@@ -8,13 +8,13 @@ using Saes.GrpcServer.ProtoServices.AuthService;
 using Saes.GrpcServer.ProtoServices.ModelServices;
 using Saes.GrpcServer.Services;
 using Saes.Models;
+using Grpc.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SaesContext>(option =>
 {
     option.UseSqlServer(Saes.Configuration.Cofiguration.ConnectionString);
 });
-
 
 
 new ServicesRegister().Register(builder.Services);
@@ -49,6 +49,8 @@ var app = builder.Build();
     app.MapGrpcReflectionService();
 #endif
 
+var loggerFactory = app.Services.GetService<ILoggerFactory>();
+loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
 
 // Configure the HTTP request pipeline.
 // GRPC

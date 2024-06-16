@@ -15,6 +15,7 @@ using Saes.AvaloniaMvvmClient.ViewModels.Authentication.User;
 using Saes.AvaloniaMvvmClient.ViewModels.Authorization.Right;
 using Saes.AvaloniaMvvmClient.ViewModels.Authorization.RightGroup;
 using Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole;
+using Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRoleRight;
 using Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserSession;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceCPAReceiver;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHConnectedHardware;
@@ -121,6 +122,7 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<RightListViewModel>();
             collection.AddTransient<UserSessionListViewModel>();
             collection.AddTransient<RightGroupListViewModel>();
+            collection.AddTransient<UserRoleRightListViewModel>();
         }
 
         public static void AddOfficeViewModels(this IServiceCollection collection)

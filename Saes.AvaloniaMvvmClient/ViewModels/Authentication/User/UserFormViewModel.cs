@@ -20,7 +20,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
             throw new NotImplementedException();
         }
 
-        protected override UserDataRequest _Configure(UserDto dto)
+        protected override UserDataRequest _ConfigureDataRequest(UserDto dto)
         {
             if (_currentMode == Core.Enums.FormMode.See || CurrentMode == Core.Enums.FormMode.Edit)
             {

@@ -73,7 +73,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             await _ctx.SaveChangesAsync();
 
             var response = new KeyHolderLookupResponse();
-            response.Data.Add(entity.Adapt<KeyHolderDto>());
+            response.Data.Add(entity.Adapt<KeyHolderDto>(_mapper.Config));
 
             return response;
         }

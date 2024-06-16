@@ -79,7 +79,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new OrganizationLookupResponse();
 
-            response.Data.Add(organization.Adapt<OrganizationDto>());
+            response.Data.Add(organization.Adapt<OrganizationDto>(_mapper.Config));
 
             return response;
         }

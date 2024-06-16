@@ -29,7 +29,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
             UserCpiCollection = new CollectionWithSelection<BusinessEntityDto>();
         }
 
-        protected override KeyHolderDataRequest _Configure(KeyHolderDto dto)
+        protected override KeyHolderDataRequest _ConfigureDataRequest(KeyHolderDto dto)
         {
             if (_currentMode == Core.Enums.FormMode.See || CurrentMode == Core.Enums.FormMode.Edit)
             {

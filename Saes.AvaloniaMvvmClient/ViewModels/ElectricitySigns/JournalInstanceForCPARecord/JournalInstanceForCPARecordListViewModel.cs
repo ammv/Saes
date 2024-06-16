@@ -1,10 +1,12 @@
 ﻿using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
+using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHRecord;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCPARecord;
 using Saes.Protos;
 using Saes.Protos.ModelServices;
@@ -13,6 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,12 +29,17 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
 
         public JournalInstanceForCPARecordListViewModel(IGrpcChannelFactory grpcChannelFactory, IDialogService dialogService)
         {
-            TabTitle = "Журнал поэкземплярного учета СКЗИ для органа криптографической защиты";
+            _dialogService = dialogService;
+            TabTitle = "Журнал поэкземплярного учета СКЗИ, эксплуатационной и технической документации к ним, ключевых документов для органа криптографической защиты";
             _grpcChannel = grpcChannelFactory.CreateChannel();
             OrganizationCollection = new CollectionWithSelection<OrganizationDto>();
+            OrganizationAddCollection = new CollectionWithSelection<OrganizationDto>();
 
             ClearCommand = ReactiveCommand.Create(() => { Lookup = new JournalInstanceForCPARecordLookup(); });
-            _dialogService = dialogService;
+
+            var canExecuteAddCommand = OrganizationAddCollection.WhenAnyValue(x => x.Selected).Select(selected => selected != null);
+
+            AddCommand = ReactiveCommand.CreateFromTask(OnAddCommand, canExecuteAddCommand);
         }
         public override async Task<bool> CloseAsync()
         {
@@ -42,11 +50,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
         {
             var vm = App.ServiceProvider.GetService<JournalInstanceForCPARecordFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.Add, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.JournalInstanceForCPARecordId} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.Add, null, new JournalInstanceForCPARecordDto { OrganizationDto = OrganizationAddCollection.Selected });
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
         }
 
         protected override async Task OnCopyCommand()
@@ -58,31 +64,31 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
         {
             if (SelectedEntity == null) return;
 
-            if (!await MessageBoxHelper.Question("Вопрос",
-                $"Вы уверены, что хотите удалить данную запись с № {_selectedEntity.JournalInstanceForCPARecordId} ?")) return;
-
-            try
+            if (await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите удалить данную запись с № п/п {SelectedEntity.JournalInstanceForCPARecordId}?"))
             {
-                var client = new JournalInstanceForCPARecordService.JournalInstanceForCPARecordServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на удаление записи журнал поэкземплярного учета СКЗИ для ОКЗ"));
-                var response = await client.RemoveAsync(new JournalInstanceForCPARecordLookup { JournalInstanceForCPARecordID = SelectedEntity.JournalInstanceForCPARecordId });
-                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+                try
+                {
+                    var service = new JournalInstanceForCPARecordService.JournalInstanceForCPARecordServiceClient(_grpcChannel);
+                    MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на удаление записи журнала поэкземплярного учёта СКЗИ для ОКЗ"));
+                    var response = await service.RemoveAsync(new JournalInstanceForCPARecordLookup { JournalInstanceForCPARecordID = SelectedEntity.JournalInstanceForCPARecordId });
+                    if (response.Result)
+                    {
+                        MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+                        await MessageBoxHelper.Success("Уведомление", $"Запись с № п/п {SelectedEntity.JournalInstanceForCPARecordId} успешно удалена!");
+                        await _Search();
+                    }
+                    else
+                    {
+                        MessageBus.Current.SendMessage(StatusData.Error("Неизвестная ошибка"));
+                    }
 
-                if (response.Result)
-                {
-                    MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBus.Current.SendMessage(StatusData.Error("Ошибка"));
+                    MessageBus.Current.SendMessage(StatusData.Error(ex));
+                    await MessageBoxHelper.Exception("Ошибка во время удаления записи", ex.Message);
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBus.Current.SendMessage(StatusData.Error(ex));
-            }
-
-            await _Search();
         }
 
         protected override async Task OnEditCommand()
@@ -91,11 +97,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
 
             var vm = App.ServiceProvider.GetService<JournalInstanceForCPARecordFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.Edit, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.JournalInstanceForCPARecordId} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.Edit, null, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
         }
 
         protected override async Task OnSeeCommand()
@@ -104,20 +108,21 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
 
             var vm = App.ServiceProvider.GetService<JournalInstanceForCPARecordFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.See, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.JournalInstanceForCPARecordId} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.See, null, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task _Export()
+        protected override async Task _Export()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
         public ReactiveCommand<Unit, Unit> ClearCommand { get;  }
+        [Reactive]
         public CollectionWithSelection<OrganizationDto> OrganizationCollection { get; set; }
+        [Reactive]
+        public CollectionWithSelection<OrganizationDto> OrganizationAddCollection { get; set; }
 
         protected override async Task _Loaded()
         {
@@ -132,6 +137,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 foreach (var item in response.Data)
                 {
                     OrganizationCollection.Items.Add(item);
+                    OrganizationAddCollection.Items.Add(item);
                 }
                 MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
             }

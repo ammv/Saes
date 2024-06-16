@@ -7,14 +7,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+		<PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
 		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.63.0" />
 		<PackageReference Include="Mapster" Version="7.4.0" />
 		<PackageReference Include="Mapster.Async" Version="2.0.1" />
 		<PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
 		<PackageReference Include="Mapster.EFCore" Version="5.1.1" />
 		<PackageReference Include="Otp.NET" Version="1.4.0" />
+		<PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<BuildOutputFiles Include="$(OutputPath)**\*.dll" />
+	</ItemGroup>
+
+	<Target Name="CopyDependencies" AfterTargets="Build">
+		<MakeDir Directories="$(OutputPath)\Libs" />
+		<Copy SourceFiles="@(BuildOutputFiles)" DestinationFolder="$(OutputPath)\Libs" />
+	</Target>
 
 	<ItemGroup>
 		<Protobuf Include="..\Saes.Protos\**\*.proto" GrpcServices="Server" ProtoRoot="..\Saes.Protos\Protos">

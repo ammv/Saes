@@ -8,7 +8,7 @@ using Saes.Protos.ModelServices;
 
 namespace Saes.GrpcServer.ProtoServices.ModelServices
 {
-    public class JournalInstanceForCIHConnectedHardwareService: Saes.Protos.ModelServices.JournalInstanceForCIHConnectedHardwareService.JournalInstanceForCIHConnectedHardwareServiceBase
+    public class JournalInstanceForCIHConnectedHardwareService : Saes.Protos.ModelServices.JournalInstanceForCIHConnectedHardwareService.JournalInstanceForCIHConnectedHardwareServiceBase
     {
         private readonly SaesContext _ctx;
         private readonly IMapper _mapper;
@@ -20,17 +20,16 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             _mapper = mapper;
             _logger = logger;
         }
+
         public override async Task<JournalInstanceForCIHConnectedHardwareLookupResponse> Search(JournalInstanceForCIHConnectedHardwareLookup request, ServerCallContext context)
         {
             var query = _ctx.JournalInstanceForCihconnectedHardwares.AsQueryable();
 
             query = query.Where(x => x.SysIsDeleted == false);
 
-            // Тут фильтрация
-
-            //query = query
-            //    .Include(x => x.SignFile)
-            //    .Include(x => x.ReceivedFrom);
+            query = request.HardwareID != null ? query.Where(x => x.HardwareId == request.HardwareID) : query;
+            query = request.JournalInstanceForCIHConnectedHardwareID != null ? query.Where(x => x.JournalInstanceForCihconnectedHardwareId == request.JournalInstanceForCIHConnectedHardwareID) : query;
+            query = request.RecordID != null ? query.Where(x => x.RecordId == request.RecordID) : query;
 
             var response = new JournalInstanceForCIHConnectedHardwareLookupResponse();
 
@@ -60,7 +59,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var record = await _ctx.JournalInstanceForCihrecords.Include(x => x.JournalInstanceForCihconnectedHardwares).FirstOrDefaultAsync(x => x.JournalInstanceForCihrecordId == request.RecordID);
 
-            if (request == null)
+            if (record == null)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, $"Specified Record ID {request.RecordID} not found"));
             }
@@ -72,7 +71,15 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 // Adding new connected hardwares
                 foreach (var hardwareId in request.ConnectedHardwaresIds)
                 {
-                    if (record.JournalInstanceForCihconnectedHardwares.FirstOrDefault(x => x.HardwareId == hardwareId) == null)
+                    var connectedHardware = record.JournalInstanceForCihconnectedHardwares.FirstOrDefault(x => x.HardwareId == hardwareId);
+                    if (connectedHardware != null)
+                    {
+                        if(connectedHardware.SysIsDeleted)
+                        {
+                            connectedHardware.SysIsDeleted = false;
+                        }
+                    }
+                    else
                     {
                         record.JournalInstanceForCihconnectedHardwares.Add(new JournalInstanceForCihconnectedHardware { HardwareId = hardwareId });
                     }
@@ -80,7 +87,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
                 foreach (var hardware in record.JournalInstanceForCihconnectedHardwares)
                 {
-                    if (request.ConnectedHardwaresIds.FirstOrDefault(x => x == hardware.HardwareId) == null)
+                    if (request.ConnectedHardwaresIds.FirstOrDefault(x => x == hardware.HardwareId) == 0)
                     {
                         record.JournalInstanceForCihconnectedHardwares.Remove(hardware);
                     }

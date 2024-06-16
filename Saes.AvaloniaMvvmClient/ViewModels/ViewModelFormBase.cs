@@ -10,13 +10,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels;
 
 
 
-public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelBase
+public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseableBase
     where TDto : class, new()
     where TDataRequest: class, new()
 
 {
-
-
+   
     private bool _formCommandIsExecuting;
     public bool FormCommandIsExecuting
     {
@@ -62,7 +61,10 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelBase
         FormCommandIsExecuting = false;
     }
 
-    protected abstract Task _OnPreFormCommand();
+    protected virtual Task _OnPreFormCommand()
+    {
+        return Task.CompletedTask;
+    }
 
     protected FormMode _currentMode;
 
@@ -98,7 +100,7 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _callback, value);
     }
 
-    protected abstract TDataRequest _Configure(TDto dto);
+    protected abstract TDataRequest _ConfigureDataRequest(TDto dto);
 
     public void Configure(FormMode formMode, Action<TDto> callback, TDto dto = null)
     {
@@ -127,7 +129,9 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelBase
 
         await _Loaded();
 
-        DataRequest = _Configure(Dto);
+        // Я перенес сюда DataRequest из-за того что загружаемые данные перебивали привязки в DataRequest и его поля принимали значение Null
+
+        DataRequest = _ConfigureDataRequest(Dto);
 
         TabIsLoading = false;
     }

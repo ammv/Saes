@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
+using DynamicData;
 using Grpc.Core;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -43,10 +44,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             InitiliazeCommands();
         }
 
-        protected override JournalInstanceForCIHRecordDataRequest _Configure(JournalInstanceForCIHRecordDto dto)
+        protected override JournalInstanceForCIHRecordDataRequest _ConfigureDataRequest(JournalInstanceForCIHRecordDto dto)
         {
             if (_currentMode == Core.Enums.FormMode.See || CurrentMode == Core.Enums.FormMode.Edit)
             {
+
                 return new JournalInstanceForCIHRecordDataRequest
                 {
                     JournalInstanceForCIHRecordId = dto.JournalInstanceForCIHRecordId,
@@ -69,9 +71,64 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             {
                 return new JournalInstanceForCIHRecordDataRequest
                 {
-                    JournalInstanceForCIHRecordId = 0
+                    JournalInstanceForCIHRecordId = 0,
+                    OrganizationID = dto.OrganizationDto.OrganizationId
                 };
             }
+        }
+
+        private async Task _ConfigureCollections()
+        {
+
+            var employeeClient = new EmployeeService.EmployeeServiceClient(_grpcChannel);
+
+            var installerClient = new JournalInstanceForCIHInstallerService.JournalInstanceForCIHInstallerServiceClient(_grpcChannel);
+            var requestInstaller = new JournalInstanceForCIHInstallerLookup { RecordID = _dto.JournalInstanceForCIHRecordId };
+
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение установщиков"));
+            var responseInstaller = await installerClient.SearchAsync(requestInstaller);
+
+            MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка полученных данных"));
+            foreach (var installer in responseInstaller.Data)
+            {
+                var employeeRequest = new EmployeeLookup { BusinessEntityID = installer.InstallerId };
+                var responseEmployee = await employeeClient.SearchAsync(employeeRequest);
+
+                if (responseEmployee.Data.Count > 0)
+                {
+
+                    LinkedInstallers.Add(responseEmployee.Data.Single());
+                }
+            }
+
+            var destructorClient = new JournalInstanceForCIHDestructorService.JournalInstanceForCIHDestructorServiceClient(_grpcChannel);
+            var requestDestructor = new JournalInstanceForCIHDestructorLookup { RecordID = _dto.JournalInstanceForCIHRecordId };
+
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение изъятелей"));
+            var responseDestructor = await destructorClient.SearchAsync(requestDestructor);
+
+            MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка полученных данных"));
+            foreach (var destructor in responseDestructor.Data)
+            {
+                var employeeRequest = new EmployeeLookup { BusinessEntityID = destructor.DestructorId };
+                var responseEmployee = await employeeClient.SearchAsync(employeeRequest);
+                LinkedDestructors.Add(responseEmployee.Data.Single());
+            }
+
+
+            var connectedhardwareClient = new JournalInstanceForCIHConnectedHardwareService.JournalInstanceForCIHConnectedHardwareServiceClient(_grpcChannel);
+            var requestConnectedHardware = new JournalInstanceForCIHConnectedHardwareLookup { RecordID = _dto.JournalInstanceForCIHRecordId };
+
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение аппаратуры"));
+            var responseConnectedHardware = await connectedhardwareClient.SearchAsync(requestConnectedHardware);
+
+            MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка полученных данных"));
+            foreach (var connectedhardware in responseConnectedHardware.Data)
+            {
+                LinkedHardwares.Add(connectedhardware.HardwareDto);
+            }
+            MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+
         }
 
         protected override void _ConfigureTitle()
@@ -93,8 +150,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
         private void InitiliazeCommands()
         {
             AddInstallerCommand = ReactiveCommand.Create(
-                () => 
-                { 
+                () =>
+                {
                     LinkedInstallers.Add(InstallerCollection.Selected);
                     InstallerCollection.Items.Remove(InstallerCollection.Selected);
                 },
@@ -110,7 +167,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 this.WhenAnyValue(x => x.SelectedLinkedInstaller, LinkedInstallers.Contains));
 
             AddDestructorCommand = ReactiveCommand.Create(
-                () => 
+                () =>
                 {
                     LinkedDestructors.Add(DestructorCollection.Selected);
                     DestructorCollection.Items.Remove(DestructorCollection.Selected);
@@ -118,7 +175,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 DestructorCollection.WhenAnyValue(x => x.Selected, x => !LinkedDestructors.Contains(x) && DestructorCollection.Selected != null)
                 );
             DeleteDestructorCommand = ReactiveCommand.Create(
-                () => 
+                () =>
                 {
                     DestructorCollection.Items.Add(SelectedLinkedDestructor);
                     DestructorCollection.SelectedIndex = 0;
@@ -127,7 +184,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 this.WhenAnyValue(x => x.SelectedLinkedDestructor, LinkedDestructors.Contains));
 
             AddHardwareCommand = ReactiveCommand.Create(
-                () => 
+                () =>
                 {
                     LinkedHardwares.Add(HardwareCollection.Selected);
                     HardwareCollection.Items.Remove(HardwareCollection.Selected);
@@ -164,7 +221,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
         [Reactive]
         public CollectionWithSelection<HardwareDto> HardwareCollection { get; set; }
         [Reactive]
-        public CollectionWithSelection<EmployeeDto> DestructorCollection  { get; set; }
+        public CollectionWithSelection<EmployeeDto> DestructorCollection { get; set; }
 
 
 
@@ -184,97 +241,100 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
 
         protected override async Task _Loaded()
         {
-            await OrganizationCollectionLoad();
-            await ReceivedFromCollectionLoad();
-            await HardwareCollectionLoad();
-            await DestructorAndInstallerAndUserCpiCollectionLoad();
+            try
+            {
+                if (_currentMode == Core.Enums.FormMode.See || _currentMode == Core.Enums.FormMode.Edit)
+                {
+                    await _ConfigureCollections();
+
+                }
+                await OrganizationCollectionLoad();
+                await ReceivedFromCollectionLoad();
+                await HardwareCollectionLoad();
+                await DestructorAndInstallerAndUserCpiCollectionLoad();
+            }
+            catch (Exception ex)
+            {
+                MessageBus.Current.SendMessage(StatusData.Error(ex));
+                await MessageBoxHelper.Exception("Ошибка во время загрузки формы", ex.Message);
+                Close();
+            }
         }
 
         private async Task HardwareCollectionLoad()
         {
-            try
+
+            var client = new HardwareService.HardwareServiceClient(_grpcChannel);
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение аппаратуры"));
+            var response = await client.SearchAsync(new HardwareLookup { OrganizationID = _dto.OrganizationId });
+            MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+            foreach (var item in response.Data)
             {
-                var client = new HardwareService.HardwareServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение аппаратуры"));
-                var response = await client.SearchAsync(new HardwareLookup { OrganizationID = DataRequest.OrganizationID });
-                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
-                foreach (var item in response.Data)
+                if (!LinkedHardwares.Contains(item))
                 {
                     HardwareCollection.Items.Add(item);
                 }
+            }
 
-                MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
-            }
-            catch (Exception ex)
-            {
-                MessageBus.Current.SendMessage(StatusData.Error(ex));
-            }
+            MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
         }
 
         private async Task DestructorAndInstallerAndUserCpiCollectionLoad()
         {
-            try
+            var client = new EmployeeService.EmployeeServiceClient(_grpcChannel);
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение сотрудников"));
+            var response = await client.SearchAsync(new EmployeeLookup { OrganizationID = _dto.OrganizationId });
+            MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+            foreach (var item in response.Data)
             {
-                var client = new EmployeeService.EmployeeServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение сотрудников"));
-                var response = await client.SearchAsync(new EmployeeLookup { OrganizationID = DataRequest.OrganizationID });
-                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
-                foreach (var item in response.Data)
+                if (!LinkedDestructors.Contains(item))
                 {
                     DestructorCollection.Items.Add(item);
-                    InstallerCollection.Items.Add(item);
-                    UserCpiCollection.Items.Add(item);
                 }
 
-                MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+                if (!LinkedInstallers.Contains(item))
+                {
+                    InstallerCollection.Items.Add(item);
+                }
+
+                UserCpiCollection.Items.Add(item);
             }
-            catch (Exception ex)
-            {
-                MessageBus.Current.SendMessage(StatusData.Error(ex));
-            }
+
+            MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+
         }
 
         private async Task ReceivedFromCollectionLoad()
         {
-            try
-            {
-                var client = new BusinessEntityService.BusinessEntityServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение записей бизнес-сущностей"));
-                var response = await client.SearchAsync(new BusinessEntityLookup());
-                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
-                ReceivedFromCollection.Items.Add(null);
-                foreach (var item in response.Data)
-                {
-                    ReceivedFromCollection.Items.Add(item);
-                }
 
-                MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
-            }
-            catch (Exception ex)
+            var client = new BusinessEntityService.BusinessEntityServiceClient(_grpcChannel);
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение записей бизнес-сущностей"));
+            var response = await client.SearchAsync(new BusinessEntityLookup());
+            MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+            ReceivedFromCollection.Items.Add(null);
+            foreach (var item in response.Data)
             {
-                MessageBus.Current.SendMessage(StatusData.Error(ex));
+                ReceivedFromCollection.Items.Add(item);
             }
+
+            MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+
         }
 
         private async Task OrganizationCollectionLoad()
         {
-            try
-            {
-                var client = new OrganizationService.OrganizationServiceClient(_grpcChannel);
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение организаций"));
-                var response = await client.SearchAsync(new OrganizationLookup { OrganizationID = DataRequest.OrganizationID });
-                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
-                foreach (var item in response.Data)
-                {
-                    OrganizationCollection.Items.Add(item);
-                }
 
-                MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
-            }
-            catch (Exception ex)
+            var client = new OrganizationService.OrganizationServiceClient(_grpcChannel);
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение организаций"));
+            var response = await client.SearchAsync(new OrganizationLookup { OrganizationID = _dto.OrganizationId });
+            MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+            foreach (var item in response.Data)
             {
-                MessageBus.Current.SendMessage(StatusData.Error(ex));
+                OrganizationCollection.Items.Add(item);
             }
+
+            MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+
         }
 
         protected override async Task _OnAdd()
@@ -284,9 +344,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 var service = new JournalInstanceForCIHRecordService.JournalInstanceForCIHRecordServiceClient(_grpcChannel);
                 MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на добавление новой записи журнала поэкземплярного учета СКЗИ для ОКИ"));
                 var response = await service.AddAsync(DataRequest);
+
                 await UpdateBulkRecordData(response.Data.First().JournalInstanceForCIHRecordId);
 
                 MessageBus.Current.SendMessage(StatusData.Ok("Успешный успех"));
+
+                await MessageBoxHelper.Success("Уведомление", "Успешно добавлено!");
 
                 Callback?.Invoke(response.Data.FirstOrDefault());
 
@@ -294,6 +357,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             catch (Exception ex)
             {
                 MessageBus.Current.SendMessage(StatusData.Error(ex));
+#if DEBUG
+                await MessageBoxHelper.Exception("Ошибка", ex.Message);
+#else
+                 await MessageBoxHelper.Exception("Ошибка", "Во время добавления произошла неизвестная ошибка");
+#endif
             }
         }
 
@@ -339,23 +407,25 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
                 if (response.Result)
                 {
+
                     MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+                    await MessageBoxHelper.Success("Уведомление", "Успешно изменено!");
                 }
                 else
                 {
                     MessageBus.Current.SendMessage(StatusData.Error("Ошибка"));
+                    await MessageBoxHelper.Exception("Ошибка", "Не удалось измезменить");
                 }
 
             }
             catch (Exception ex)
             {
-                MessageBus.Current.SendMessage(StatusData.Error(ex));
+#if DEBUG
+                await MessageBoxHelper.Exception("Ошибка", ex.Message);
+#else
+                 await MessageBoxHelper.Exception("Ошибка", "Во время изменения произошла неизвестная ошибка");
+#endif
             }
-        }
-
-        protected override async Task _OnPreFormCommand()
-        {
-            
         }
 
         protected override Task _OnSee()

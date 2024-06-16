@@ -43,7 +43,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
                 await MessageBoxHelper.Question("Вопрос", $"{f.Name} - Вы довольны результатом?");
             }, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
 
             await _Search();
         }
@@ -94,7 +94,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
                 await MessageBoxHelper.Question("Вопрос", $"{f.Name} - Вы довольны результатом?");
             }, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
 
             await _Search();
         }
@@ -107,7 +107,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
                 await MessageBoxHelper.Question("Вопрос", $"{f.Name} - Вы довольны результатом?");
             }, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
 
             await _Search();
         }

@@ -223,9 +223,21 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             {
                 return;
             }
+            var content = App.ServiceProvider.GetService(e.ViewModelType) as ViewModelBase;
+
+            if(content == null)
+            {
+                throw new Exception($"{e.ViewModelType} не найден в ServiceProvider");
+            }
+
+            if (content is not ViewModelTabBase viewModelTabBase)
+            {
+                throw new Exception($"{e.ViewModelType} не наследуется от ViewModelTabBase");
+            }
+
             TabStrip.Tabs.Add(new TabStripItemViewModel
             {
-                Content = App.ServiceProvider.GetService(e.ViewModelType) as ViewModelTabBase
+                Content = viewModelTabBase
             });
         }
     }

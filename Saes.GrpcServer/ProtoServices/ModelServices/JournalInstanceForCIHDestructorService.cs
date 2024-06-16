@@ -8,7 +8,7 @@ using Saes.Protos.ModelServices;
 
 namespace Saes.GrpcServer.ProtoServices.ModelServices
 {
-    public class JournalInstanceForCIHDestructorService: Saes.Protos.ModelServices.JournalInstanceForCIHDestructorService.JournalInstanceForCIHDestructorServiceBase
+    public class JournalInstanceForCIHDestructorService : Saes.Protos.ModelServices.JournalInstanceForCIHDestructorService.JournalInstanceForCIHDestructorServiceBase
     {
         private readonly SaesContext _ctx;
         private readonly IMapper _mapper;
@@ -26,7 +26,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             query = query.Where(x => x.SysIsDeleted == false);
 
-            // Тут фильтрация
+            query = request.DestructorID != null ? query.Where(x => x.DestructorId == request.DestructorID) : query;
+            query = request.JournalInstanceForCIHDestructorID != null ? query.Where(x => x.JournalInstanceForCihdestructorId == request.JournalInstanceForCIHDestructorID) : query;
+            query = request.RecordID != null ? query.Where(x => x.RecordId == request.RecordID) : query;
 
             //query = query
             //    .Include(x => x.SignFile)
@@ -60,7 +62,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var record = await _ctx.JournalInstanceForCihrecords.Include(x => x.JournalInstanceForCihdestructors).FirstOrDefaultAsync(x => x.JournalInstanceForCihrecordId == request.RecordID);
 
-            if (request == null)
+            if (record == null)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, $"Specified Record ID {request.RecordID} not found"));
             }
@@ -72,15 +74,25 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 // Adding new destructors
                 foreach (var destructorId in request.DestructorsIds)
                 {
-                    if (record.JournalInstanceForCihdestructors.FirstOrDefault(x => x.DestructorId == destructorId) == null)
+                    var destructor = record.JournalInstanceForCihdestructors.FirstOrDefault(x => x.DestructorId == destructorId);
+                    if (destructor != null)
+                    {
+                        if(destructor.SysIsDeleted)
+                        {
+                            destructor.SysIsDeleted = false;
+                        }
+
+                    }
+                    else
                     {
                         record.JournalInstanceForCihdestructors.Add(new JournalInstanceForCihdestructor { DestructorId = destructorId });
+
                     }
                 }
 
                 foreach (var destructor in record.JournalInstanceForCihdestructors)
                 {
-                    if (request.DestructorsIds.FirstOrDefault(x => x == destructor.DestructorId) == null)
+                    if (request.DestructorsIds.FirstOrDefault(x => x == destructor.DestructorId) == 0)
                     {
                         record.JournalInstanceForCihdestructors.Remove(destructor);
                     }

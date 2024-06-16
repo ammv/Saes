@@ -12,7 +12,7 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
 {
     public class DialogService : IDialogService
     {
-        public async void ShowDialog(ViewModelBase viewModel)
+        public async Task ShowDialog(ViewModelBase viewModel)
         {
             Window dialog = Build(viewModel);
 
@@ -34,6 +34,17 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
             {
                 throw new Exception($"Not found Window of type {name}");
             }
+        }
+
+        public async Task ShowDialog(ViewModelCloseableBase viewModel)
+        {
+            Window dialog = Build(viewModel);
+
+            dialog.DataContext = viewModel;
+
+            viewModel.Close = dialog.Close;
+
+            await dialog.ShowDialog(WindowManager.Windows.First());
         }
     }
 }

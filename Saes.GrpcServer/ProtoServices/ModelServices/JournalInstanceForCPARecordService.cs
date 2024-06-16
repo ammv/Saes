@@ -51,15 +51,6 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             query = request.DestructionActNumber != null ? query.Where(x => x.DestructionActNumber.Contains(request.DestructionActNumber)) : query;
 
-            //query = request.CommissioningDate != null ? query.Where(x => x.CommissioningDate == request.CommissioningDate.ToDateTime().ToLocalTime()) : query;
-
-            // Тут фильтрация
-
-            //query = query
-            //    .Include(x => x.Organization)
-            //    .Include(x => x.SignFile)
-            //    .Include(x => x.ReceivedFrom);
-
             var response = new JournalInstanceForCPARecordLookupResponse();
 
             var dtos = await query.ProjectToType<JournalInstanceForCPARecordDto>(_mapper.Config).ToListAsync();
@@ -78,14 +69,20 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 SerialCpi = request.SerialCPI,
                 InstanceNumber = request.InstanceNumber,
                 ReceivedFromId = request.ReceivedFromID,
+
                 DateAndNumberCoverLetterReceive = request.DateAndNumberCoverLetterReceive,
                 DateAndNumberCoverLetterSend = request.DateAndNumberCoverLetterSend,
+
                 DateAndNumberConfirmationSend = request.DateAndNumberConfirmationSend,
                 DateAndNumberCoverLetterReturn = request.DateAndNumberCoverLetterReturn,
+
+                
+
                 DateAndNumberConfirmationReturn = request.DateAndNumberConfirmationReturn,
-                CommissioningDate = request.CommissioningDate.ToDateTime().ToLocalTime(),
-                DecommissioningDate = request.DecommissioningDate.ToDateTime().ToLocalTime(),
-                DestructionDate = request.DestructionDate.ToDateTime().ToLocalTime(),
+
+                CommissioningDate = request.CommissioningDate?.ToDateTime().ToLocalTime(),
+                DecommissioningDate = request.DecommissioningDate?.ToDateTime().ToLocalTime(),
+                DestructionDate = request.DestructionDate?.ToDateTime().ToLocalTime(),
                 DestructionActNumber = request.DestructionActNumber,
                 Note = request.Note
             };
@@ -94,8 +91,10 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             await _ctx.SaveChangesAsync();
 
+            var dto = entity.Adapt(new JournalInstanceForCPARecordDto(), _mapper.Config);
+
             var response = new JournalInstanceForCPARecordLookupResponse();
-            response.Data.Add(entity.Adapt<JournalInstanceForCPARecordDto>());
+            response.Data.Add(dto);
 
             return response;
         }
@@ -128,9 +127,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             entity.DateAndNumberConfirmationSend = request.DateAndNumberConfirmationSend;
             entity.DateAndNumberCoverLetterReturn = request.DateAndNumberCoverLetterReturn;
             entity.DateAndNumberConfirmationReturn = request.DateAndNumberConfirmationReturn;
-            entity.CommissioningDate = request.CommissioningDate.ToDateTime().ToLocalTime();
-            entity.DecommissioningDate = request.DecommissioningDate.ToDateTime().ToLocalTime();
-            entity.DestructionDate = request.DestructionDate.ToDateTime().ToLocalTime();
+            entity.CommissioningDate = request.CommissioningDate?.ToDateTime().ToLocalTime();
+            entity.DecommissioningDate = request.DecommissioningDate?.ToDateTime().ToLocalTime();
+            entity.DestructionDate = request.DestructionDate?.ToDateTime().ToLocalTime();
             entity.DestructionActNumber = request.DestructionActNumber;
             entity.Note = request.Note;
 
@@ -149,7 +148,13 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 throw new ArgumentNullException(nameof(request.JournalInstanceForCPARecordID));
             }
 
-            var entity = await _ctx.JournalInstanceForCparecords.SingleAsync(x => x.JournalInstanceForCparecordId == request.JournalInstanceForCPARecordID);
+            var entity = await _ctx.JournalInstanceForCparecords.FirstOrDefaultAsync(x => x.JournalInstanceForCparecordId == request.JournalInstanceForCPARecordID);
+
+            if(entity == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, request.JournalInstanceForCPARecordID.ToString()!
+                ));
+            }
 
             _ctx.JournalInstanceForCparecords.Remove(entity);
 

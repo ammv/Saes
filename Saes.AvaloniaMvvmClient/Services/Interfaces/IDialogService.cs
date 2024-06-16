@@ -15,6 +15,7 @@ namespace Saes.AvaloniaMvvmClient.Services.Interfaces
 
         //    var result = await dialog.ShowDialog<UserDto?>(WindowManager.Windows.Last());
 
-        public void ShowDialog(ViewModelBase viewModel);
+        public Task ShowDialog(ViewModelBase viewModel);
+        public Task ShowDialog(ViewModelCloseableBase viewModel);
     }
 }

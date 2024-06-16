@@ -115,7 +115,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
                 await MessageBoxHelper.Question("Вопрос", $"{f.Login} - Вы довольны результатом?");
             }, SelectedEntity);
 
-            _dialogService.ShowDialog(vm);
+            await _dialogService.ShowDialog(vm);
 
             return;
         }

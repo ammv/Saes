@@ -1426,7 +1426,7 @@ CREATE TABLE [AccountingCPI].[JournalInstanceForCIHConnectedHardware]
 	CONSTRAINT UQ_RecordCPIForCIH_RecordID_HardwareID UNIQUE([RecordID], [HardwareID])
 )
 
-INSERT INTO [AccountingCPI].[JournalInstanceForCIHInstaller] VALUES
+INSERT INTO [AccountingCPI].[JournalInstanceForCIHConnectedHardware] VALUES
 (2, 1)
 
 -- Название: Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ,

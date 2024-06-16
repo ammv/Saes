@@ -178,7 +178,8 @@
     </Style>
 
 
-    <Style Selector="DatePicker.primary">
+
+    <Style Selector="DatePicker">
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="BorderThickness" Value="1.5" />
     </Style>
