@@ -40,9 +40,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new ErrorLogLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.ErrorLogDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<Proto.ErrorLogDto>(_mapper.Config)));
 
             return response;
         }

@@ -42,9 +42,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new TableDataLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.TableDataDto>(_mapper.Config).ToListAsync();
-
-            response.Data.AddRange(dtos);
+            var entities = await query.ToListAsync();
+			
+			response.Data.AddRange(entities.Select( x => x.Adapt<TableDataDto>(_mapper.Config)));
 
             return response;
         }

@@ -1,7 +1,11 @@
-﻿using Avalonia.Reactive;
+﻿using Avalonia.Controls;
+using Avalonia.Reactive;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using Saes.AvaloniaMvvmClient.Helpers;
+using Saes.AvaloniaMvvmClient.Services.Impementations;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
 using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
@@ -13,50 +17,22 @@ namespace Saes.AvaloniaMvvmClient.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    private readonly ISessionKeyService _sessionKeyService;
+    private readonly AuthenticationMainViewModel _authenticationMainViewModel;
+    private readonly IServiceProvider _serviceProvider;
+    
+    public static Func<Window, bool> Selector = (x) => x.DataContext.GetType() == typeof(MainViewModel);
 
     public INavigationService NavigationService { get; }
 
-    public MainViewModel(AuthenticationMainViewModel authenticationMainViewModel, INavigationService navigationService, ISessionKeyService sessionKeyService, IGrpcChannelFactory grpcChannelFactory, IUserService userService)
+    public MainViewModel(INavigationService navigationService, IServiceProvider serviceProvider)
     {
         NavigationService = navigationService;
-#if !DEBUG
-        if (sessionKeyService.GetSessionKey() == null)
-        {
-            NavigationService.NavigateTo(authenticationMainViewModel);
-            return;
-        }
+        _serviceProvider = serviceProvider;
+    }
 
-        try
-        {
-            userService.LoadRights();
-
-            var authService = new Protos.Auth.Authentication.AuthenticationClient(grpcChannelFactory.CreateChannel());
-
-            var request = new ValidateSessionKeyRequest { SessionKey = sessionKeyService.GetSessionKey() };
-
-            var response = authService.ValidateSessionKey(request);
-
-            if(response.Result)
-            {
-                NavigationService.NavigateTo(App.ServiceProvider.GetService<MainMenuViewModel>());
-            }
-            else
-            {
-                NavigationService.NavigateTo(authenticationMainViewModel);
-            }
-
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-        
-        
-#else
-        NavigationService.NavigateTo(App.ServiceProvider.GetService<MainMenuViewModel>());
-#endif
+    public async void Loaded()
+    {
+        NavigationService.NavigateTo(_serviceProvider.GetService<LoadingViewModel>());
     }
 
 }

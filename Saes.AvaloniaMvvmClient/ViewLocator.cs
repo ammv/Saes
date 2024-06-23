@@ -65,16 +65,16 @@ namespace Saes.AvaloniaMvvmClient
                 if (child is Control control)
                 {
                     var propValue = control.GetValue(RightBehav.RightCodeProperty);
-                    if (propValue != AvaloniaProperty.UnsetValue && !string.IsNullOrEmpty(propValue))
+                    if (!string.IsNullOrEmpty(propValue))
                     {
-                        if(!rights.Contains(propValue))
+                        if (!rights.Contains(propValue))
                         {
                             await Dispatcher.UIThread.InvokeAsync(() =>
                             {
                                 control.IsVisible = false;
                             });
                         }
-                        
+
                     }
                 }
 

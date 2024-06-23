@@ -35,9 +35,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new KeyHolderTypeLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.KeyHolderTypeDto>(_mapper.Config).ToListAsync();
-
-            response.Data.AddRange(dtos);
+            var entities = await query.ToListAsync();
+			
+			response.Data.AddRange(entities.Select( x => x.Adapt<KeyHolderTypeDto>(_mapper.Config)));
 
             return response;
         }

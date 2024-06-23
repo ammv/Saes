@@ -9,11 +9,7 @@ namespace Saes.AvaloniaMvvmClient.Views.ElectricitySigns.KeyDocumentType
         {
             InitializeComponent();
             WindowManager.Add(this);
-        }
-
-        ~KeyDocumentTypeFormView()
-        {
-            WindowManager.Remove(this);
+            Closed += (s, e) => WindowManager.Remove(this);
         }
     }
 }

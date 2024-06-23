@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
@@ -25,18 +26,25 @@
                 Orientation="Horizontal"
                 Spacing="16">
 
-                <!--<StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            Classes="TextField">
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="№ п/п" />
-                    <TextBox Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="Название" />
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="№ п/п" />
+                    <TextBox Text="{Binding Lookup.UserRoleId, Mode=TwoWay}" />
+
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="Название" />
                     <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
-                </StackPanel>-->
+                </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
@@ -52,6 +60,13 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="right_group_add"
+                    Classes="secondary"
+                    Command="{Binding AddCommand}"
+                    Content="Добавить" />
+                <Button
+                    VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="right_group_export"
                     Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
@@ -83,6 +98,29 @@
                         <MenuItem Command="{Binding SeeCommand}" Header="Посмотреть">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource eye_show_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem
+                            atp:RightBehav.RightCode="user_role_edit"
+                            Command="{Binding EditCommand}"
+                            Header="Изменить">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource edit_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding AddCommand}"
+                            Header="Добавить">
+                            <MenuItem.Icon>
+                                <PathIcon atp:RightBehav.RightCode="user_role_add" Data="{StaticResource add_regular}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem
+                            atp:RightBehav.RightCode="user_role_delete"
+                            Command="{Binding DeleteCommand}"
+                            Header="Удалить">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource delete_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
                     </ContextMenu>

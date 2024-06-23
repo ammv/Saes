@@ -13,7 +13,7 @@ package userSession;
 
 service UserSessionService {
     rpc Search (UserSessionLookup) returns (UserSessionLookupResponse);
-    rpc GetUserByCurrentSession (google.protobuf.Empty) returns (GetUserByCurrentSessionResponse);
+    rpc GetUserByCurrentSession (GetUserByCurrentSessionRequest) returns (GetUserByCurrentSessionResponse);
 }
 
 message UserSessionLookup
@@ -39,4 +39,8 @@ message GetUserByCurrentSessionResponse
 message UserSessionLookupResponse
 {
     repeated models.UserSessionDto data = 1;
+}
+
+message GetUserByCurrentSessionRequest
+{
 }

@@ -9,11 +9,7 @@ namespace Saes.AvaloniaMvvmClient.Views.ElectricitySigns.KeyHolderType
         {
             InitializeComponent();
             WindowManager.Add(this);
-        }
-
-        ~KeyHolderTypeFormView()
-        {
-            WindowManager.Remove(this);
+            Closed += (s, e) => WindowManager.Remove(this);
         }
     }
 }

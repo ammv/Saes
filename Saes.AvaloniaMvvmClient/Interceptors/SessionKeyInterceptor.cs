@@ -1,9 +1,11 @@
-﻿using Grpc.Core;
+﻿using DynamicData;
+using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microsoft.Extensions.DependencyInjection;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
+using Saes.Protos;
 using Saes.Protos.Auth;
 using System;
 using System.Collections.Generic;
@@ -16,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.Interceptors
 {
-    public class SessionKeyInterceptor: Interceptor
+    public class SessionKeyInterceptor : Interceptor
     {
         private readonly ISessionKeyService _sessionKeyService;
         private readonly IDialogService _dialogService;
@@ -25,7 +27,10 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
 
         static SessionKeyInterceptor()
         {
-            _notInterceptableRequestTypes = ImmutableHashSet.Create(typeof(FirstFactorAuthenticateRequest), typeof(SecondFactorAuthenticateRequest));
+            _notInterceptableRequestTypes = ImmutableHashSet.Create(
+                typeof(FirstFactorAuthenticateRequest),
+                typeof(SecondFactorAuthenticateRequest),
+                typeof(HelloRequest));
         }
 
         public SessionKeyInterceptor(ISessionKeyService sessionKeyService, IDialogService dialogService, INavigationService navigationService)
@@ -36,7 +41,7 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
         }
 
         private ClientInterceptorContext<TRequest, TResponse> CreateContextWithSessionKey<TRequest, TResponse>(ClientInterceptorContext<TRequest, TResponse> context)
-            where TRequest: class
+            where TRequest : class
             where TResponse : class
         {
             var headers = new Metadata
@@ -54,16 +59,25 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
             return context;
         }
 
+        public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation)
+        {
+            if (!_notInterceptableRequestTypes.Contains(typeof(TRequest)))
+            {
+                context = CreateContextWithSessionKey(context);
+            }
+
+            return base.BlockingUnaryCall(request, context, continuation);
+        }
+
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
             TRequest request,
             ClientInterceptorContext<TRequest, TResponse> context,
             AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-            if(!_notInterceptableRequestTypes.Contains(typeof(TRequest)))
+            if (!_notInterceptableRequestTypes.Contains(typeof(TRequest)))
             {
                 context = CreateContextWithSessionKey(context);
             }
-
 
             var call = continuation(request, context);
 
@@ -104,14 +118,12 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
                 }
                 else
                 {
-                    throw new InvalidOperationException("Custom error", ex);
+                    throw;
                 }
-                
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new InvalidOperationException("Custom error", ex);
+                throw;
             }
         }
     }

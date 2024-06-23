@@ -37,11 +37,10 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
 
         protected override async Task OnAddCommand()
         {
+            
             var vm = App.ServiceProvider.GetService<KeyHolderFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.Add, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.Add, null, SelectedEntity);
 
             await _dialogService.ShowDialog(vm);
         }
@@ -88,9 +87,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
 
             var vm = App.ServiceProvider.GetService<KeyHolderFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.Edit, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.Edit, null, SelectedEntity);
 
             await _dialogService.ShowDialog(vm);
         }
@@ -100,11 +97,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
 
         protected override async Task OnSeeCommand()
         {
+            if (SelectedEntity == null) return;
+
             var vm = App.ServiceProvider.GetService<KeyHolderFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.See, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.SerialNumber} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.See, null, SelectedEntity);
 
             await _dialogService.ShowDialog(vm);
         }

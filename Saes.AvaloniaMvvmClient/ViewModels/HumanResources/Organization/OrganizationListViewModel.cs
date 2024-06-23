@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Core.Attributes;
@@ -18,46 +19,63 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Organization
     [RightScope("organization_see")]
     public class OrganizationListViewModel : ViewModelTabListBase<OrganizationDto, OrganizationLookup>
     {
+        private readonly IDialogService _dialogService;
         private CallInvoker _grpcChannel;
 
-        public OrganizationListViewModel(IGrpcChannelFactory grpcChannelFactory)
+        public OrganizationListViewModel(IGrpcChannelFactory grpcChannelFactory, IDialogService dialogService)
         {
             TabTitle = "Организации";
             _grpcChannel = grpcChannelFactory.CreateChannel();
+
+            _dialogService = dialogService;
         }
         public override async Task<bool> CloseAsync()
         {
             return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
         }
 
-        protected override Task OnAddCommand()
+        protected override async Task OnAddCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<OrganizationFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Add, null, new OrganizationDto());
+
+            await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task OnCopyCommand()
+        protected override async Task OnCopyCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnDeleteCommand()
+        protected override async Task OnDeleteCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnEditCommand()
+        protected override async Task OnEditCommand()
         {
-            throw new NotImplementedException();
+            if (SelectedEntity == null) return;
+            var vm = App.ServiceProvider.GetService<OrganizationFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Edit, null, SelectedEntity);
+
+            await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task OnSeeCommand()
+        protected override async Task OnSeeCommand()
         {
-            throw new NotImplementedException();
+            if (SelectedEntity == null) return;
+            var vm = App.ServiceProvider.GetService<OrganizationFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.See, null, SelectedEntity);
+
+            await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task _Export()
+        protected override async Task _Export()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
         protected override async Task _Loaded()

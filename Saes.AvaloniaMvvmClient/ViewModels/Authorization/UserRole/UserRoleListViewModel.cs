@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Core.Attributes;
@@ -18,21 +19,27 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
     [RightScope("user_role_see")]
     public class UserRoleListViewModel : ViewModelTabListBase<UserRoleDto, UserRoleLookup>
     {
+        private readonly IDialogService _dialogService;
         private CallInvoker _grpcChannel;
 
-        public UserRoleListViewModel(IGrpcChannelFactory grpcChannelFactory)
+        public UserRoleListViewModel(IGrpcChannelFactory grpcChannelFactory, IDialogService dialogService)
         {
             TabTitle = "Роли пользователей";
             _grpcChannel = grpcChannelFactory.CreateChannel();
+            _dialogService = dialogService;
         }
         public override async Task<bool> CloseAsync()
         {
             return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
         }
 
-        protected override Task OnAddCommand()
+        protected override async Task OnAddCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<UserRoleFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Add, null, new UserRoleDto());
+
+            await _dialogService.ShowDialog(vm);
         }
 
         protected override Task OnCopyCommand()
@@ -45,14 +52,24 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
             throw new NotImplementedException();
         }
 
-        protected override Task OnEditCommand()
+        protected override async Task OnEditCommand()
         {
-            throw new NotImplementedException();
+            if (SelectedEntity == null) return;
+            var vm = App.ServiceProvider.GetService<UserRoleFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Edit, null, SelectedEntity);
+
+            await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task OnSeeCommand()
+        protected override async Task OnSeeCommand()
         {
-            throw new NotImplementedException();
+            if (SelectedEntity == null) return;
+            var vm = App.ServiceProvider.GetService<UserRoleFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.See, null, SelectedEntity);
+
+            await _dialogService.ShowDialog(vm);
         }
 
         protected override Task _Export()
@@ -71,7 +88,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
 
             try
             {
-                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение записей"));
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение ролей"));
                 var response = await client.SearchAsync(Lookup);
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
                 Entities = new ObservableCollection<UserRoleDto>(response.Data);

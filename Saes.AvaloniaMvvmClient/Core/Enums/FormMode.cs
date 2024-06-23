@@ -8,8 +8,8 @@ namespace Saes.AvaloniaMvvmClient.Core.Enums
 {
     public enum FormMode
     {
-        See,
-        Add,
-        Edit
+        See = 0,
+        Add = 2,
+        Edit = 4
     }
 }

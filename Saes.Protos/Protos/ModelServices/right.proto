@@ -11,9 +11,6 @@ package right;
 
 service RightService {
     rpc Search (RightLookup) returns (RightLookupResponse);
-    rpc Add (RightDataRequest) returns (RightLookupResponse);
-    rpc Remove (RightLookup) returns (statuses.StatusResponse);
-    rpc Edit (RightDataRequest) returns (statuses.StatusResponse);
 }
 
 message RightLookup
@@ -21,14 +18,7 @@ message RightLookup
     google.protobuf.Int32Value rightId = 1;
     google.protobuf.StringValue name = 2;
     google.protobuf.StringValue code = 3;
-}
-
-// Add or Edit
-message RightDataRequest
-{
-    google.protobuf.Int32Value rightId = 1;
-    google.protobuf.StringValue name = 2;
-    google.protobuf.StringValue code = 3;
+    google.protobuf.Int32Value rightGroupId = 4;
 }
 
 // Comment

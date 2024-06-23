@@ -125,8 +125,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                     }),
                     new MenuItemViewModel("Человеческие ресурсы", "people_team_regular", new ObservableCollection<SubMenuItemViewModel>()
                     {
-                         new SubMenuItemViewModel("Типы бизнес-сущностей", "book_regular", typeof(BusinessEntityTypeListViewModel)),
-                         new SubMenuItemViewModel("Бизнес-сущности", "people_team_regular", typeof(BusinessEntityListViewModel)),
+                         //new SubMenuItemViewModel("Типы бизнес-сущностей", "book_regular", typeof(BusinessEntityTypeListViewModel)),
+                         //new SubMenuItemViewModel("Бизнес-сущности", "people_team_regular", typeof(BusinessEntityListViewModel)),
                          new SubMenuItemViewModel("Организации", "briefcase_regular", typeof(OrganizationListViewModel)),
                          new SubMenuItemViewModel("Контакты организаций", "call_regular", typeof(OrganizationContactListViewModel)),
                          new SubMenuItemViewModel("Должности сотрудников", "book_regular", typeof(EmployeePositionListViewModel)),
@@ -142,12 +142,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                          new SubMenuItemViewModel("Журнал технический (аппаратный) ", "notebook_regular", typeof(JournalTechnicalRecordListViewModel)),
                          new SubMenuItemViewModel("Журнал поэкземплярного учета СКЗИ для органа криптографической защиты", "notebook_regular", typeof(JournalInstanceForCPARecordListViewModel)),
                          new SubMenuItemViewModel("Журнал поэкземплярного учета СКЗИ, эксплуатационной и технической документации к ним, ключевых документов (для обладателя конфиденциальной информации) ", "notebook_regular", typeof(JournalInstanceForCIHRecordListViewModel)),
-                         new SubMenuItemViewModel("Субъекты журнала поэкземплярного учета СКЗИ для органа криптографической защиты которым была разослана информация", "people_community_regular", typeof(JournalInstanceCPAReceiverListViewModel)),
-                         new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших подключение (установку)",
-                         "people_community_regular", typeof(JournalInstanceForCIHInstallerListViewModel)
-                         ),
-                         new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших изъятие (уничтожение)", "people_community_regular", typeof(JournalInstanceForCIHDestructorListViewModel)),
-                         new SubMenuItemViewModel("Номера аппаратных средств, в которые установлены или к которым подключены СКЗИ", "notebook_regular", typeof(JournalInstanceForCIHConnectedHardwareListViewModel)),
+                         //new SubMenuItemViewModel("Субъекты журнала поэкземплярного учета СКЗИ для органа криптографической защиты которым была разослана информация", "people_community_regular", typeof(JournalInstanceCPAReceiverListViewModel)),
+                         //new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших подключение (установку)",
+                         //"people_community_regular", typeof(JournalInstanceForCIHInstallerListViewModel)
+                         //),
+                         //new SubMenuItemViewModel("Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших изъятие (уничтожение)", "people_community_regular", typeof(JournalInstanceForCIHDestructorListViewModel)),
+                         //new SubMenuItemViewModel("Номера аппаратных средств, в которые установлены или к которым подключены СКЗИ", "notebook_regular", typeof(JournalInstanceForCIHConnectedHardwareListViewModel)),
                          new SubMenuItemViewModel("Типы ключевых документов", "document_page_top_right_regular", typeof(KeyDocumentTypeListViewModel)),
                          new SubMenuItemViewModel("Типы ключевых носителей", "usb_stick_regular", typeof(KeyHolderTypeListViewModel)),
                          new SubMenuItemViewModel("Ключевые носители", "key_regular", typeof(KeyHolderListViewModel)),
@@ -164,9 +164,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
                     }),
                 }
             );
-#if !DEBUG
+
             ConfigureMenuRights();
-#endif
 
             Menu.SideMenuItemClicked += Menu_MenuButtonClicked;
 

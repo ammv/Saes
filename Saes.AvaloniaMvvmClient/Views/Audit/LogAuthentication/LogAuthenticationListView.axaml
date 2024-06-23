@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
@@ -54,6 +55,7 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="log_auth_export"
                     Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />

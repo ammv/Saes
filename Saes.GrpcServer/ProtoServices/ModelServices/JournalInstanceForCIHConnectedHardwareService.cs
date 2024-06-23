@@ -31,11 +31,14 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             query = request.JournalInstanceForCIHConnectedHardwareID != null ? query.Where(x => x.JournalInstanceForCihconnectedHardwareId == request.JournalInstanceForCIHConnectedHardwareID) : query;
             query = request.RecordID != null ? query.Where(x => x.RecordId == request.RecordID) : query;
 
+            query = query
+                .Include(x => x.Hardware);
+
             var response = new JournalInstanceForCIHConnectedHardwareLookupResponse();
 
-            var dtos = await query.ProjectToType<JournalInstanceForCIHConnectedHardwareDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<JournalInstanceForCIHConnectedHardwareDto>(_mapper.Config)));
 
             return response;
         }

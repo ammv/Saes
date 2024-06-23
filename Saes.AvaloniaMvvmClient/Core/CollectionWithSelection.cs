@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using DynamicData;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.Generic;
@@ -21,15 +22,20 @@ namespace Saes.AvaloniaMvvmClient.Core
 
 
         [Reactive]
-        public ICollection<T> Items {get; set;}
+        public ObservableCollection<T> Items { get; set; }
 
         public CollectionWithSelection(ICollection<T> items = null, T selected = default)
         {
 
-            Items = items ?? new ObservableCollection<T>();
+            Items = new ObservableCollection<T>();
+            if (items != null)
+            {
+
+                Items.AddRange(items);
+            }
             Selected = selected;
 
-            ClearSelectedCommand = ReactiveCommand.Create(() => { Selected = default; SelectedIndex = -1; });
+            //ClearSelectedCommand = ReactiveCommand.Create(() => { Selected = default; SelectedIndex = -1; });
         }
 
         public CollectionWithSelection<T> Clone()

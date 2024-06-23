@@ -34,11 +34,93 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new EmployeePositionLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.EmployeePositionDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<EmployeePositionDto>(_mapper.Config)));
 
             return response;
+        }
+
+        public override async Task<EmployeePositionLookupResponse> Add(EmployeePositionDataRequest request, ServerCallContext context)
+        {
+            if(string.IsNullOrEmpty(request.Name))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Empty name of employee position"));
+            }
+
+            var empPos = await _ctx.EmployeePositions.FirstOrDefaultAsync(x => x.Name == request.Name);
+
+            if(empPos != null)
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, request.Name));
+            }
+
+            var entity = new EmployeePosition
+            {
+                Name = request.Name
+            };
+
+            entity = (await _ctx.EmployeePositions.AddAsync(entity)).Entity;
+
+            await _ctx.SaveChangesAsync();
+
+            var response = new EmployeePositionLookupResponse();
+            response.Data.Add(entity.Adapt<EmployeePositionDto>(_mapper.Config));
+
+            return response;
+        }
+
+        public override async Task<StatusResponse> Edit(EmployeePositionDataRequest request, ServerCallContext context)
+        {
+            if (string.IsNullOrEmpty(request.Name))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument,$"{nameof(request.Name)} was null or empty"));
+            }
+
+            if (!request.EmployeePositionID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"{nameof(request.EmployeePositionID)} was null"));
+            }
+
+            var entity = await _ctx.EmployeePositions.FirstOrDefaultAsync(x => x.EmployeePositionId == request.EmployeePositionID);
+
+            if (entity == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"{request.EmployeePositionID}"));
+            }
+
+            if(await _ctx.EmployeePositions.AnyAsync(x => x.EmployeePositionId != request.EmployeePositionID && x.Name == request.Name))
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, $"{request.Name}"));
+            }
+
+            entity.Name = request.Name;
+            entity.Note = request.Note;
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
+        }
+
+        public override async Task<StatusResponse> Remove(EmployeePositionLookup request, ServerCallContext context)
+        {
+            if (!request.EmployeePositionID.HasValue)
+            {
+                throw new ArgumentNullException(nameof(request.EmployeePositionID));
+            }
+
+            var entity = await _ctx.EmployeePositions.FirstOrDefaultAsync(x => x.EmployeePositionId == request.EmployeePositionID);
+
+            if(entity == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"{request.EmployeePositionID}"));
+            }
+
+            _ctx.EmployeePositions.Remove(entity);
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
         }
     }
 }

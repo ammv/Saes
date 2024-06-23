@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
@@ -57,11 +58,13 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="orgnanization_contact_add"
                     Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="orgnanization_contact_export"
                     Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
@@ -81,12 +84,12 @@
                 CanUserReorderColumns="True"
                 CanUserResizeColumns="True"
                 CanUserSortColumns="False"
+                ColumnWidth="200"
                 GridLinesVisibility="All"
                 HorizontalScrollBarVisibility="Auto"
                 IsReadOnly="True"
                 IsVisible="{Binding !TabIsLoading}"
                 ItemsSource="{Binding Entities}"
-                ColumnWidth="200"
                 SelectedItem="{Binding SelectedEntity}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -102,8 +105,7 @@
                         </MenuItem>
                         <MenuItem
                             Command="{Binding AddCommand}"
-                            Header="Добавить"
-                            IsEnabled="False">
+                            Header="Добавить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource add_regular}" />
                             </MenuItem.Icon>

@@ -30,33 +30,27 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             query = query.Where(x => x.SysIsDeleted == false);
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.RightID != null ? query.Where(x => x.RightId == request.RightID) : query;
+            if(request.RightId != null)
+            {
+                query = query.Where(x => x.RightId == request.RightId);
+                goto EndFilters;
+            }
 
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            query = request.Code != null ? query.Where(x => x.Code.Contains(request.Code)) : query;
+            query = request.RightGroupId != null ? query.Where(x => x.RightGroupId == request.RightGroupId) : query;
+            query = request.Name != null ? query.Where(x => x.Name.Contains(request.Name)) : query;
+
+            EndFilters:
+
+            query = query.Include(x => x.RightGroup);
 
             var response = new RightLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.RightDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<RightDto>(_mapper.Config)));
 
             return response;
-        }
-
-        public override async Task<RightLookupResponse> Add(RightDataRequest request, ServerCallContext context)
-        {
-            return await base.Add(request, context);
-        }
-
-        public override async Task<StatusResponse> Edit(RightDataRequest request, ServerCallContext context)
-        {
-            return await base.Edit(request, context);
         }
     }
 }

@@ -28,21 +28,29 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var query = _ctx.LogAuthentications.AsQueryable();
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.LogAuthenticationID != null ? query.Where(x => x.LogAuthenticationId == request.LogAuthenticationID) : query;
+            if (request.LogAuthenticationID != null)
+            {
+                query = query.Where(x => x.LogAuthenticationId == request.LogAuthenticationID);
+                goto EndFilters;
+            }
 
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            query = request.AuthServiceResponse != null ? query.Where(x => x.AuthServiceResponse.Contains(request.AuthServiceResponse)) : query;
+            query = request.EnteredLogin != null ? query.Where(x => x.EnteredLogin.Contains(request.EnteredLogin)) : query;
+            query = request.IP != null ? query.Where(x => x.Ip.Contains(request.IP)) : query;
+            query = request.MAC != null ? query.Where(x => x.Mac.Contains(request.MAC)) : query;
+            query = request.MashineUserName != null ? query.Where(x => x.MashineUserName.Contains(request.MashineUserName)) : query;
+            query = request.FirstFactorResult != null ? query.Where(x => x.FirstFactorResult == x.FirstFactorResult) : query;
+            query = request.SecondFactorResult != null ? query.Where(x => x.SecondFactorResult == x.SecondFactorResult) : query;
+            query = request.DateStart != null ? query.Where(x => x.Date >= request.DateStart.ToDateTime().ToLocalTime()) : query;
+            query = request.DateEnd != null ? query.Where(x => x.Date <= request.DateEnd.ToDateTime().ToLocalTime()) : query;
+
+            EndFilters:
 
             var response = new LogAuthenticationLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.LogAuthenticationDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<LogAuthenticationDto>(_mapper.Config)));
 
             return response;
         }

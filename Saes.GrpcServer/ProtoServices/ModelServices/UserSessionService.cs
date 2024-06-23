@@ -43,14 +43,14 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new UserSessionLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.UserSessionDto>(_mapper.Config).ToListAsync();
-
-            response.Data.AddRange(dtos);
+            var entities = await query.ToListAsync();
+			
+			response.Data.AddRange(entities.Select( x => x.Adapt<UserSessionDto>(_mapper.Config)));
 
             return response;
         }
 
-        public override async Task<GetUserByCurrentSessionResponse> GetUserByCurrentSession(Empty request, ServerCallContext context)
+        public override async Task<GetUserByCurrentSessionResponse> GetUserByCurrentSession(GetUserByCurrentSessionRequest request, ServerCallContext context)
         {
             string? sessionKey = context.RequestHeaders.GetValue("SessionKey");
             UserSession userSession = await _ctx.UserSessions.Include(x => x.User).SingleAsync(x => x.SessionKey == sessionKey);

@@ -318,7 +318,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             }
 
             MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
-
         }
 
         private async Task OrganizationCollectionLoad()
@@ -357,11 +356,8 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             catch (Exception ex)
             {
                 MessageBus.Current.SendMessage(StatusData.Error(ex));
-#if DEBUG
-                await MessageBoxHelper.Exception("Ошибка", ex.Message);
-#else
-                 await MessageBoxHelper.Exception("Ошибка", "Во время добавления произошла неизвестная ошибка");
-#endif
+
+                await MessageBoxHelper.Exception("Ошибка", $"Во время добавления произошла неизвестная ошибка: {ex.Message}");
             }
         }
 
@@ -420,11 +416,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await MessageBoxHelper.Exception("Ошибка", ex.Message);
-#else
-                 await MessageBoxHelper.Exception("Ошибка", "Во время изменения произошла неизвестная ошибка");
-#endif
+                await MessageBoxHelper.Exception("Ошибка", $"Во время изменения произошла неизвестная ошибка: {ex.Message}");
             }
         }
 

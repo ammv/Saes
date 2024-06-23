@@ -9,13 +9,9 @@ namespace Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalInstanceForCPARe
         {
             InitializeComponent();
             WindowManager.Add(this);
+            Closed += (s, e) => WindowManager.Remove(this);
 
-            
-        }
 
-        ~JournalInstanceForCPARecordFormView()
-        {
-            WindowManager.Remove(this);
         }
     }
 }

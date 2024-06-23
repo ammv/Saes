@@ -37,14 +37,15 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
             query = request.OrganizationID != null ? query.Where(x => x.OrganizationId == request.OrganizationID) : query;
 
-            query = query.Include(x => x.BusinessAddress)
+            query = query
+                .Include(x => x.BusinessAddress)
                 .Include(x => x.BusinessEntity);
 
             var response = new OrganizationLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.OrganizationDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<OrganizationDto>(_mapper.Config)));
 
             return response;
         }
@@ -54,9 +55,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             if (request.IsOwnerJournalAccountingCPI == null)
                 throw new ArgumentNullException(nameof(request.IsOwnerJournalAccountingCPI));
 
-            BusinessEntityType businessEntityType = _ctx.BusinessEntityTypes.FirstOrDefault(x => x.Name == "Организация");
+            BusinessEntityType businessEntityType = await _ctx.BusinessEntityTypes.SingleAsync(x => x.Name == "Организация");
 
-            BusinessEntity businessEntity = new BusinessEntity { BusinessEntityType = businessEntityType };
+            BusinessEntity businessEntity = _ctx.BusinessEntities.Add(new BusinessEntity { BusinessEntityType = businessEntityType }).Entity;
 
             Organization organization = new Organization
             {
@@ -68,9 +69,10 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 DirectorFullName = request.DirectorFullName,
                 Inn = request.INN,
                 Ogrn = request.OGRN,
-                DateOfAssignmentOgrn = request.DateOfAssignmentOGRN.ToDateTime().ToLocalTime(),
+                DateOfAssignmentOgrn = request.DateOfAssignmentOGRN?.ToDateTime().ToLocalTime(),
                 Kpp = request.KPP,
-                BusinessEntity = businessEntity
+                BusinessEntity = businessEntity,
+                IsOwnerJournalAccountingCpi = request.IsOwnerJournalAccountingCPI.Value
             };
 
             organization = _ctx.Organizations.Add(organization).Entity;
@@ -101,15 +103,16 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 throw new RpcException(new Status(StatusCode.NotFound, "Organization not found"));
             }
 
-            organization.Okpo = request.OKPO ?? organization.Okpo;
-            organization.Okved = request.OKVED ?? organization.Okved;
-            organization.FullName = request.FullName ?? organization.FullName;
-            organization.ShortName = request.ShortName ?? organization.ShortName;
-            organization.DirectorFullName = request.DirectorFullName ?? organization.DirectorFullName;
-            organization.Inn = request.INN ?? organization.Inn;
-            organization.Ogrn = request.OGRN ?? organization.Ogrn;
-            organization.DateOfAssignmentOgrn = request.DateOfAssignmentOGRN?.ToDateTime().ToLocalTime() ?? organization.DateOfAssignmentOgrn;
-            organization.Kpp = request.KPP ?? organization.Kpp;
+            organization.Okpo = request.OKPO;
+            organization.Okved = request.OKVED;
+            organization.FullName = request.FullName;
+            organization.ShortName = request.ShortName;
+            organization.DirectorFullName = request.DirectorFullName;
+            organization.Inn = request.INN;
+            organization.Ogrn = request.OGRN;
+            organization.DateOfAssignmentOgrn = request.DateOfAssignmentOGRN?.ToDateTime().ToLocalTime();
+            organization.Kpp = request.KPP;
+            organization.IsOwnerJournalAccountingCpi = request.IsOwnerJournalAccountingCPI.Value;
 
             _ctx.Organizations.Update(organization);
 
@@ -121,6 +124,27 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             };
 
             return response;
+        }
+
+        public override async Task<StatusResponse> Remove(OrganizationLookup request, ServerCallContext context)
+        {
+            if (!request.OrganizationID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"{nameof(request.OrganizationID)} was null or empty"));
+            }
+
+            var entity = await _ctx.Organizations.FirstOrDefaultAsync(x => x.OrganizationId == request.OrganizationID);
+
+            if (entity == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"{request.OrganizationID}"));
+            }
+
+            _ctx.Organizations.Remove(entity);
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
         }
     }
 }

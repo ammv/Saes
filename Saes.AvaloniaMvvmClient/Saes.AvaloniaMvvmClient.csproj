@@ -65,6 +65,7 @@
     <PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Notification.Avalonia" Version="2.1.0" />
+    <PackageReference Include="QRCoder" Version="1.5.1" />
     <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
   </ItemGroup>
 
@@ -119,6 +120,9 @@
     <Compile Update="Views\Authorization\UserRoleRight\UserRoleRightListView.axaml.cs">
       <DependentUpon>UserRoleRightListView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Authorization\UserRole\UserRoleFormView.axaml.cs">
+      <DependentUpon>UserRoleFormView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Authorization\UserRole\UserRoleListView.axaml.cs">
       <DependentUpon>UserRoleListView.axaml</DependentUpon>
     </Compile>
@@ -148,6 +152,9 @@
     </Compile>
     <Compile Update="Views\ElectricitySigns\JournalInstanceForCPARecord\JournalInstanceForCPARecordFormView.axaml.cs">
       <DependentUpon>JournalInstanceForCPARecordFormView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElectricitySigns\JournalTechnicalRecord\JournalTechnicalRecordFormView.axaml.cs">
+      <DependentUpon>JournalTechnicalRecordFormView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\ElectricitySigns\JournalTechnicalRecord\JournalTechnicalRecordListView.axaml.cs">
       <DependentUpon>JournalTechnicalRecordListView.axaml</DependentUpon>
@@ -180,11 +187,20 @@
     <Compile Update="Views\HumanResources\EmployeePosition\EmployeePositionListView.axaml.cs">
       <DependentUpon>EmployeePositionListView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\HumanResources\EmployeePosition\EmployeePositionFormView.axaml.cs">
+      <DependentUpon>EmployeePositionFormView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\HumanResources\Employee\EmployeeListView.axaml.cs">
       <DependentUpon>EmployeeListView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\HumanResources\Employee\EmployeeFormView.axaml.cs">
+      <DependentUpon>EmployeeFormView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\HumanResources\OrganizationContact\OrganizationContactListView.axaml.cs">
       <DependentUpon>OrganizationContactListView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HumanResources\Organization\OrganizationFormView.axaml.cs">
+      <DependentUpon>OrganizationFormView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\HumanResources\Organization\OrganizationListView.axaml.cs">
       <DependentUpon>OrganizationListView.axaml</DependentUpon>

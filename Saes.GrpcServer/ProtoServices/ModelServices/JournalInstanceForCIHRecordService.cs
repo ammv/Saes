@@ -30,14 +30,16 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             query = query
                 .Include(x => x.Organization)
+                .ThenInclude(o => o.BusinessEntity)
+                .ThenInclude(o => o.BusinessEntityType)
                 .Include(x => x.SignFile)
                 .Include(x => x.ReceivedFrom);
 
             var response = new JournalInstanceForCIHRecordLookupResponse();
 
-            var dtos = await query.ProjectToType<JournalInstanceForCIHRecordDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<JournalInstanceForCIHRecordDto>(_mapper.Config)));
 
             return response;
         }

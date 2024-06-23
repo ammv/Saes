@@ -22,8 +22,10 @@ message LogLookup
 	google.protobuf.Int32Value TableRowID = 3;
 	google.protobuf.StringValue Action = 4;
 	google.protobuf.Int32Value UserSessionID = 5;
-	google.protobuf.Timestamp Date = 6;
-	google.protobuf.StringValue GUID = 7;
+	google.protobuf.Timestamp DateStart = 6;
+	google.protobuf.Timestamp DateEnd = 7;
+	google.protobuf.StringValue GUID = 8;
+	google.protobuf.StringValue UserLogin = 9;
 }
 
 

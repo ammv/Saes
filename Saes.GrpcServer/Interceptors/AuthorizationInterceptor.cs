@@ -3,32 +3,43 @@ using Grpc.Core.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Saes.Models;
 using Saes.Models.Schemas;
+using Saes.Protos;
 using Saes.Protos.Auth;
+using Saes.Protos.ModelServices;
 using Auth = Saes.Protos.Auth;
 
 namespace Saes.GrpcServer.Interceptors
 {
-    public class AuthorizationInterceptor: Interceptor
+    public class AuthorizationInterceptor : Interceptor
     {
         private readonly ILogger _logger;
-        private readonly SaesContext _ctx;
+        private static SaesContext _ctx;
         private static readonly HashSet<Type> _nonInterceptableRequestTypes;
+
+        public static  SaesContext Context
+        {
+            set
+            {
+                _ctx = value;
+            }
+        }
 
         static AuthorizationInterceptor()
         {
             _nonInterceptableRequestTypes = new HashSet<Type> {
                 typeof(FirstFactorAuthenticateRequest),
                 typeof(SecondFactorAuthenticateRequest),
-                typeof(ValidateSessionKeyRequest)
+                typeof(ValidateSessionKeyRequest),
+                typeof(UserGetRightsRequest),
+                typeof(HelloRequest)
             };
+            _ctx = new SaesContext();
         }
 
-        public AuthorizationInterceptor(ILogger<AuthorizationInterceptor> logger, SaesContext ctx)
+        public AuthorizationInterceptor(ILogger<AuthorizationInterceptor> logger)
         {
             _logger = logger;
-            _ctx = ctx;
             _logger.LogInformation($"Context Id: {0}", _ctx.ContextId);
-
         }
 
         private void ValidateSessionAsync(Metadata.Entry? headerSessionKey)

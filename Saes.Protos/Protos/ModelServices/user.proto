@@ -15,7 +15,8 @@ service UserService {
     rpc Add (UserDataRequest) returns (UserLookupResponse);
     rpc Remove (UserLookup) returns (statuses.StatusResponse);
     rpc Edit (UserDataRequest) returns (statuses.StatusResponse);
-    rpc GetRights (UserLookup) returns (UserGetRightsResponse);
+    rpc GetRights (UserGetRightsRequest) returns (UserGetRightsResponse);
+    rpc UpdateTwoFactorToken (UserLookup) returns (UpdateTwoFactorTokenResponse);
 }
 
 message UserLookup
@@ -24,6 +25,16 @@ message UserLookup
     google.protobuf.StringValue login = 2;
     google.protobuf.Int32Value userRoleId = 3;
     google.protobuf.StringValue userRoleName = 4;
+    google.protobuf.BoolValue twoFactorEnabled = 5;
+}
+
+message UserGetRightsRequest
+{
+    google.protobuf.Int32Value userId = 1;
+    google.protobuf.StringValue login = 2;
+    google.protobuf.Int32Value userRoleId = 3;
+    google.protobuf.StringValue userRoleName = 4;
+    google.protobuf.BoolValue twoFactorEnabled = 5;
 }
 
 // Add or Edit
@@ -33,6 +44,7 @@ message UserDataRequest
     google.protobuf.StringValue login = 2;
     google.protobuf.Int32Value userRoleId = 3;
     google.protobuf.StringValue password = 4;
+    google.protobuf.BoolValue twoFactorEnabled = 5;
 }
 
 // Comment
@@ -44,4 +56,10 @@ message UserLookupResponse
 message UserGetRightsResponse
 {
     repeated string data = 1;
+}
+
+message UpdateTwoFactorTokenResponse
+{
+    string token = 1;
+    string UriToken = 2;
 }

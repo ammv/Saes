@@ -3,14 +3,14 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Employee"
-    Width="1440"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1440"
     x:DataType="vm:EmployeeListViewModel"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
@@ -23,6 +23,7 @@
         <Grid>
             <StackPanel
                 Margin=""
+                IsEnabled="{Binding !TabIsLoading}"
                 Orientation="Horizontal"
                 Spacing="16">
 
@@ -35,11 +36,21 @@
                         FontSize="14"
                         Text="№ п/п" />
                     <TextBox Classes="primary" Text="{Binding Lookup.EmployeeId, Mode=TwoWay}" />
-                    <TextBlock
+                </StackPanel>
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="ComboboxField">
+                    <TextBlock FontSize="14" Text="Организация" />
+                    <ComboBox
                         Width="200"
-                        FontSize="14"
-                        Text="Название" />
-                    <TextBox Classes="primary" Text="{Binding Lookup.FirstName, Mode=TwoWay}" />
+                        Classes="primary"
+                        DisplayMemberBinding="{Binding ShortName}"
+                        ItemsSource="{Binding OrganizationCollection.Items}"
+                        SelectedItem="{Binding OrganizationCollection.Selected}"
+                        SelectedValue="{Binding Lookup.OrganizationID}"
+                        SelectedValueBinding="{Binding BusinessEntityId}" />
                 </StackPanel>
 
                 <Button
@@ -47,6 +58,70 @@
                     Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    ToolTip.Tip="Фильтры">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_regular}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <WrapPanel Width="400" Classes="filter_panel">
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Фамилия" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.MiddleName, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Имя" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.FirstName, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Отчество" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.LastName, Mode=TwoWay}" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="ComboboxField">
+                                    <TextBlock FontSize="14" Text="Должность" />
+                                    <ComboBox
+                                        Width="300"
+                                        Classes="primary"
+                                        DisplayMemberBinding="{Binding Name}"
+                                        ItemsSource="{Binding EmployeePositionCollection.Items}"
+                                        SelectedItem="{Binding EmployeePositionCollection.Selected}"
+                                        SelectedValue="{Binding Lookup.EmployeePositionID}"
+                                        SelectedValueBinding="{Binding EmployeePositionId}" />
+                                </StackPanel>
+
+                            </WrapPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ClearCommand}">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_dismiss_regular}" />
+                    </Button.Content>
+                </Button>
             </StackPanel>
 
             <StackPanel
@@ -56,11 +131,13 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="employee_add"
                     Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="employee_export"
                     Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
@@ -94,20 +171,26 @@
                                 <PathIcon Data="{StaticResource eye_show_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding EditCommand}" Header="Изменить">
+                        <MenuItem
+                            atp:RightBehav.RightCode="employee_edit"
+                            Command="{Binding EditCommand}"
+                            Header="Изменить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource edit_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem
+                            atp:RightBehav.RightCode="employee_add"
                             Command="{Binding AddCommand}"
-                            Header="Добавить"
-                            IsEnabled="False">
+                            Header="Добавить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource add_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding DeleteCommand}" Header="Удалить">
+                        <MenuItem
+                            atp:RightBehav.RightCode="employee_delete"
+                            Command="{Binding DeleteCommand}"
+                            Header="Удалить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource delete_regular}" />
                             </MenuItem.Icon>

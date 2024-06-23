@@ -28,21 +28,34 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var query = _ctx.Logs.AsQueryable();
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.LogID != null ? query.Where(x => x.LogId == request.LogID) : query;
+            query = request.LogID != null ? query.Where(x => x.LogId == request.LogID) : query;
+            if(request.LogID != null)
+            {
+                query = query.Where(x => x.LogId == request.LogID);
+                goto EndFilters;
+            }
 
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            query = request.Action != null ? query.Where(x => x.Action == request.Action) : query;
+            query = request.GUID != null ? query.Where(x => x.Guid.ToString() == request.GUID) : query;
+            query = request.TableDataID != null ? query.Where(x => x.TableDataId == request.TableDataID) : query;
+            query = request.TableRowID != null ? query.Where(x => x.TableRowId == request.TableRowID) : query;
+            query = request.DateStart != null ? query.Where(x => x.Date >= request.DateStart.ToDateTime().ToLocalTime()) : query;
+            query = request.DateEnd != null ? query.Where(x => x.Date <= request.DateEnd.ToDateTime().ToLocalTime()) : query;
+            query = request.UserLogin != null ? query.Where(x => x.UserSession.User.Login.Contains(request.UserLogin)) : query;
+
+            EndFilters:
+
+            query = query
+                .Include(x => x.TableData)
+                .Include(x => x.UserSession)
+                    .ThenInclude(x => x.User);
+
 
             var response = new LogLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.LogDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<LogDto>(_mapper.Config)));
 
             return response;
         }

@@ -13,7 +13,8 @@ service UserRoleRightService {
     rpc Search (UserRoleRightLookup) returns (UserRoleRightLookupResponse);
     rpc Add (UserRoleRightDataRequest) returns (UserRoleRightLookupResponse);
     rpc Remove (UserRoleRightLookup) returns (statuses.StatusResponse);
-    rpc Edit (UserRoleRightDataRequest) returns (statuses.StatusResponse);
+    rpc AddBulk(UserRoleRightBulkRequest) returns (statuses.StatusResponse);
+    rpc RemoveBulk (UserRoleRightBulkRequest) returns (statuses.StatusResponse);
 }
 
 message UserRoleRightLookup
@@ -35,4 +36,10 @@ message UserRoleRightDataRequest
 message UserRoleRightLookupResponse
 {
     repeated models.UserRoleRightDto data = 1;
+}
+
+// Comment
+message UserRoleRightBulkRequest
+{
+    repeated UserRoleRightDataRequest data = 1;
 }

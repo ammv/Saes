@@ -35,6 +35,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
         private readonly CallInvoker _grpcChannel;
         private readonly IDialogService _dialogService;
 
+        [Reactive]
         public CollectionWithSelection<UserRoleDto> UserRoleCollection { get; set; }
 
         public override async Task<bool> CloseAsync()
@@ -93,36 +94,67 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
 
         protected override async Task OnSeeCommand()
         {
-            
+            if (SelectedEntity == null) return;
+            var vm = App.ServiceProvider.GetService<UserFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.See, null, SelectedEntity);
+
+            await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task OnAddCommand()
+        protected override async Task OnAddCommand()
         {
-            throw new NotImplementedException();
+            var vm = App.ServiceProvider.GetService<UserFormViewModel>();
+
+            vm.Configure(Core.Enums.FormMode.Add, null, new UserDto());
+
+            await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task OnDeleteCommand()
+        protected override async Task OnDeleteCommand()
         {
-            throw new NotImplementedException();
+            if (SelectedEntity == null) return;
+
+            if (await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите удалить данную запись с № п/п {SelectedEntity.UserId}?"))
+            {
+                try
+                {
+                    var service = new UserService.UserServiceClient(_grpcChannel);
+                    MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на удаление пользователя"));
+                    var response = await service.RemoveAsync(new UserLookup { UserId = SelectedEntity.UserId });
+                    if (response.Result)
+                    {
+                        MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+                        await MessageBoxHelper.Success("Уведомление", $"Запись с № п/п {SelectedEntity.UserId} успешно удалена!");
+                        await _Search();
+                    }
+                    else
+                    {
+                        MessageBus.Current.SendMessage(StatusData.Error("Неизвестная ошибка"));
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBus.Current.SendMessage(StatusData.Error(ex));
+                    await MessageBoxHelper.Exception("Ошибка во время удаления записи", ex.Message);
+                }
+            }
         }
 
         protected override async Task OnEditCommand()
         {
-            
+            if (SelectedEntity == null) return;
             var vm = App.ServiceProvider.GetService<UserFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.Edit, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.Login} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.Edit, null, SelectedEntity);
 
             await _dialogService.ShowDialog(vm);
-
-            return;
         }
 
-        protected override Task OnCopyCommand()
+        protected override async Task OnCopyCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
     }
 }

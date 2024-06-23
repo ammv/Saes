@@ -34,9 +34,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new BusinessEntityTypeLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.BusinessEntityTypeDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<BusinessEntityTypeDto>(_mapper.Config)));
 
             return response;
         }

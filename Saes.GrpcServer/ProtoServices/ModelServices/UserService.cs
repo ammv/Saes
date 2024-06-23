@@ -3,6 +3,8 @@ using Grpc.Core;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using OtpNet;
 using Saes.Models;
 using Saes.Models.Schemas;
 using Saes.Protos;
@@ -41,9 +43,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new UserLookupResponse();
 
-            var dtos = await query.ProjectToType<UserDto>(_mapper.Config).ToListAsync();
-
-            response.Data.AddRange(dtos);
+            var entities = await query.ToListAsync();
+			
+			response.Data.AddRange(entities.Select( x => x.Adapt<UserDto>(_mapper.Config)));
 
             return response;
         }
@@ -54,30 +56,36 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             if(string.IsNullOrEmpty(request.Login))
             {
-                throw new ArgumentNullException(nameof(request.Login));
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "В запросе не был указан логин"));
             }
 
             if (string.IsNullOrEmpty(request.Password))
             {
-                throw new ArgumentNullException(nameof(request.Password));
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "В запросе не был указан пароль"));
+            }
+
+            if (request.UserRoleId == null)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "В запросе не был указана роль пользователя"));
             }
 
             User foundByLogin = await _ctx.Users.FirstOrDefaultAsync(x => x.Login == request.Login);
             if(foundByLogin != null)
             {
-                throw new RpcException(new Status(StatusCode.AlreadyExists, request.Login));
-            }
-
-            if (request.UserRoleId == null)
-            {
-                throw new ArgumentNullException(nameof(request.UserRoleId));
+                throw new RpcException(new Status(StatusCode.AlreadyExists, "Пользователь с таким логином уже существует"));
             }
 
             await _ctx.uspAddUserAsync(request.Login, request.Password, request.UserRoleId.Value);
 
+            //await _ctx.SaveChangesAsync();
+
             var response = new UserLookupResponse();
 
             var addedUser = await _ctx.Users.SingleAsync(x => x.Login == request.Login);
+
+            addedUser.TwoFactorEnabled = request.TwoFactorEnabled;
+
+            await _ctx.SaveChangesAsync();
 
             response.Data.Add(addedUser.Adapt<UserDto>(_mapper.Config));
 
@@ -103,9 +111,12 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             user.Login = request.Login;
             user.UserRoleId = request.UserRoleId;
 
-            await _ctx.uspUpdatePasswordUserAsync(request.Login, request.Password);
+            if(!string.IsNullOrEmpty(request.Password))
+            {
+                await _ctx.uspUpdatePasswordUserAsync(request.Login, request.Password);
+            }
 
-            _ctx.SaveChanges();
+            await _ctx.SaveChangesAsync();
 
             return new StatusResponse { Result = true };
             
@@ -120,10 +131,12 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             User user = await _ctx.Users.SingleAsync(x => x.UserId == request.UserId);
             _ctx.Users.Remove(user);
 
+            await _ctx.SaveChangesAsync();
+
             return new StatusResponse { Result = true };
         }
 
-        public override async Task<UserGetRightsResponse> GetRights(UserLookup request, ServerCallContext context)
+        public override async Task<UserGetRightsResponse> GetRights(UserGetRightsRequest request, ServerCallContext context)
         {
             if (request.UserId == null || request.UserId <= 0)
             {
@@ -137,6 +150,8 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 throw new ArgumentNullException(nameof(request.UserId));
             }
 
+            //List<UserRoleRight> userRoleRights = _ctx.UserRoleRights.Where(x => x.UserRoleId == user.UserRoleId).ToList();
+
             List<string> rights = await _ctx.UserRoleRights.Where(x => x.UserRoleId == user.UserRoleId).Select(x => x.Right.Code).ToListAsync();
 
             var response = new UserGetRightsResponse();
@@ -145,6 +160,39 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             return response;
 
+
+        }
+
+        public override async Task<UpdateTwoFactorTokenResponse> UpdateTwoFactorToken(UserLookup request, ServerCallContext context)
+        {
+            if (request.UserId == null || request.UserId <= 0)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"В запросе не был указан идентификатор пользователя или он был неккоректный"));
+            }
+
+            User user = await _ctx.Users.FirstOrDefaultAsync(x => x.UserId == request.UserId);
+
+            if (user == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"В запросе не был указан несуществующий идентификатор пользователя"));
+            }
+
+            if(user.TwoFactorEnabled.HasValue && user.TwoFactorEnabled.Value != true)
+            {
+                throw new RpcException(new Status(StatusCode.Internal, $"Вы не можете получить токен OTP для пользователя, у которого не включена двухфакторная аутенфикация"));
+            }
+
+            byte[] token = KeyGeneration.GenerateRandomKey(20);
+
+            var strToken = Base32Encoding.ToString(token);
+
+            var strUriToken = new OtpUri(OtpType.Totp, strToken, user.Login, "СУЭП").ToString();
+
+            user.TotpSecretKey = strToken;
+
+            await _ctx.SaveChangesAsync();
+
+            return new UpdateTwoFactorTokenResponse { Token = strToken, UriToken = strUriToken };
 
         }
     }

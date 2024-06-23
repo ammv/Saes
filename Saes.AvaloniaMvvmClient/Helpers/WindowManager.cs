@@ -40,5 +40,14 @@ namespace Saes.AvaloniaMvvmClient.Helpers
             }); 
             
         }
+
+        public static async Task CloseWithException(Func<Window, bool> selector, string errorTitle = null, string errorMessage = null)
+        {
+            if (errorTitle != null || errorMessage != null)
+            {
+                await MessageBoxHelper.Exception(errorTitle, errorMessage);
+            }
+            await Close(selector);
+        }
     }
 }

@@ -87,33 +87,6 @@
                 IsVisible="{Binding !TabIsLoading}"
                 ItemsSource="{Binding Entities}"
                 SelectedItem="{Binding SelectedEntity}">
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Command="{Binding SeeCommand}" Header="Посмотреть">
-                            <MenuItem.Icon>
-                                <PathIcon Data="{StaticResource eye_show_regular}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{Binding EditCommand}" Header="Изменить">
-                            <MenuItem.Icon>
-                                <PathIcon Data="{StaticResource edit_regular}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem
-                            Command="{Binding AddCommand}"
-                            Header="Добавить"
-                            IsEnabled="False">
-                            <MenuItem.Icon>
-                                <PathIcon Data="{StaticResource add_regular}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{Binding DeleteCommand}" Header="Удалить">
-                            <MenuItem.Icon>
-                                <PathIcon Data="{StaticResource delete_regular}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
                     <DataGridTextColumn
                         Binding="{Binding BusinessEntityId}"

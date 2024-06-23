@@ -11,7 +11,7 @@ using Saes.Protos.ModelServices;
 
 namespace Saes.GrpcServer.ProtoServices.ModelServices
 {
-    public class RightGroupService : Saes.Protos.ModelServices.RightGroupService.RightGroupServiceBase
+    public class RightGroupService : Protos.ModelServices.RightGroupService.RightGroupServiceBase
     {
         private readonly SaesContext _ctx;
         private readonly ILogger<RightGroupService> _logger;
@@ -24,39 +24,30 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             _mapper = mapper;
         }
 
-        public override async Task<Protos.ModelServices.RightGroupLookupResponse> Search(Protos.ModelServices.RightGroupLookup request, ServerCallContext context)
+        public override async Task<RightGroupLookupResponse> Search(RightGroupLookup request, ServerCallContext context)
         {
             var query = _ctx.RightGroups.AsQueryable();
 
             query = query.Where(x => x.SysIsDeleted == false);
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.RightGroupID != null ? query.Where(x => x.RightGroupId == request.RightGroupID) : query;
+            if(request.RightGroupId != null)
+            {
+                query = query.Where(x => x.RightGroupId == request.RightGroupId);
+                goto EndFilters;
+            }
 
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            query = request.Name != null ? query.Where(x => x.Name.Contains(request.Name)) : query;
+            query = request.Code != null ? query.Where(x => x.Code.Contains(request.Code)) : query;
+
+            EndFilters:
 
             var response = new RightGroupLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.RightGroupDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<RightGroupDto>(_mapper.Config)));
 
             return response;
-        }
-
-        public override async Task<RightGroupLookupResponse> Add(RightGroupDataRequest request, ServerCallContext context)
-        {
-            return await base.Add(request, context);
-        }
-
-        public override async Task<StatusResponse> Edit(RightGroupDataRequest request, ServerCallContext context)
-        {
-            return await base.Edit(request, context);
         }
     }
 }

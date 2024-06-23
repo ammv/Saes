@@ -53,7 +53,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
 
                 var employee = response.Data.First();
 
-                return $"({employee.OrganizationDto.ShortName}) {employee.MiddleName} {employee.FirstName} {employee.LastName}";
+                return $"({employee.OrganizationDto?.ShortName}) {employee.MiddleName} {employee.FirstName} {employee.LastName}";
             }
             catch (Exception)
             {

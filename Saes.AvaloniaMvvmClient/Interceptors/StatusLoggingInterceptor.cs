@@ -15,8 +15,21 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
             ClientInterceptorContext<TRequest, TResponse> context,
             AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest($"Начат вызов. Тип/Метод: {context.Method.Type} / {context.Method.Name}. Запрос/Ответ: {typeof(TRequest).Name} / {typeof(TResponse).Name}"));
+            LogSendingGrpcRequest(context);
             return continuation(request, context);
+        }
+
+        public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation)
+        {
+            LogSendingGrpcRequest(context);
+            return base.BlockingUnaryCall(request, context, continuation);
+        }
+
+        private static void LogSendingGrpcRequest<TRequest, TResponse>(ClientInterceptorContext<TRequest, TResponse> context)
+            where TRequest : class
+            where TResponse : class
+        {
+            MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest($"Начат вызов. Тип/Метод: {context.Method.Type} / {context.Method.Name}. Запрос/Ответ: {typeof(TRequest).Name} / {typeof(TResponse).Name}"));
         }
     }
 }

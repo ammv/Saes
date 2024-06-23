@@ -14,6 +14,7 @@ service OrganizationContactService {
     rpc Add (OrganizationContactDataRequest) returns (OrganizationContactLookupResponse);
     rpc Remove (OrganizationContactLookup) returns (statuses.StatusResponse);
     rpc Edit (OrganizationContactDataRequest) returns (statuses.StatusResponse);
+    rpc BulkUpdate (OrganizationContactBulkUpdateRequest) returns (statuses.StatusResponse);
 }
 
 message OrganizationContactLookup
@@ -36,6 +37,12 @@ message OrganizationContactDataRequest
 
 // Comment
 message OrganizationContactLookupResponse
+{
+    repeated models.OrganizationContactDto data = 1;
+}
+
+// Comment
+message OrganizationContactBulkUpdateRequest
 {
     repeated models.OrganizationContactDto data = 1;
 }

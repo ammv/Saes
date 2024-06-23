@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
@@ -17,6 +18,32 @@
             <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
+
+    <UserControl.Resources>
+        <Flyout x:Key="addFlyout">
+            <StackPanel Width="200" Spacing="8">
+                <TextBlock Text="Выберите организацию для которой создается запись" TextWrapping="Wrap" />
+                <StackPanel
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Classes="ComboboxField">
+                    <TextBlock FontSize="14" Text="Организация" />
+                    <ComboBox
+                        Width="200"
+                        Classes="primary"
+                        DisplayMemberBinding="{Binding ShortName}"
+                        ItemsSource="{Binding OrganizationAddCollection.Items}"
+                        SelectedItem="{Binding OrganizationAddCollection.Selected, Mode=TwoWay}"
+                        SelectedValueBinding="{Binding BusinessEntityId}" />
+                </StackPanel>
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="primary"
+                    Command="{Binding AddCommand}"
+                    Content="Продолжить" />
+            </StackPanel>
+        </Flyout>
+    </UserControl.Resources>
 
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
@@ -87,36 +114,13 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="journal_instance_for_cih_record_add"
                     Classes="secondary"
-                    Content="Добавить">
-                    <Button.Flyout>
-                        <Flyout>
-                            <StackPanel Width="200" Spacing="8">
-                                <TextBlock Text="Выберите организацию для которой создается запись" TextWrapping="Wrap" />
-                                <StackPanel
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Bottom"
-                                    Classes="ComboboxField">
-                                    <TextBlock FontSize="14" Text="Организация" />
-                                    <ComboBox
-                                        Width="200"
-                                        Classes="primary"
-                                        DisplayMemberBinding="{Binding ShortName}"
-                                        ItemsSource="{Binding OrganizationAddCollection.Items}"
-                                        SelectedItem="{Binding OrganizationAddCollection.Selected, Mode=TwoWay}"
-                                        SelectedValueBinding="{Binding BusinessEntityId}" />
-                                </StackPanel>
-                                <Button
-                                    VerticalAlignment="Bottom"
-                                    Classes="primary"
-                                    Command="{Binding AddCommand}"
-                                    Content="Продолжить" />
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
+                    Content="Добавить"
+                    Flyout="{StaticResource addFlyout}" />
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="journal_instance_for_cih_record_export"
                     Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
@@ -150,17 +154,26 @@
                                 <PathIcon Data="{StaticResource eye_show_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding EditCommand}" Header="Изменить">
+                        <MenuItem
+                            atp:RightBehav.RightCode="journal_instance_for_cih_record_edit"
+                            Command="{Binding EditCommand}"
+                            Header="Изменить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource edit_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding AddCommand}" Header="Добавить">
+                        <MenuItem
+                            atp:RightBehav.RightCode="journal_instance_for_cih_record_add"
+                            FlyoutBase.AttachedFlyout="{StaticResource addFlyout}"
+                            Header="Добавить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource add_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding DeleteCommand}" Header="Удалить">
+                        <MenuItem
+                            atp:RightBehav.RightCode="journal_instance_for_cih_record_delete"
+                            Command="{Binding DeleteCommand}"
+                            Header="Удалить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource delete_regular}" />
                             </MenuItem.Icon>
@@ -205,12 +218,27 @@
                         Header="Дата и расписка в получении в отметке о выдаче"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
+                        Binding="{Binding, Converter={StaticResource JournalCihRecordListColumnsToStringConverter},
+                                           ConverterParameter=installers}"
+                        Header="Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, произведших подключение (установку)"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
                         Binding="{Binding InstallationDateAndConfirmation}"
                         Header="Дата подключения (установки) и подписи лиц, производивших подключение (установку) в отметке о подключении"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
+                        Binding="{Binding, Converter={StaticResource JournalCihRecordListColumnsToStringConverter},
+                                           ConverterParameter=hardwares}"
+                        Header="Номера аппаратных средств, в которые установлены или к которым подключены СКЗИ"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
                         Binding="{Binding DestructionDate}"
                         Header="Дата изъятия (уничтожения) в отметке об изъятии"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding, Converter={StaticResource JournalCihRecordListColumnsToStringConverter},
+                                           ConverterParameter=destructors}"
+                        Header="Ф.И.О. сотрудников органа криптографической защиты, пользователя СКЗИ, производивших изъятие (уничтожение)"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding DestructionActNumber}"

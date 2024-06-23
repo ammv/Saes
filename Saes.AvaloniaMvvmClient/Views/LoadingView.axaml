@@ -1,0 +1,36 @@
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.LoadingView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels"
+    Width="400"
+    Height="200"
+    x:DataType="vm:LoadingViewModel"
+    Background="White"
+    mc:Ignorable="d">
+    <Grid RowDefinitions="Auto, 60, 20">
+        <i:Interaction.Behaviors>
+            <ia:EventTriggerBehavior EventName="Loaded">
+                <ia:CallMethodAction MethodName="LoadedAsync" TargetObject="{Binding}" />
+            </ia:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
+        <Image
+            Width="128"
+            Height="128"
+            Source="avares://Saes.AvaloniaMvvmClient/Assets/Images/Logo/logo256x256.png" />
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="{Binding LoadingStatus}" />
+        <ProgressBar
+            Grid.Row="2"
+            Height="10"
+            IsIndeterminate="True" />
+    </Grid>
+</UserControl>

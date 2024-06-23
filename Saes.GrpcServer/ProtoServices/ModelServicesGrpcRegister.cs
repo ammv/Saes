@@ -8,11 +8,13 @@ namespace Saes.GrpcServer.ProtoServices
         {
             app.MapGrpcService<UserService>();
             app.MapGrpcService<UserRoleService>();
+            app.MapGrpcService<UserRoleRightService>();
             app.MapGrpcService<JournalInstanceForCIHConnectedHardwareService>();
             app.MapGrpcService<JournalInstanceForCIHDestructorService>();
             app.MapGrpcService<JournalInstanceForCIHInstallerService>();
             app.MapGrpcService<JournalInstanceForCIHRecordService>();
             app.MapGrpcService<JournalInstanceForCPARecordService>();
+            app.MapGrpcService<JournalTechnicalRecordService>();
             app.MapGrpcService<KeyDocumentTypeService>();
             app.MapGrpcService<KeyHolderService>();
             app.MapGrpcService<KeyHolderTypeService>();
@@ -34,6 +36,7 @@ namespace Saes.GrpcServer.ProtoServices
             app.MapGrpcService<LogChangeService>();
             app.MapGrpcService<AddressService>();
             app.MapGrpcService<FileService>();
+            app.MapGrpcService<ContactTypeService>();
         }
     }
 }

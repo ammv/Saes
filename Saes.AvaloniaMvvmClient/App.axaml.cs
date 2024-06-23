@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using OfficeOpenXml;
 using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Core;
+using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Injections;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels;
 using Saes.AvaloniaMvvmClient.Views;
+using System;
 using System.Collections.Generic;
 
 namespace Saes.AvaloniaMvvmClient;
@@ -20,6 +22,8 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -31,8 +35,6 @@ public partial class App : Application
 
         var excelExporterConfig = new ExcelExporterConfig();
         ConfigureExcelExporterConfig.Configure(excelExporterConfig);
-
-
 
         collection.AddSingleton(excelExporterConfig);
 
@@ -67,5 +69,17 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if(e.ExceptionObject is Exception ex)
+        {
+            await MessageBoxHelper.Exception("Неизвестная ошибка", $"Произошла неизвестная ошибка:\n{ex.Message}");
+        }
+        else
+        {
+            await MessageBoxHelper.Exception("Неизвестная ошибка", $"Произошла неизвестная ошибка");
+        }
     }
 }

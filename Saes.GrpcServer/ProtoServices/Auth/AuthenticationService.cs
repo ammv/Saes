@@ -41,7 +41,7 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
             {
                 answer = $"User with login '{request.Login}' not found";
                 await _logAuthenticationService.AddLogAsync(request.Login, false, false, answer);
-                throw new RpcException(new Status(StatusCode.NotFound, answer));
+                throw new RpcException(new Status(StatusCode.NotFound, "Неправильный логин или пароль"));
             }
 
             // 2. Check password
@@ -51,12 +51,16 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
             {
                 answer = $"Incorrect password";
                 await _logAuthenticationService.AddLogAsync(request.Login, false, false, answer);
-                throw new RpcException(new Status(StatusCode.InvalidArgument, answer));
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Неправильный логин или пароль"));
             }
 
             // 3. Check user has2Fa
 
-            if(user.TwoFactorEnabled == true)
+            answer = $"Success First Factor Authenticate";
+
+            await _logAuthenticationService.AddLogAsync(request.Login, true, user.TwoFactorEnabled == false, answer);
+
+            if (user.TwoFactorEnabled == true)
             {
                 response.Has2FA = true;
                 response.Token = _tokenService.GenerateToken(64);
@@ -65,11 +69,9 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
             }
             else
             {
-                response.SessionKey = _tokenService.GenerateToken(128);
-            }
-
-            answer = $"Success First Factor Authenticate";
-            await _logAuthenticationService.AddLogAsync(request.Login, true, false, answer);
+                string sessionKey = await _ctx.uspCreateSessionAsync(user.UserId, DateTime.Now.AddHours(Configuration.Cofiguration.SessionExpiredHours));
+                response.SessionKey = sessionKey;
+            }   
 
             return response;
         }
@@ -81,13 +83,13 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
             {
                 answer = "Invalid request data.";
                 await _logAuthenticationService.AddLogAsync(null, true, false, answer);
-                throw new AuthenticationException(answer);
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "В запросе не был указан токен или одноразовый пароль"));
             }
             if (!_userFirstAuthTokensMap.TryGetValue(request.Token, out int userId))
             {
                 answer = "Invalid token.";
                 await _logAuthenticationService.AddLogAsync(null, true, false, answer);
-                throw new AuthenticationException(answer);
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "В запросе был указан неккоректный токен"));
             }
 
             var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
@@ -95,32 +97,40 @@ namespace Saes.GrpcServer.ProtoServices.AuthService
             {
                 answer = "Invalid token.";
                 await _logAuthenticationService.AddLogAsync(null, true, false, answer);
-                throw new AuthenticationException(answer);
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Неккоректный токен"));
             }
 
             // Проверьте, как хранится TotpSecretKey и используйте соответствующую кодировку
             byte[] userOtpTokenBytes = Base32Encoding.ToBytes(user.TotpSecretKey);
-            var totp = new Totp(userOtpTokenBytes);
+            var totp = new Totp(userOtpTokenBytes, timeCorrection: new TimeCorrection(request.SendTime.ToDateTime()));
 
-            string computedTotp = totp.ComputeTotp(request.SendTime.ToDateTime());
+            //totp.VerifyTotp(request.OtpPassword, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay);
 
-            if (!totp.VerifyTotp(request.SendTime.ToDateTime(), request.OtpPassword, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay))
+            if (!totp.VerifyTotp(request.OtpPassword, out long timeStepMatched, new VerificationWindow(previous: 3, future: 3)))
             {
                 answer = "Bad TOTP password";
                 await _logAuthenticationService.AddLogAsync(user.Login, true, false, answer);
-                throw new RpcException(new Status(StatusCode.InvalidArgument, answer));
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Одноразовый пароль неправильный"));
             }
 
-            string sessionKey = await _ctx.uspCreateSessionAsync(userId, request.SendTime.ToDateTime().ToLocalTime().AddHours(Configuration.Cofiguration.SessionExpiredHours));
+            //if (!totp.VerifyTotp(request.SendTime.ToDateTime(), request.OtpPassword, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay))
+            //{
+            //    answer = "Bad TOTP password";
+            //    await _logAuthenticationService.AddLogAsync(user.Login, true, false, answer);
+            //    throw new RpcException(new Status(StatusCode.InvalidArgument, "Одноразовый пароль неправильный"));
+            //}
+
 
             answer = $"Success Second Factor Authenticate";
             await _logAuthenticationService.AddLogAsync(user.Login, true, true, answer);
+
+            string sessionKey = await _ctx.uspCreateSessionAsync(userId, DateTime.Now.AddHours(Configuration.Cofiguration.SessionExpiredHours));
 
             if (sessionKey == null)
             {
                 answer = $"uspCreateSession returned null value";
                 await _logAuthenticationService.AddLogAsync(user.Login, true, true, answer);
-                throw new RpcException(new Status(StatusCode.Internal, answer));
+                throw new RpcException(new Status(StatusCode.Internal, "Не удалось создать сессию"));
             }
 
             var response = new SecondFactorAuthenticateResponse

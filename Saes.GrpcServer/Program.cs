@@ -10,32 +10,28 @@ using Saes.GrpcServer.Services;
 using Saes.Models;
 using Grpc.AspNetCore;
 
+var context = new SaesContext();
+context.Logs.Any(x => x.LogId != 0);
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SaesContext>(option =>
 {
     option.UseSqlServer(Saes.Configuration.Cofiguration.ConnectionString);
 });
 
-
 new ServicesRegister().Register(builder.Services);
 // Additional configuration is required to successfully run gRPC on macOS.
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
 // Add services to the container.
-#if !DEBUG
+//#if !DEBUG
 builder.Services.AddGrpc(options =>
 {
+    AuthorizationInterceptor.Context = context;
     options.Interceptors.Add<AuthorizationInterceptor>();
 });
-#else
-builder.Services.AddGrpc();
+
 builder.Services.AddGrpcReflection();
-#endif
-
-
-// Mapster
-//var mapsterConfig = new MapsterConfig();
-//builder.Services.AddSingleton<MapsterConfig>();
 
 var config = new TypeAdapterConfig();
 new MapsterConfig(config);
@@ -44,10 +40,7 @@ builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IMapper, ServiceMapper>(); //Добавляем сам маппер
 
 var app = builder.Build();
-
-#if DEBUG
-    app.MapGrpcReflectionService();
-#endif
+app.MapGrpcReflectionService();
 
 var loggerFactory = app.Services.GetService<ILoggerFactory>();
 loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
@@ -61,3 +54,5 @@ app.MapGrpcService<GreeterService>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 app.Run();
+
+context.Dispose();

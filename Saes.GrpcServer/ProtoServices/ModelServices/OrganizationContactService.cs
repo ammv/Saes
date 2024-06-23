@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Saes.Models;
 using Saes.Models.Core;
@@ -28,23 +29,120 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var query = _ctx.OrganizationContacts.AsQueryable();
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.OrganizationContactID != null ? query.Where(x => x.OrganizationContactId == request.OrganizationContactID) : query;
+            if (request.OrganizationContactID != null)
+            {
+                query = query.Where(x => x.OrganizationContactId == request.OrganizationContactID);
+                goto EndFilters;
+            }
 
-            //query = query.Include(x => x.BusinessAddress)
+            query = request.ContactTypeID != null ? query.Where(x => x.OrganizationContactId == request.ContactTypeID) : query;
+            query = request.OrganizationID != null ? query.Where(x => x.OrganizationId == request.OrganizationID) : query;
+
+            EndFilters:
+
+            query = query.Include(x => x.ContactType);
             //    .Include(x => x.BusinessEntity);
 
             var response = new OrganizationContactLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.OrganizationContactDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<OrganizationContactDto>(_mapper.Config)));
 
             return response;
+        }
+
+        public override async Task<OrganizationContactLookupResponse> Add(OrganizationContactDataRequest request, ServerCallContext context)
+        {
+            if (!request.OrganizationID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"В запросе на добавление контакта организации отсутствовал идентификатор организации"));
+            }
+
+            if (!request.ContactTypeID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"В запросе на добавление контакта организации отсутствовал идентификатор типа контакта"));
+            }
+
+            if (!await _ctx.Organizations.AnyAsync(x => x.OrganizationId == request.OrganizationID))
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"В запросе на добавление контакта организации был указан несуществующий идентификатор организации"));
+            }
+
+            var entity = new OrganizationContact
+            {
+                OrganizationId = request.OrganizationID.Value,
+                Value = request.Value,
+                ContactTypeId = request.ContactTypeID.Value,
+                Note = request.Note
+            };
+
+            var addedEntity = await _ctx.OrganizationContacts.AddAsync(entity);
+
+            await _ctx.SaveChangesAsync();
+
+            var response = new OrganizationContactLookupResponse();
+
+            response.Data.Add(addedEntity.Entity.Adapt<OrganizationContactDto>(_mapper.Config));
+
+            return response;
+        }
+
+        public override async Task<StatusResponse> Edit(OrganizationContactDataRequest request, ServerCallContext context)
+        {
+            if (!request.OrganizationContactID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"В запросе на изменение контакта организации отсутствовал идентификатор контакта"));
+            }
+
+            if (!request.OrganizationID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"В запросе на изменение контакта организации отсутствовал идентификатор организации"));
+            }
+
+            if (!request.ContactTypeID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"В запросе на изменение контакта организации отсутствовал идентификатор типа контакта"));
+            }
+
+            var entity = await _ctx.OrganizationContacts.FirstOrDefaultAsync(x => x.OrganizationContactId == request.OrganizationContactID);
+
+            if (entity == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"В запросе на изменение контакта организации был указан несуществующий идентификатор контакта"));
+            }
+
+            entity.OrganizationId = request.OrganizationID.Value;
+            entity.Value = request.Value;
+            entity.ContactTypeId = request.ContactTypeID.Value;
+            entity.Note = request.Note;
+
+            _ctx.OrganizationContacts.Update(entity);
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
+        }
+
+        public override async Task<StatusResponse> Remove(OrganizationContactLookup request, ServerCallContext context)
+        {
+            if (!request.OrganizationContactID.HasValue)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"В запросе на изменение контакта организации отсутствовал идентификатор контакта"));
+            }
+
+            var entity = await _ctx.OrganizationContacts.FirstOrDefaultAsync(x => x.OrganizationContactId == request.OrganizationContactID);
+
+            if (entity == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"В запросе на изменение контакта организации был указан несуществующий идентификатор контакта"));
+            }
+
+            _ctx.OrganizationContacts.Remove(entity);
+
+            await _ctx.SaveChangesAsync();
+
+            return new StatusResponse { Result = true };
         }
     }
 }

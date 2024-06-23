@@ -35,9 +35,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new KeyDocumentTypeLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.KeyDocumentTypeDto>(_mapper.Config).ToListAsync();
-
-            response.Data.AddRange(dtos);
+            var entities = await query.ToListAsync();
+			
+			response.Data.AddRange(entities.Select( x => x.Adapt<KeyDocumentTypeDto>(_mapper.Config)));
 
             return response;
         }
@@ -51,7 +51,8 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var entity = new KeyDocumentType
             {
-                Name = request.Name
+                Name = request.Name,
+                Note = request.Note
             };
 
             entity = (await _ctx.KeyDocumentTypes.AddAsync(entity)).Entity;

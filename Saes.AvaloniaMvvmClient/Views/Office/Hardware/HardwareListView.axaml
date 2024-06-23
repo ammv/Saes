@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
@@ -28,18 +29,25 @@
                 Orientation="Horizontal"
                 Spacing="16">
 
-                <!--<StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            Classes="TextField">
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="№ п/п" />
-                    <TextBox Classes="primary" Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="Название" />
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="№ п/п" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.HardwareId, Mode=TwoWay}" />
+
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="Название" />
                     <TextBox Classes="primary" Text="{Binding Lookup.Name, Mode=TwoWay}" />
-                </StackPanel>-->
+                </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
@@ -55,6 +63,13 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="hardware_add"
+                    Classes="secondary"
+                    Command="{Binding AddCommand}"
+                    Content="Добавить" />
+                <Button
+                    VerticalAlignment="Bottom"
+                    atp:RightBehav.RightCode="hardware_export"
                     Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
@@ -74,12 +89,12 @@
                 CanUserReorderColumns="True"
                 CanUserResizeColumns="True"
                 CanUserSortColumns="False"
+                ColumnWidth="200"
                 GridLinesVisibility="All"
                 HorizontalScrollBarVisibility="Auto"
                 IsReadOnly="True"
                 IsVisible="{Binding !TabIsLoading}"
                 ItemsSource="{Binding Entities}"
-                ColumnWidth="200"
                 SelectedItem="{Binding SelectedEntity}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>

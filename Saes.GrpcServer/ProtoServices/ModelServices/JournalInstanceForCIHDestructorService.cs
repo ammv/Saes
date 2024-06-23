@@ -30,15 +30,15 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             query = request.JournalInstanceForCIHDestructorID != null ? query.Where(x => x.JournalInstanceForCihdestructorId == request.JournalInstanceForCIHDestructorID) : query;
             query = request.RecordID != null ? query.Where(x => x.RecordId == request.RecordID) : query;
 
-            //query = query
-            //    .Include(x => x.SignFile)
+            query = query
+                .Include(x => x.Destructor);
             //    .Include(x => x.ReceivedFrom);
 
             var response = new JournalInstanceForCIHDestructorLookupResponse();
 
-            var dtos = await query.ProjectToType<JournalInstanceForCIHDestructorDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<JournalInstanceForCIHDestructorDto>(_mapper.Config)));
 
             return response;
         }

@@ -9,11 +9,7 @@ namespace Saes.AvaloniaMvvmClient.Views.Authentication.User
         {
             InitializeComponent();
             WindowManager.Add(this);
-        }
-
-        ~UserFormView()
-        {
-            WindowManager.Remove(this);
+            Closed += (s,e) => WindowManager.Remove(this);
         }
     }
 }

@@ -34,7 +34,10 @@
             VerticalAlignment="Bottom"
             Classes="TextField">
             <TextBlock FontSize="14" Text="№ п/п" />
-            <TextBox IsEnabled="False" Text="{Binding DataRequest.KeyDocumentTypeID, Mode=OneTime}" Classes="primary"/>
+            <TextBox
+                Classes="primary"
+                IsEnabled="False"
+                Text="{Binding DataRequest.KeyDocumentTypeID, Mode=OneTime}" />
         </StackPanel>
 
         <StackPanel
@@ -42,7 +45,18 @@
             VerticalAlignment="Bottom"
             Classes="TextField">
             <TextBlock FontSize="14" Text="Название" />
-            <TextBox Classes="primary" IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" Text="{Binding DataRequest.Name, Mode=TwoWay}" />
+            <TextBox
+                Classes="primary"
+                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                Text="{Binding DataRequest.Name, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField">
+            <TextBlock FontSize="14" Text="Примечание" />
+            <TextBox Classes="primary" Text="{Binding DataRequest.Note, Mode=TwoWay}" />
         </StackPanel>
 
         <Button

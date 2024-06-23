@@ -48,6 +48,45 @@
                     </Button>
                 </StackPanel>
 
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    ToolTip.Tip="Фильтры">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_regular}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <WrapPanel Width="400" Classes="filter_panel">
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Фамилия" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.MiddleName, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Имя" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.FirstName, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Отчество" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.LastName, Mode=TwoWay}" />
+                                </StackPanel>
+                            </WrapPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
                 <DatePicker Classes="primary" />
 
 
@@ -63,6 +102,8 @@
                         <DataGridTextColumn Header="346" />
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <CheckBox Content="1124" />
 
             </StackPanel>
 
@@ -92,8 +133,6 @@
     <Style Selector="DataGrid DataGridRow:nth-child(even)">
         <Setter Property="Background" Value="Transparent" />
     </Style>
-
-
 
 
 
@@ -225,4 +264,10 @@
             <Setter Property="Foreground" Value="{StaticResource PrimaryBrushDisabled}" />
         </Style>
     </Style>
+
+
+    <Style Selector="WrapPanel.filter_panel StackPanel">
+        <Setter Property="Margin" Value="0 0 16 8" />
+    </Style>
+
 </Styles>

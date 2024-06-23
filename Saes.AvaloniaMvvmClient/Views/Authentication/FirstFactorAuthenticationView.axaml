@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="250"
     x:DataType="vm:FirstFactorAuthenticationViewModel"
     mc:Ignorable="d">
     <Design.DataContext />
@@ -51,11 +51,6 @@
                 Classes="primary"
                 Command="{Binding AuthCommand}"
                 Content="Войти" />
-
-            <TextBlock
-                Classes="h3"
-                Text="{Binding Status, StringFormat={}Статус: {0}}"
-                TextWrapping="Wrap" />
 
         </StackPanel>
         <TextBlock

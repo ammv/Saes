@@ -2,21 +2,111 @@
     x:Class="Saes.AvaloniaMvvmClient.Views.Authentication.User.UserFormView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="using:AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:qr="clr-namespace:Avalonia.QRCode;assembly=Avalonia.QRCode"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authentication.User"
-    Width="200"
-    Height="100"
+    Width="250"
     x:DataType="vm:UserFormViewModel"
-    Background="Transparent"
+    Background="White"
+    SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <StackPanel
+        Margin="8"
+        IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+        Orientation="Vertical"
+        Spacing="16">
 
-    <StackPanel>
-        <TextBlock Text="Логин" />
-        <TextBox Text="{Binding DataRequest.Login, Mode=TwoWay}" Classes="primary" />
-        <Button Command="{Binding FormCommand}" Content="Accept"
-				Classes="primary"/>
+        <TextBlock
+            FontSize="24"
+            FontWeight="SemiBold"
+            Text="{Binding Title}"
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
+
+        <Image
+            Height="80"
+            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            IsVisible="{Binding TabIsLoading}" />
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField"
+            IsVisible="{Binding !TabIsLoading}">
+            <TextBlock FontSize="14" Text="№ п/п" />
+            <TextBox
+                Classes="primary"
+                IsEnabled="False"
+                Text="{Binding DataRequest.UserId, Mode=OneTime}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField">
+            <TextBlock FontSize="14" Text="Логин" />
+            <TextBox Classes="primary" Text="{Binding DataRequest.Login, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField"
+            IsVisible="{Binding FormModeIsAdd}">
+            <TextBlock FontSize="14" Text="Пароль" />
+            <TextBox Classes="primary" Text="{Binding DataRequest.Password, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField">
+            <TextBlock FontSize="14" Text="Роль" />
+            <ComboBox
+                HorizontalAlignment="Stretch"
+                Classes="primary"
+                DisplayMemberBinding="{Binding Name}"
+                ItemsSource="{Binding UserRoleCollection.Items}"
+                SelectedItem="{Binding UserRoleCollection.Selected, Mode=TwoWay}"
+                SelectedValue="{Binding DataRequest.UserRoleId, Mode=TwoWay}"
+                SelectedValueBinding="{Binding UserRoleId}" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Classes="TextField"
+            Orientation="Horizontal">
+
+            <CheckBox
+                Classes="primary"
+                IsChecked="{Binding DataRequest.TwoFactorEnabled, Mode=TwoWay}"
+                IsThreeState="False" />
+            <TextBlock
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="Включить 2FA"
+                TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Button
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="primary"
+            Command="{Binding FormCommand}"
+            Content="{Binding CurrentMode, Converter={StaticResource FormModeToStringConverter}}"
+            IsVisible="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" />
     </StackPanel>
 
 

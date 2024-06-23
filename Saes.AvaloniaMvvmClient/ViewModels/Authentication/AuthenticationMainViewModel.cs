@@ -16,9 +16,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
     public class AuthenticationMainViewModel: ViewModelBase
     {
         private readonly IGrpcChannelFactory _grpcChannelFactory;
-        private readonly FirstFactorAuthenticationViewModel _firstFactorAuthenticationViewModel;
         private readonly ISessionKeyService _sessionKeyService;
         private readonly IUserService _userService;
+        private readonly FirstFactorAuthenticationViewModel _firstFactorAuthenticationViewModel;
         private SecondFactorAuthenticationViewModel _secondFactorAuthenticationViewModel;
 
         [Reactive]

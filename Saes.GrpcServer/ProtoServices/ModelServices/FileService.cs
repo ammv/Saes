@@ -36,9 +36,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new FileLookupResponse();
 
-            var dtos = await query.ProjectToType<FileDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<FileDto>(_mapper.Config)));
 
             return response;
         }

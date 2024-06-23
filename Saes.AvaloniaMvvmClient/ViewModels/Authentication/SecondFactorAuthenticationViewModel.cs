@@ -2,6 +2,7 @@
 using Grpc.Core;
 using Grpc.Net.Client;
 using ReactiveUI;
+using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.Protos.Auth;
 using System;
@@ -73,9 +74,13 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
             {
                 response = await authService.SecondFactorAuthenticateAsync(request);
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
-                return null;
+                await MessageBoxHelper.Exception("Ошибка во время аутенфикации", $"Во время аутенфикации по второму фактору произошла ошибка:\n{ex.Status.Detail}");
+            }
+            catch(Exception ex)
+            {
+                await MessageBoxHelper.Exception("Ошибка во время аутенфикации", $"{ex.Message}");
             }
             finally
             {

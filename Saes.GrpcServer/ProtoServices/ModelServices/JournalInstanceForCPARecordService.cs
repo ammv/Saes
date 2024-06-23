@@ -53,9 +53,9 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
             var response = new JournalInstanceForCPARecordLookupResponse();
 
-            var dtos = await query.ProjectToType<JournalInstanceForCPARecordDto>(_mapper.Config).ToListAsync();
-
-            response.Data.AddRange(dtos);
+            var entities = await query.ToListAsync();
+			
+			response.Data.AddRange(entities.Select( x => x.Adapt<JournalInstanceForCPARecordDto>(_mapper.Config)));
 
             return response;
         }

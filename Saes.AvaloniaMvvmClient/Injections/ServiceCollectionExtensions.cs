@@ -71,6 +71,7 @@ namespace Saes.AvaloniaMvvmClient.Injections
 
         public static void AddMainViewModels(this IServiceCollection collection)
         {
+            collection.AddTransient<LoadingViewModel>();
             collection.AddTransient<MainViewModel>();
             collection.AddTransient<MainMenuViewModel>();
                         collection.AddTransient<JournalInstanceForCPARecordListViewModel>();
@@ -88,10 +89,10 @@ namespace Saes.AvaloniaMvvmClient.Injections
 
         public static void AddElectricitySignsViewModels(this IServiceCollection collection)
         {
-            collection.AddTransient<JournalInstanceCPAReceiverListViewModel>();
-            collection.AddTransient<JournalInstanceForCIHConnectedHardwareListViewModel>();
-            collection.AddTransient<JournalInstanceForCIHDestructorListViewModel>();
-            collection.AddTransient<JournalInstanceForCIHInstallerListViewModel>();
+            //collection.AddTransient<JournalInstanceCPAReceiverListViewModel>();
+            //collection.AddTransient<JournalInstanceForCIHConnectedHardwareListViewModel>();
+            //collection.AddTransient<JournalInstanceForCIHDestructorListViewModel>();
+            //collection.AddTransient<JournalInstanceForCIHInstallerListViewModel>();
             collection.AddTransient<JournalInstanceForCIHRecordListViewModel>();
             collection.AddTransient<JournalInstanceForCPARecordListViewModel>();
             collection.AddTransient<JournalTechnicalRecordListViewModel>();
@@ -99,11 +100,13 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<KeyHolderTypeListViewModel>();
             collection.AddTransient<KeyHolderListViewModel>();
 
+            
+            collection.AddTransient<JournalInstanceForCPARecordFormViewModel>();
+            collection.AddTransient<JournalInstanceForCIHRecordFormViewModel>();
+            collection.AddTransient<JournalTechnicalRecordFormViewModel>();
             collection.AddTransient<KeyDocumentTypeFormViewModel>();
             collection.AddTransient<KeyHolderTypeFormViewModel>();
             collection.AddTransient<KeyHolderFormViewModel>();
-            collection.AddTransient<JournalInstanceForCPARecordFormViewModel>();
-            collection.AddTransient<JournalInstanceForCIHRecordFormViewModel>();
         }
 
         public static void AddAuditViewModels(this IServiceCollection collection)
@@ -123,6 +126,8 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<UserSessionListViewModel>();
             collection.AddTransient<RightGroupListViewModel>();
             collection.AddTransient<UserRoleRightListViewModel>();
+
+            collection.AddTransient<UserRoleFormViewModel>();
         }
 
         public static void AddOfficeViewModels(this IServiceCollection collection)
@@ -139,6 +144,8 @@ namespace Saes.AvaloniaMvvmClient.Injections
         {
             collection.AddTransient<AddressListViewModel>();
             collection.AddTransient<FileListViewModel>();
+
+            
         }
 
         public static void AddHumanResourcesViewModels(this IServiceCollection collection)
@@ -149,6 +156,12 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<EmployeeListViewModel>();
             collection.AddTransient<EmployeePositionListViewModel>();
             collection.AddTransient<OrganizationContactListViewModel>();
+
+            collection.AddTransient<EmployeeFormViewModel>();
+            collection.AddTransient<EmployeePositionFormViewModel>();
+            collection.AddTransient<OrganizationFormViewModel>();
+
+            //collection.AddTransient<OrganizationFormViewModel>();
         }
     }
 }

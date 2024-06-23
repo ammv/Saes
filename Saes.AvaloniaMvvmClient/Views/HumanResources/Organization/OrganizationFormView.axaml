@@ -1,0 +1,396 @@
+<Window
+    x:Class="Saes.AvaloniaMvvmClient.Views.HumanResources.Organization.OrganizationFormView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="using:AnimatedImage.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Organization"
+    Title="{Binding Title}"
+    Width="1250"
+    x:DataType="vm:OrganizationFormViewModel"
+    Background="White"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <Window.Effect>
+        <DropShadowEffect />
+    </Window.Effect>
+
+    <Window.Resources />
+
+    <StackPanel
+        Margin="8"
+        Orientation="Vertical"
+        Spacing="16">
+
+        <TextBlock
+            Margin="0,0,0,16"
+            FontSize="24"
+            FontWeight="SemiBold"
+            Text="{Binding Title}"
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
+
+        <Image
+            Height="80"
+            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            IsVisible="{Binding TabIsLoading}" />
+
+        <TabControl x:Name="tabControl" IsVisible="{Binding !TabIsLoading}">
+            <TabItem Header="Общее">
+                <StackPanel
+                    MinHeight="300"
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <!--  1 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="№ п/п" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="False"
+                                Text="{Binding DataRequest.OrganizationId, Mode=OneTime}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                Width="250"
+                                FontSize="14"
+                                Text="Полное наименование" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.FullName, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="Короткое название" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.ShortName, Mode=TwoWay}" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <!--  2 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="Директор" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.DirectorFullName, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="Гл. Бухгалтер" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.ChiefAccountantFullName, Mode=TwoWay}" />
+                        </StackPanel>
+
+
+
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="ОГРН" />
+                            <TextBox
+                                Classes="primary"
+                                MaxLength="15"
+                                Text="{Binding DataRequest.OGRN, Mode=TwoWay}"
+                                Watermark="13 или 15 цифр для ИП" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!--  2 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="ОКВЭД" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.OKVED, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="КПП" />
+                            <TextBox
+                                Classes="primary"
+                                MaxLength="9"
+                                Text="{Binding DataRequest.KPP, Mode=TwoWay}"
+                                Watermark="9 цифр" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="ОКПО" />
+                            <TextBox
+                                Classes="primary"
+                                MaxLength="8"
+                                Text="{Binding DataRequest.OKPO, Mode=TwoWay}"
+                                Watermark="8 цифр" />
+                        </StackPanel>
+
+
+                    </StackPanel>
+
+                    <!--  2 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="ИНН" />
+                            <TextBox
+                                Classes="primary"
+                                MaxLength="12"
+                                Text="{Binding DataRequest.INN, Mode=TwoWay}"
+                                Watermark="10 или 12 цифр для ИП" />
+                        </StackPanel>
+
+                        <StackPanel
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата присвоения ОГРН"
+                                TextWrapping="Wrap" />
+                            <DatePicker SelectedDate="{Binding DataRequest.DateOfAssignmentOGRN, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
+                        </StackPanel>
+
+
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Контакты">
+                <StackPanel
+                    x:Name="table"
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <StackPanel
+                        IsVisible="{Binding !IsEditingContactOrganization}"
+                        Orientation="Vertical"
+                        Spacing="16">
+                        <Button
+                            x:Name="AddContactBtn"
+                            VerticalAlignment="Bottom"
+                            Classes="secondary"
+                            Content="Добавить">
+                            <Button.Flyout>
+                                <Flyout ShowMode="Transient">
+                                    <StackPanel Orientation="Vertical" Spacing="16">
+                                        <TextBlock Text="Добавление контакта" TextWrapping="Wrap" />
+                                        <StackPanel
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Bottom"
+                                            Classes="ComboboxField">
+                                            <TextBlock FontSize="14" Text="Тип контакта" />
+                                            <ComboBox
+                                                Width="250"
+                                                Classes="primary"
+                                                DisplayMemberBinding="{Binding Name}"
+                                                ItemsSource="{Binding ContactTypeCollection.Items}"
+                                                SelectedItem="{Binding OrganizationContactTemp.ContactTypeDto, Mode=TwoWay}"
+                                                SelectedValueBinding="{Binding ContactTypeId}" />
+                                            <StackPanel
+                                                Width="250"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Bottom"
+                                                Classes="TextField">
+                                                <TextBlock FontSize="14" Text="Значение" />
+                                                <TextBox Classes="primary" Text="{Binding OrganizationContactTemp.Value}" />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Width="250"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Bottom"
+                                                Classes="TextField">
+                                                <TextBlock FontSize="14" Text="Заметка" />
+                                                <TextBox
+                                                    Height="60"
+                                                    Classes="primary"
+                                                    Text="{Binding OrganizationContactTemp.Note}"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+
+                                        </StackPanel>
+                                        <Button
+                                            VerticalAlignment="Bottom"
+                                            Classes="primary"
+                                            Content="Добавить">
+                                            <i:Interaction.Behaviors>
+                                                <ia:EventTriggerBehavior EventName="Click">
+                                                    <ia:InvokeCommandAction Command="{Binding AddOrganizationContanctCommand}" />
+                                                    <ia:CallMethodAction MethodName="Hide" TargetObject="{Binding #grid.ContextFlyout}" />
+                                                </ia:EventTriggerBehavior>
+                                            </i:Interaction.Behaviors>
+                                        </Button>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+
+                        <DataGrid
+                            x:Name="grid"
+                            Height="250"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            CanUserReorderColumns="True"
+                            CanUserResizeColumns="True"
+                            CanUserSortColumns="False"
+                            ColumnWidth="200"
+                            GridLinesVisibility="All"
+                            HorizontalScrollBarVisibility="Auto"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding OrganizationContactCollection.Items}"
+                            SelectedItem="{Binding OrganizationContactCollection.Selected}"
+                            VerticalScrollBarVisibility="Auto">
+                            <DataGrid.ContextFlyout>
+                                <Flyout>
+                                    <i:Interaction.Behaviors>
+                                        <ia:EventTriggerBehavior EventName="Opened">
+                                            <ia:InvokeCommandAction Command="{Binding StartEditOrganizationContanctCommand}" CommandParameter="{Binding #grid.ContextFlyout}" />
+                                        </ia:EventTriggerBehavior>
+                                        <ia:EventTriggerBehavior EventName="Closed">
+                                            <ia:InvokeCommandAction Command="{Binding CloseEditOrganizationContanctCommand}" />
+                                        </ia:EventTriggerBehavior>
+                                    </i:Interaction.Behaviors>
+                                    <StackPanel Orientation="Vertical" Spacing="16">
+                                        <TextBlock Text="Изменение контакта" TextWrapping="Wrap" />
+                                        <StackPanel
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Bottom"
+                                            Classes="ComboboxField">
+                                            <TextBlock FontSize="14" Text="Тип контакта" />
+                                            <ComboBox
+                                                Width="250"
+                                                Classes="primary"
+                                                DisplayMemberBinding="{Binding Name}"
+                                                ItemsSource="{Binding ContactTypeCollection.Items}"
+                                                SelectedItem="{Binding OrganizationContactTemp.ContactTypeDto, Mode=TwoWay}"
+                                                SelectedValueBinding="{Binding ContactTypeId}" />
+                                            <StackPanel
+                                                Width="250"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Bottom"
+                                                Classes="TextField">
+                                                <TextBlock FontSize="14" Text="Значение" />
+                                                <TextBox Classes="primary" Text="{Binding OrganizationContactTemp.Value}" />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Width="250"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Bottom"
+                                                Classes="TextField">
+                                                <TextBlock FontSize="14" Text="Заметка" />
+                                                <TextBox
+                                                    Height="60"
+                                                    Classes="primary"
+                                                    Text="{Binding OrganizationContactTemp.Note}"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Button
+                                                x:Name="EditContactBtn"
+                                                VerticalAlignment="Bottom"
+                                                Classes="primary"
+                                                Content="Изменить">
+                                                <i:Interaction.Behaviors>
+                                                    <ia:EventTriggerBehavior EventName="Click">
+                                                        <ia:InvokeCommandAction Command="{Binding EditFinalOrganizationContanctCommand}" />
+                                                        <ia:CallMethodAction MethodName="Hide" TargetObject="{Binding #grid.ContextFlyout}" />
+                                                    </ia:EventTriggerBehavior>
+                                                </i:Interaction.Behaviors>
+                                            </Button>
+                                            <Button
+                                                x:Name="DelContactBtn"
+                                                VerticalAlignment="Bottom"
+                                                Classes="secondary"
+                                                Content="Удалить">
+                                                <i:Interaction.Behaviors>
+                                                    <ia:EventTriggerBehavior EventName="Click">
+                                                        <ia:InvokeCommandAction Command="{Binding DeleteOrganizationContanctCommand}" />
+                                                        <ia:CallMethodAction MethodName="Hide" TargetObject="{Binding #grid.ContextFlyout}" />
+                                                    </ia:EventTriggerBehavior>
+                                                </i:Interaction.Behaviors>
+                                            </Button>
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                </Flyout>
+                            </DataGrid.ContextFlyout>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Binding="{Binding OrganizationContactId}"
+                                    Header="№ п/п"
+                                    HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                                <DataGridTextColumn
+                                    Binding="{Binding ContactTypeDto.Name}"
+                                    Header="Тип"
+                                    HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Value}"
+                                    Header="Значение"
+                                    HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Note}"
+                                    Header="Заметка"
+                                    HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+        <Button
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="primary"
+            Command="{Binding FormCommand}"
+            Content="{Binding CurrentMode, Converter={StaticResource FormModeToStringConverter}}"
+            IsVisible="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" />
+    </StackPanel>
+
+
+
+
+</Window>

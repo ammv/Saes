@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         WindowManager.Add(this);
+        Closed += (s, e) => WindowManager.Remove(this);
         //this.WhenActivated(action =>
         //        action(ViewModel!.ShowDialog.RegisterHandler(DoShowDialogAsync)));
     }
@@ -41,9 +42,4 @@ public partial class MainWindow : Window
     //    var result = await dialog.ShowDialog<UserDto?>(this);
     //    interaction.SetOutput(result);
     //}
-
-    ~MainWindow()
-    {
-        WindowManager.Remove(this);
-    }
 }

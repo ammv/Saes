@@ -9,11 +9,8 @@ namespace Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalInstanceForCIHRe
         {
             InitializeComponent();
             WindowManager.Add(this);
+            Closed += (s, e) => WindowManager.Remove(this);
         }
 
-        ~JournalInstanceForCIHRecordFormView()
-        {
-            WindowManager.Remove(this);
-        }
     }
 }

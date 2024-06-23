@@ -27,6 +27,10 @@ message OrganizationLookup
 	google.protobuf.StringValue INN = 5;
 	google.protobuf.StringValue DirectorFullName = 6;
 	google.protobuf.StringValue ChiefAccountantFullName = 7;
+	google.protobuf.StringValue KPP = 8;
+	google.protobuf.StringValue OKPO = 9;
+	google.protobuf.StringValue OGRN = 10;
+	google.protobuf.StringValue OKVED = 11;
 }
 
 // Add or Edit

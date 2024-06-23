@@ -30,15 +30,14 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             query = request.JournalInstanceForCIHInstallerID != null ? query.Where(x => x.JournalInstanceForCihinstallerId == request.JournalInstanceForCIHInstallerID) : query;
             query = request.RecordID != null ? query.Where(x => x.RecordId == request.RecordID) : query;
 
-            //query = query
-            //    .Include(x => x.SignFile)
-            //    .Include(x => x.ReceivedFrom);
+            query = query
+                .Include(x => x.Installer);
 
             var response = new JournalInstanceForCIHInstallerLookupResponse();
 
-            var dtos = await query.ProjectToType<JournalInstanceForCIHInstallerDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<JournalInstanceForCIHInstallerDto>(_mapper.Config)));
 
             return response;
         }

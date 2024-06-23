@@ -39,13 +39,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
         {
             var vm = App.ServiceProvider.GetService<KeyHolderTypeFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.Add, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.Name} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.Add, null, SelectedEntity);
 
             await _dialogService.ShowDialog(vm);
-
-            await _Search();
         }
 
         protected override async Task OnCopyCommand()
@@ -90,26 +86,20 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
 
             var vm = App.ServiceProvider.GetService<KeyHolderTypeFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.Edit, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.Name} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.Edit, null, SelectedEntity);
 
             await _dialogService.ShowDialog(vm);
-
-            await _Search();
         }
 
         protected override async Task OnSeeCommand()
         {
+            if (SelectedEntity == null) return;
+
             var vm = App.ServiceProvider.GetService<KeyHolderTypeFormViewModel>();
 
-            vm.Configure(Core.Enums.FormMode.See, async (f) => {
-                await MessageBoxHelper.Question("Вопрос", $"{f.Name} - Вы довольны результатом?");
-            }, SelectedEntity);
+            vm.Configure(Core.Enums.FormMode.See, null, SelectedEntity);
 
             await _dialogService.ShowDialog(vm);
-
-            await _Search();
         }
 
         protected override async Task _Export()

@@ -1,0 +1,217 @@
+<Window
+    x:Class="Saes.AvaloniaMvvmClient.Views.Authorization.UserRole.UserRoleFormView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="using:AnimatedImage.Avalonia"
+    xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:qr="clr-namespace:Avalonia.QRCode;assembly=Avalonia.QRCode"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole"
+    Width="600"
+    x:DataType="vm:UserRoleFormViewModel"
+    Background="White"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Window.Styles>
+        <Style Selector="DataGridCell">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Styles>
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <StackPanel
+        Margin="8"
+        IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+        Orientation="Vertical"
+        Spacing="16">
+
+        <TextBlock
+            FontSize="24"
+            FontWeight="SemiBold"
+            Text="{Binding Title}"
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
+
+        <Image
+            Height="80"
+            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            IsVisible="{Binding TabIsLoading}" />
+
+        <Grid IsVisible="{Binding !TabIsLoading}">
+
+            <StackPanel
+                HorizontalAlignment="Stretch"
+                Orientation="Vertical"
+                Spacing="16">
+                <StackPanel
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Horizontal"
+                    Spacing="16">
+                    <StackPanel
+                        Width="200"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        Classes="TextField">
+                        <TextBlock FontSize="14" Text="№ п/п" />
+                        <TextBox
+                            Classes="primary"
+                            IsEnabled="False"
+                            Text="{Binding DataRequest.UserId, Mode=OneTime}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Width="200"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        Classes="TextField">
+                        <TextBlock FontSize="14" Text="Название" />
+                        <TextBox Classes="primary" Text="{Binding DataRequest.Name, Mode=TwoWay}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <DataGrid
+                    Height="400"
+                    MaxHeight="400"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    CanUserReorderColumns="True"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="False"
+                    GridLinesVisibility="All"
+                    HorizontalScrollBarVisibility="Auto"
+                    IsEnabled="True"
+                    IsReadOnly="True"
+                    IsVisible="{Binding !TabIsLoading}"
+                    ItemsSource="{Binding RightGroupExCollection.Items}"
+                    SelectedItem="{Binding RightGroupExCollection.Selected}"
+                    VerticalScrollBarVisibility="Visible">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn
+                            Width="425"
+                            Header="Меню"
+                            HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        Text="{Binding RightGroup.Name}"
+                                        TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="30">
+                            <DataGridTemplateColumn.Header>
+                                <PathIcon
+                                    Margin="2,0,0,0"
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    Data="{StaticResource eye_show_regular}" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding SeeRight.Enabled, Mode=TwoWay}" IsVisible="{Binding SeeRight.Has}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="30">
+                            <DataGridTemplateColumn.Header>
+                                <PathIcon
+                                    Margin="2,0,0,0"
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    Data="{StaticResource add_regular}" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        HorizontalAlignment="Center"
+                                        IsChecked="{Binding AddRight.Enabled, Mode=TwoWay}"
+                                        IsVisible="{Binding AddRight.Has}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="30">
+                            <DataGridTemplateColumn.Header>
+                                <PathIcon
+                                    Margin="2,0,0,0"
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    Data="{StaticResource edit_regular}" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        HorizontalAlignment="Center"
+                                        IsChecked="{Binding EditRight.Enabled, Mode=TwoWay}"
+                                        IsVisible="{Binding EditRight.Has}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="30">
+                            <DataGridTemplateColumn.Header>
+                                <PathIcon
+                                    Margin="2,0,0,0"
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    Data="{StaticResource delete_regular}" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        HorizontalAlignment="Center"
+                                        IsChecked="{Binding DeleteRight.Enabled, Mode=TwoWay}"
+                                        IsVisible="{Binding DeleteRight.Has}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="30">
+                            <DataGridTemplateColumn.Header>
+                                <PathIcon
+                                    Margin="2,0,0,0"
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    Data="{StaticResource arrow_download_regular}" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        HorizontalAlignment="Center"
+                                        IsChecked="{Binding ExportRight.Enabled, Mode=TwoWay}"
+                                        IsVisible="{Binding ExportRight.Has}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+
+
+
+        </Grid>
+
+        <Button
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="primary"
+            Command="{Binding FormCommand}"
+            Content="{Binding CurrentMode, Converter={StaticResource FormModeToStringConverter}}"
+            IsVisible="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" />
+    </StackPanel>
+
+
+
+
+</Window>

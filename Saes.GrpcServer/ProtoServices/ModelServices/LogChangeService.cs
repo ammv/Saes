@@ -28,21 +28,27 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         {
             var query = _ctx.LogChanges.AsQueryable();
 
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.LogChangeID != null ? query.Where(x => x.LogChangeId == request.LogChangeID) : query;
+            if(request.AuditLogId != null)
+            {
+                query = query.Where(x => x.AuditLogId == request.AuditLogId);
+                goto EndFilters;
+            }
 
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            query = request.TableColumnDataId != null ? query.Where(x => x.TableColumnDataId == request.TableColumnDataId) : query;
+            query = request.OldValue != null ? query.Where(x => x.OldValue.Contains(request.OldValue)) : query;
+            query = request.NewValue != null ? query.Where(x => x.NewValue.Contains(request.NewValue)) : query;
+
+            EndFilters:
+
+            query = query
+                .Include(x => x.AuditLog)
+                .Include(x => x.TableColumnData);
 
             var response = new LogChangeLookupResponse();
 
-            var dtos = await query.ProjectToType<Protos.LogChangeDto>(_mapper.Config).ToListAsync();
+            var entities = await query.ToListAsync();
 
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select(x => x.Adapt<LogChangeDto>(_mapper.Config)));
 
             return response;
         }

@@ -1,0 +1,272 @@
+<Window
+    x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalTechnicalRecord.JournalTechnicalRecordFormView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anim="using:AnimatedImage.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalTechnicalRecord"
+    Title="{Binding Title}"
+    x:DataType="vm:JournalTechnicalRecordFormViewModel"
+    Background="White"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <Window.Effect>
+        <DropShadowEffect />
+    </Window.Effect>
+
+    <StackPanel
+        Margin="8"
+        Orientation="Vertical"
+        Spacing="16">
+
+        <TextBlock
+            Margin="0,0,0,16"
+            FontSize="24"
+            FontWeight="SemiBold"
+            Text="{Binding Title}"
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
+
+        <Image
+            Height="80"
+            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            IsVisible="{Binding TabIsLoading}" />
+
+        <TabControl x:Name="tabControl" IsVisible="{Binding !TabIsLoading}">
+            <TabItem Header="Общее">
+                <StackPanel
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <!--  1 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="№ п/п" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="False"
+                                Text="{Binding DataRequest.JournalTechnicalRecordId, Mode=OneTime}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="250"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="ComboboxField">
+                            <TextBlock FontSize="14" Text="Организация" />
+                            <ComboBox
+                                Width="250"
+                                Classes="primary"
+                                DisplayMemberBinding="{Binding ShortName}"
+                                IsEnabled="False"
+                                ItemsSource="{Binding OrganizationCollection.Items}"
+                                SelectedItem="{Binding OrganizationCollection.Selected}"
+                                SelectedValue="{Binding DataRequest.OrganizationID}"
+                                SelectedValueBinding="{Binding OrganizationId}" />
+
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Тип и серийные номера используемых СКЗИ"
+                                TextWrapping="Wrap" />
+                            <TextBox Classes="primary" Text="{Binding DataRequest.TypeAndSerialUsedCPI, Mode=TwoWay}" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <!--  2 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Записи по обслуживанию СКЗИ"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Height="100"
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.RecordOnMaintenanceCPI, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            Classes="TextField">
+                            <TextBlock FontSize="14" Text="Примечание" />
+                            <TextBox
+                                Height="108"
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.Note, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel
+                        IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                        Orientation="Vertical"
+                        Spacing="16">
+                        <!--  5 Строка  -->
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <StackPanel
+                                Width="516"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                Classes="TextField">
+                                <TextBlock
+                                    FontSize="14"
+                                    Text="Дата"
+                                    TextWrapping="Wrap" />
+                                <DatePicker SelectedDate="{Binding DataRequest.Date, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Используемые криптоключи">
+                <StackPanel
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Classes="ComboboxField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Тип используемого ключевого документа"
+                                TextWrapping="Wrap" />
+                            <ComboBox
+                                Width="516"
+                                Classes="primary"
+                                DisplayMemberBinding="{Binding Name}"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                ItemsSource="{Binding KeyDocumentTypeCollection.Items}"
+                                SelectedItem="{Binding KeyDocumentTypeCollection.Selected}"
+                                SelectedValue="{Binding DataRequest.KeyDocumentTypeID}"
+                                SelectedValueBinding="{Binding KeyDocumentTypeId}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Серийный, криптографический номер и номер экземпляра ключевого документа"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.SerialCPIAndKeyDocumentInstanceNumber, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Номер разового ключевого носителя или зоны СКЗИ, в которую введены криптоключи"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.NumberOneTimeKeyCarrierCPIZoneCryptoKeysInserted, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Отметка о изъятии">
+                <StackPanel
+                    IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                    Orientation="Vertical"
+                    Spacing="16">
+                    <!--  5 Строка  -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Дата изъятия (уничтожения)"
+                                TextWrapping="Wrap" />
+                            <DatePicker SelectedDate="{Binding DataRequest.DestructionDate, Mode=TwoWay, Converter={StaticResource TimestampToDateTimeConverter}}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Width="516"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Classes="TextField">
+                            <TextBlock
+                                FontSize="14"
+                                Text="Номер акта или расписка об уничтожении"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                Classes="primary"
+                                IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"
+                                Text="{Binding DataRequest.ActNumber, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+        <!--<Grid Classes="SeparatorBlock">
+
+			<Separator Height="1.5" />
+			<TextBlock
+                Padding="0,0,8,0"
+                HorizontalAlignment="Left"
+                Background="White"
+                FontSize="18"
+                FontWeight="SemiBold"
+                Text="Отметка об изъятии СКЗИ из аппаратных средств, уничтожении ключевых документов " />
+		</Grid>-->
+
+        <Button
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Classes="primary"
+            Command="{Binding FormCommand}"
+            Content="{Binding CurrentMode, Converter={StaticResource FormModeToStringConverter}}"
+            IsVisible="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}" />
+    </StackPanel>
+
+
+
+
+</Window>
