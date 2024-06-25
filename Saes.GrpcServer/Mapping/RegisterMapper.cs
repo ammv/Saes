@@ -32,9 +32,12 @@ namespace Saes.GrpcServer.Mapping
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef);
             config.NewConfig<Right, RightDto>()
+                .Map(dest => dest.RightGroupDto, src => src.RightGroup)
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef);
             config.NewConfig<UserRoleRight, UserRoleRightDto>()
+                .Map(dest => dest.UserRoleDto, src => src.UserRole)
+                .Map(dest => dest.RightDto, src => src.Right)
                 .RequireDestinationMemberSource(requireDms)
                 .PreserveReference(preserveRef);
             config.NewConfig<User, UserDto>()

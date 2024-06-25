@@ -58,14 +58,18 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
         private readonly ISessionKeyService _sessionKeyService;
         private readonly IUserService _userService;
 
+        [Reactive]
         public ReactiveCommand<Unit, Unit> ExitCommand { get; set; }
 
+        [Reactive]
         public TabStripViewModel TabStrip { get; set; }
+        [Reactive]
         public SideMenuViewModel Menu { get; set; }
 
         [Reactive]
         public StatusData Status { get; set; }
-        public INavigationService NavigationService { get; }
+        [Reactive]
+        public INavigationService NavigationService { get; private set; }
 
         private async Task OnExitCommand()
         {
@@ -83,13 +87,16 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             LoadMenu();
         }
 
-        public MainMenuViewModel(INavigationService navigationService, ISessionKeyService sessionKeyService, IUserService userService)
+        public MainMenuViewModel(INavigationServiceFactory navigationServiceFactory, ISessionKeyService sessionKeyService, IUserService userService)
         {
-            NavigationService = navigationService;
+            NavigationService = navigationServiceFactory.Singleton;
             _sessionKeyService = sessionKeyService;
             _userService = userService;
+        }
+
+        public void Loaded()
+        {
             LoadMenu();
-            
         }
 
         private void LoadMenu()

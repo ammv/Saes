@@ -33,11 +33,11 @@ namespace Saes.AvaloniaMvvmClient.Interceptors
                 typeof(HelloRequest));
         }
 
-        public SessionKeyInterceptor(ISessionKeyService sessionKeyService, IDialogService dialogService, INavigationService navigationService)
+        public SessionKeyInterceptor(ISessionKeyService sessionKeyService, IDialogService dialogService, INavigationServiceFactory navigationServiceFactory)
         {
             _sessionKeyService = sessionKeyService;
             _dialogService = dialogService;
-            _navigationService = navigationService;
+            _navigationService = navigationServiceFactory.Singleton;
         }
 
         private ClientInterceptorContext<TRequest, TResponse> CreateContextWithSessionKey<TRequest, TResponse>(ClientInterceptorContext<TRequest, TResponse> context)

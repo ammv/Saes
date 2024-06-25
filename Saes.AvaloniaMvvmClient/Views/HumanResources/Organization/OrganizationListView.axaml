@@ -206,9 +206,12 @@
                                 <PathIcon Data="{StaticResource edit_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding AddCommand}" Header="Добавить">
+                        <MenuItem
+                            atp:RightBehav.RightCode="organization_add"
+                            Command="{Binding AddCommand}"
+                            Header="Добавить">
                             <MenuItem.Icon>
-                                <PathIcon atp:RightBehav.RightCode="organization_add" Data="{StaticResource add_regular}" />
+                                <PathIcon Data="{StaticResource add_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem

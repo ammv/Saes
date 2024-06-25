@@ -112,20 +112,21 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
 
         private async Task _RightGroupExCollectionLoad()
         {
-            var rightGroupClient = new RightGroupService.RightGroupServiceClient(_grpcChannel);
             var rightClient = new RightService.RightServiceClient(_grpcChannel);
             MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение прав"));
-            var response = await rightGroupClient.SearchAsync(new RightGroupLookup());
-
+            var response = await rightClient.SearchAsync(new RightLookup());
             MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
-            foreach (var rightGroup in response.Data.OrderBy( x => x.Name.Length))
-            {
-                RightLookupResponse rightResponse = await rightClient.SearchAsync(new RightLookup { RightGroupId = rightGroup.RightGroupId });
-                List<RightDto> rights = rightResponse.Data.ToList();
 
+            var grouppedRights = from right in response.Data
+                                 orderby right.RightGroupDto.Name
+                                 group right by right.RightGroupDto;
+
+            foreach (var grouppedRight in grouppedRights)
+            {
+                var rights = grouppedRight.ToList();
                 RightGroupEx rightGroupEx = new RightGroupEx
                 {
-                    RightGroup = rightGroup,
+                    RightGroup = grouppedRight.Key,
                     AddRight = new RightEx { Right = rights.FirstOrDefault(x => x.Code.EndsWith("add")) },
                     EditRight = new RightEx { Right = rights.FirstOrDefault(x => x.Code.EndsWith("edit")) },
                     DeleteRight = new RightEx { Right = rights.FirstOrDefault(x => x.Code.EndsWith("delete")) },
@@ -145,11 +146,10 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
                     x.SeeRight
                 }).Where(x => x.Right != null).ToList();
 
-           // RightGroupExCollection.Items = new ObservableCollection<RightGroupEx>(RightGroupExCollection.Items.OrderBy(x => x.RightGroup.Name));
+            // RightGroupExCollection.Items = new ObservableCollection<RightGroupEx>(RightGroupExCollection.Items.OrderBy(x => x.RightGroup.Name));
 
             MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
         }
-
         protected override async Task _OnAdd()
         {
             if(!Validate())

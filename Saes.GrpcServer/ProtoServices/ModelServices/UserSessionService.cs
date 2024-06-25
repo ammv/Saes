@@ -53,7 +53,10 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
         public override async Task<GetUserByCurrentSessionResponse> GetUserByCurrentSession(GetUserByCurrentSessionRequest request, ServerCallContext context)
         {
             string? sessionKey = context.RequestHeaders.GetValue("SessionKey");
-            UserSession userSession = await _ctx.UserSessions.Include(x => x.User).SingleAsync(x => x.SessionKey == sessionKey);
+            UserSession userSession = await _ctx.UserSessions
+                .Include(x => x.User)
+                    .ThenInclude( x => x.UserRole)
+                .SingleAsync(x => x.SessionKey == sessionKey);
             return new GetUserByCurrentSessionResponse { User = userSession.User.Adapt<UserDto>(_mapper.Config) };
         }
     }

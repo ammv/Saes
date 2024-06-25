@@ -48,8 +48,8 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             var response = new UserRoleRightLookupResponse();
 
             var entities = await query.ToListAsync();
-			
-			response.Data.AddRange(entities.Select( x => x.Adapt<UserRoleRightDto>(_mapper.Config)));
+
+            response.Data.AddRange(entities.Select(x => x.Adapt<UserRoleRightDto>(_mapper.Config)));
 
             return response;
         }
@@ -162,9 +162,12 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             {
                 var existingUserRoleRight = await _ctx.UserRoleRights.FirstOrDefaultAsync(x => x.UserRoleId == item.UserRoleId && x.RightId == item.RightId);
 
-                if (existingUserRoleRight != null && existingUserRoleRight.SysIsDeleted)
+                if (existingUserRoleRight != null)
                 {
-                    existingUserRoleRight.SysIsDeleted = false;
+                    if (existingUserRoleRight.SysIsDeleted)
+                    {
+                        existingUserRoleRight.SysIsDeleted = false;
+                    }
                 }
                 else
                 {
@@ -195,7 +198,7 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 throw new RpcException(new Status(StatusCode.NotFound, "В запросе были указаны несуществующие идентификаторы права ролей"));
             }
 
-            _ctx.UserRoleRights.RemoveRange(removeUserRoleRights.Where( x => !x.SysIsDeleted));
+            _ctx.UserRoleRights.RemoveRange(removeUserRoleRights.Where(x => !x.SysIsDeleted));
 
             await _ctx.SaveChangesAsync();
 

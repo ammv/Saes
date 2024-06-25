@@ -162,14 +162,14 @@
                                 <PathIcon Data="{StaticResource edit_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem
+                        <!--<MenuItem
                             atp:RightBehav.RightCode="journal_instance_for_cih_record_add"
                             FlyoutBase.AttachedFlyout="{StaticResource addFlyout}"
                             Header="Добавить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource add_regular}" />
                             </MenuItem.Icon>
-                        </MenuItem>
+                        </MenuItem>-->
                         <MenuItem
                             atp:RightBehav.RightCode="journal_instance_for_cih_record_delete"
                             Command="{Binding DeleteCommand}"

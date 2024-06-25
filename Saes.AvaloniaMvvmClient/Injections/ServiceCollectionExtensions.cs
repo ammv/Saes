@@ -54,7 +54,9 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddSingleton<ISessionKeyService, FileSessionKeyService>();
             collection.AddSingleton<IUserService, UserService>();
             collection.AddSingleton<IDialogService, DialogService>();
-            collection.AddSingleton<INavigationService, NavigationService>();
+            collection.AddSingleton<IWindowTitleService, WindowTitleService>();
+            //collection.AddSingleton<INavigationService, NavigationService>();
+            collection.AddSingleton<INavigationServiceFactory, NavigationServiceFactory>();
             //collection.AddSingleton<IStatusService, StatusService>();
         }
 

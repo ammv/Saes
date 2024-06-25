@@ -9,8 +9,8 @@ namespace Saes.AvaloniaMvvmClient.Services.Interfaces
 {
     public interface INavigationService
     {
+        public event EventHandler<ViewModelBase> Navigated;
         public ViewModelBase Content { get; }
-
         public void NavigateTo(ViewModelBase content);
     }
 }

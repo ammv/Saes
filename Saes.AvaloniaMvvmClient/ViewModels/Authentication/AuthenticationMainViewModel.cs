@@ -13,11 +13,13 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
 {
-    public class AuthenticationMainViewModel: ViewModelBase
+    public class AuthenticationMainViewModel : ViewModelBase
     {
         private readonly IGrpcChannelFactory _grpcChannelFactory;
         private readonly ISessionKeyService _sessionKeyService;
+        private readonly INavigationServiceFactory _navigationServiceFactory;
         private readonly IUserService _userService;
+        private readonly IWindowTitleService _windowTitleService;
         private readonly FirstFactorAuthenticationViewModel _firstFactorAuthenticationViewModel;
         private SecondFactorAuthenticationViewModel _secondFactorAuthenticationViewModel;
 
@@ -35,35 +37,40 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
                 CompleteCallback?.Invoke();
                 return;
             }
-            NavigationService.NavigateTo(App.ServiceProvider.GetService<MainMenuViewModel>());
+            _navigationServiceFactory.Singleton.NavigateTo(App.ServiceProvider.GetService<MainMenuViewModel>());
         }
-        [Reactive]
-        public ViewModelBase Content { get; set; }
 
-        public AuthenticationMainViewModel(FirstFactorAuthenticationViewModel firstFactorAuthenticationViewModel, ISessionKeyService sessionKeyService, INavigationService navigationService, IUserService userService)
+        public AuthenticationMainViewModel(FirstFactorAuthenticationViewModel firstFactorAuthenticationViewModel, ISessionKeyService sessionKeyService, INavigationServiceFactory navigationServiceFactory, IUserService userService, IWindowTitleService windowTitleService)
         {
             _firstFactorAuthenticationViewModel = firstFactorAuthenticationViewModel;
             _sessionKeyService = sessionKeyService;
-            NavigationService = navigationService;
+            _navigationServiceFactory = navigationServiceFactory;
             _userService = userService;
-            _firstFactorAuthenticationViewModel.AuthCommand.Subscribe(FirstFactorCommandOnExecute);
+            _windowTitleService = windowTitleService;
 
-            Content = _firstFactorAuthenticationViewModel;
             DialogMode = false;
+        }
+        public void Loaded()
+        {
+            _windowTitleService.TitleFormat = "{appName}";
+            NavigationService = _navigationServiceFactory.Create();
+            _firstFactorAuthenticationViewModel.AuthCommand.Subscribe(FirstFactorCommandOnExecute);
+            NavigationService.NavigateTo(_firstFactorAuthenticationViewModel);
+
         }
 
         private void FirstFactorCommandOnExecute(FirstFactorAuthenticateResponse response)
         {
             if (response == null) return;
 
-            if(!response.Has2FA)
+            if (!response.Has2FA)
             {
                 _sessionKeyService.SaveSessionKey(response.SessionKey);
                 OnAuthenticationCompleted();
                 return;
             }
 
-            if(_secondFactorAuthenticationViewModel == null)
+            if (_secondFactorAuthenticationViewModel == null)
             {
                 _secondFactorAuthenticationViewModel = App.ServiceProvider.GetService<SecondFactorAuthenticationViewModel>();
 
@@ -72,15 +79,23 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
                 _secondFactorAuthenticationViewModel.SuccessCommand.Subscribe(SecondFactorCommandOnExecute);
             }
 
-            Content = _secondFactorAuthenticationViewModel;
+            NavigationService.NavigateTo(_secondFactorAuthenticationViewModel);
 
         }
-        
+
+        private int _badOtpAttempts = 0;
+        private const int _maxBadOtpAttempts = 3;
+
+
         private void SecondFactorCommandOnExecute(SecondFactorAuthenticateResponse response)
         {
             if (response == null)
             {
-                Content = _firstFactorAuthenticationViewModel;
+                if (++_badOtpAttempts == _maxBadOtpAttempts)
+                {
+                    NavigationService.NavigateTo(_firstFactorAuthenticationViewModel);
+                    _badOtpAttempts = 0;
+                }
                 return;
             }
 
@@ -88,6 +103,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
             OnAuthenticationCompleted();
         }
 
-        public INavigationService NavigationService { get; }
+        [Reactive]
+        public INavigationService NavigationService { get; private set; }
     }
 }

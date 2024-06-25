@@ -3,6 +3,7 @@ using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI.Fody.Helpers;
 using Saes.AvaloniaMvvmClient.Helpers;
+using Saes.AvaloniaMvvmClient.Services.Impementations;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
 using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
@@ -19,19 +20,19 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
     public class LoadingViewModel: ViewModelBase
     {
         private readonly INavigationService _navigationService;
-        private readonly ISessionKeyService _sessionKeyService;
         private readonly IGrpcChannelFactory _grpcChannelFactory;
+        private readonly ISessionKeyService _sessionKeyService;
         private readonly IUserService _userService;
         private readonly IServiceProvider _serviceProvider;
 
         [Reactive]
         public string LoadingStatus { get; set; }
 
-        public LoadingViewModel(INavigationService navigationService, ISessionKeyService sessionKeyService, IGrpcChannelFactory grpcChannelFactory, IUserService userService, IServiceProvider serviceProvider)
+        public LoadingViewModel(INavigationServiceFactory navigationServiceFactory, ISessionKeyService sessionKeyService, IGrpcChannelFactory grpcChannelFactory, IUserService userService, IServiceProvider serviceProvider)
         {
-            _navigationService = navigationService;
-            _sessionKeyService = sessionKeyService;
+            _navigationService = navigationServiceFactory.Singleton;
             _grpcChannelFactory = grpcChannelFactory;
+            _sessionKeyService = sessionKeyService;
             _userService = userService;
             _serviceProvider = serviceProvider;
         }

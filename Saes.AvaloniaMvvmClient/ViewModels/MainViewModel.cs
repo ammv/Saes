@@ -22,17 +22,22 @@ public class MainViewModel : ViewModelBase
     
     public static Func<Window, bool> Selector = (x) => x.DataContext.GetType() == typeof(MainViewModel);
 
-    public INavigationService NavigationService { get; }
+    public INavigationServiceFactory NavigationServiceFactory { get; }
+    public IWindowTitleService WindowTitleService { get; }
 
-    public MainViewModel(INavigationService navigationService, IServiceProvider serviceProvider)
+    public MainViewModel(INavigationServiceFactory navigationServiceFactory, IServiceProvider serviceProvider, IWindowTitleService windowTitleService)
     {
-        NavigationService = navigationService;
+        NavigationServiceFactory = navigationServiceFactory;
         _serviceProvider = serviceProvider;
+        WindowTitleService = windowTitleService;
     }
 
-    public async void Loaded()
+    public void Loaded()
     {
-        NavigationService.NavigateTo(_serviceProvider.GetService<LoadingViewModel>());
+        WindowTitleService.AddOrUpdate("appName", "Система учёта электронных подписей");
+        WindowTitleService.TitleFormat = "{appName}";
+
+        NavigationServiceFactory.Singleton.NavigateTo(_serviceProvider.GetService<LoadingViewModel>());
     }
 
 }

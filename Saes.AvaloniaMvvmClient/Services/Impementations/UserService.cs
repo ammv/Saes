@@ -19,10 +19,12 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
     {
         private HashSet<string> _rights = new HashSet<string>();
         private readonly CallInvoker _grpcChannel;
+        private readonly IWindowTitleService _windowTitleService;
 
-        public UserService(IGrpcChannelFactory grpcChannelFactory)
+        public UserService(IGrpcChannelFactory grpcChannelFactory, IWindowTitleService windowTitleService)
         {
             _grpcChannel = grpcChannelFactory.CreateChannel();
+            _windowTitleService = windowTitleService;
         }
         public IReadOnlyCollection<string> GetRights()
         {
@@ -35,6 +37,10 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
             {
                 var userSessionClient = new UserSessionService.UserSessionServiceClient(_grpcChannel);
                 var response = userSessionClient.GetUserByCurrentSession(new GetUserByCurrentSessionRequest());
+
+                _windowTitleService.AddOrUpdate("userLogin", response.User.Login);
+                _windowTitleService.AddOrUpdate("userRole", response.User.UserRoleDto.Name);
+                _windowTitleService.TitleFormat = "{appName} - {userLogin} ({userRole})";
 
                 var userClient = new Saes.Protos.ModelServices.UserService.UserServiceClient(_grpcChannel);
 

@@ -6,6 +6,7 @@ using ReactiveUI;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.ViewModels;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication.User;
+using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
 using Saes.AvaloniaMvvmClient.Views.Authentication.User;
 using Saes.Protos;
 using System.Threading.Tasks;
@@ -18,28 +19,30 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         WindowManager.Add(this);
-        Closed += (s, e) => WindowManager.Remove(this);
-        //this.WhenActivated(action =>
-        //        action(ViewModel!.ShowDialog.RegisterHandler(DoShowDialogAsync)));
+        Closed += (s, e) =>
+        {
+            WindowManager.Remove(this);
+            var vm = DataContext as MainMenuViewModel;
+        };
+        Loaded += MainWindow_Loaded;
     }
 
-    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    private void MainWindow_Loaded(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        base.OnSizeChanged(e);
-
-        int x = (int)(Screens.Primary.WorkingArea.Width - this.Bounds.Width) / 2;
-        int y = (int)(Screens.Primary.WorkingArea.Height - this.Bounds.Height) / 2;
-
-        this.Position = new Avalonia.PixelPoint(x,y);
+        CenterWindow();
+        var vm = DataContext as MainViewModel;
+        vm.NavigationServiceFactory.Created += (s, e) => e.Navigated += (s,e) => CenterWindow();
     }
 
-    //private async Task DoShowDialogAsync(InteractionContext<UserFormViewModel,
-    //                                            UserDto?> interaction)
-    //{
-    //    var dialog = new UserFormView();
-    //    dialog.DataContext = interaction.Input;
+    private void CenterWindow()
+    {
+        var screen = Screens.ScreenFromWindow(this);
+        var screenWidth = screen.WorkingArea.Width;
+        var screenHeight = screen.WorkingArea.Height;
 
-    //    var result = await dialog.ShowDialog<UserDto?>(this);
-    //    interaction.SetOutput(result);
-    //}
+        var x = (int)(screenWidth - this.Bounds.Size.Width) / 2;
+        var y = (int)(screenHeight - this.Bounds.Size.Height) / 2;
+
+        this.Position = new Avalonia.PixelPoint(x, y);
+    }
 }

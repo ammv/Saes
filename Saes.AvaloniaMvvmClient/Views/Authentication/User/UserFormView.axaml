@@ -59,13 +59,25 @@
             <TextBox Classes="primary" Text="{Binding DataRequest.Login, Mode=TwoWay}" />
         </StackPanel>
 
+
+
         <StackPanel
             HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
             Classes="TextField"
             IsVisible="{Binding FormModeIsAdd}">
             <TextBlock FontSize="14" Text="Пароль" />
-            <TextBox Classes="primary" Text="{Binding DataRequest.Password, Mode=TwoWay}" />
+            <TextBox
+                Classes="primary"
+                IsEnabled="{Binding #EnablePasswordEditCb.IsChecked}"
+                Text="{Binding DataRequest.Password, Mode=TwoWay}" />
+            <CheckBox
+                x:Name="EnablePasswordEditCb"
+                Classes="primary"
+                Content="Я хочу изменить пароль"
+                IsChecked="True"
+                IsThreeState="False"
+                IsVisible="{Binding !FormModeIsAdd}" />
         </StackPanel>
 
         <StackPanel
@@ -91,13 +103,9 @@
 
             <CheckBox
                 Classes="primary"
+                Content="Включить 2FA"
                 IsChecked="{Binding DataRequest.TwoFactorEnabled, Mode=TwoWay}"
                 IsThreeState="False" />
-            <TextBlock
-                VerticalAlignment="Center"
-                FontSize="14"
-                Text="Включить 2FA"
-                TextWrapping="Wrap" />
         </StackPanel>
 
         <Button

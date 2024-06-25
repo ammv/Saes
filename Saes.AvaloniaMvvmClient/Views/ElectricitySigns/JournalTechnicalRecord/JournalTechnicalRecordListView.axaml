@@ -163,14 +163,14 @@
                                 <PathIcon Data="{StaticResource edit_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem
+                        <!--<MenuItem
                             atp:RightBehav.RightCode="journal_technical_record_add"
                             Command="{Binding AddCommand}"
                             Header="Добавить">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource add_regular}" />
                             </MenuItem.Icon>
-                        </MenuItem>
+                        </MenuItem>-->
                         <MenuItem
                             atp:RightBehav.RightCode="journal_technical_record_delete"
                             Command="{Binding DeleteCommand}"

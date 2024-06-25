@@ -14,6 +14,7 @@ using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Saes.AvaloniaMvvmClient.Views;
 using Saes.AvaloniaMvvmClient.Views.Authentication;
+using Avalonia.LogicalTree;
 
 namespace Saes.AvaloniaMvvmClient
 {
@@ -55,34 +56,51 @@ namespace Saes.AvaloniaMvvmClient
         {
             
             Control controlSender = (Control)sender;
-            await CheckRights(controlSender, App.ServiceProvider.GetService<IUserService>().GetRights());
+            await VisualTreeRightPropertyWalking(controlSender, App.ServiceProvider.GetService<IUserService>().GetRights());
         }
 
-        private async Task CheckRights(Visual controlSender, IReadOnlyCollection<string> rights)
+        private async Task VisualTreeRightPropertyWalking(Visual controlSender, IReadOnlyCollection<string> rights)
         {
             foreach (var child in controlSender.GetVisualChildren())
             {
                 if (child is Control control)
                 {
-                    var propValue = control.GetValue(RightBehav.RightCodeProperty);
-                    if (!string.IsNullOrEmpty(propValue))
-                    {
-                        if (!rights.Contains(propValue))
-                        {
-                            await Dispatcher.UIThread.InvokeAsync(() =>
-                            {
-                                control.IsVisible = false;
-                            });
-                        }
+                    await configureRight(rights, control);
 
+                    var contextMenu = control.ContextMenu;
+                    if (contextMenu != null)
+                    {
+                        foreach(Control item in contextMenu.Items)
+                        {
+                            if(item != null)
+                            {
+                                await configureRight(rights, item);
+                            }
+                        }
                     }
                 }
 
                 // Рекурсивный вызов для проверки всех дочерних элементов
                 if (child is Visual visualChild)
                 {
-                    await CheckRights(visualChild, rights);
+                    await VisualTreeRightPropertyWalking(visualChild, rights);
                 }
+            }
+        }
+
+        private static async Task configureRight(IReadOnlyCollection<string> rights, Control control)
+        {
+            var propValue = control.GetValue(RightBehav.RightCodeProperty);
+            if (!string.IsNullOrEmpty(propValue))
+            {
+                if (!rights.Contains(propValue))
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        control.IsVisible = false;
+                    });
+                }
+
             }
         }
 

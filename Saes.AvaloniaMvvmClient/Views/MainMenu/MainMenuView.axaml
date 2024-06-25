@@ -17,6 +17,11 @@
     d:DesignWidth="1300"
     x:DataType="vm:MainMenuViewModel"
     mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
     <Design.DataContext>
         <vm:MainMenuViewModel />
     </Design.DataContext>

@@ -60,13 +60,13 @@
                 Spacing="16">
                 <Button
                     VerticalAlignment="Bottom"
-                    atp:RightBehav.RightCode="right_group_add"
+                    atp:RightBehav.RightCode="user_role_add"
                     Classes="secondary"
                     Command="{Binding AddCommand}"
                     Content="Добавить" />
                 <Button
                     VerticalAlignment="Bottom"
-                    atp:RightBehav.RightCode="right_group_export"
+                    atp:RightBehav.RightCode="user_role_export"
                     Classes="secondary"
                     Command="{Binding ExportCommand}"
                     Content="Экспорт" />
@@ -109,10 +109,11 @@
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem
+                            atp:RightBehav.RightCode="user_role_add"
                             Command="{Binding AddCommand}"
                             Header="Добавить">
                             <MenuItem.Icon>
-                                <PathIcon atp:RightBehav.RightCode="user_role_add" Data="{StaticResource add_regular}" />
+                                <PathIcon Data="{StaticResource add_regular}" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem
