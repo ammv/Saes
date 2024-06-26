@@ -12,14 +12,16 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
     public class NavigationService : ReactiveObject, INavigationService
     {
         public event EventHandler<ViewModelBase> Navigated;
+        public event EventHandler<ViewModelBase> Navigating;
 
         private ViewModelBase _content;
         public ViewModelBase Content => _content;
 
         public void NavigateTo(ViewModelBase content)
         {
-            Navigated?.Invoke(this, _content);
+            Navigating?.Invoke(this, _content);
             this.RaiseAndSetIfChanged(ref _content, content, nameof(Content));
+            Navigated?.Invoke(this, _content);
         }
     }
 }

@@ -55,13 +55,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
             set => this.RaiseAndSetIfChanged(ref _exportCommandIsExecuting, value);
         }
 
-        protected IObservable<bool> _tabIsLoadingObservable
-        {
-            get
-            {
-                return this.WhenAnyValue(x => x.TabIsLoading, x => !x);
-            }
-        }
+        
 
         protected IObservable<bool> _searchCommandIsExecutingObservable
         {
@@ -114,12 +108,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
         public ReactiveCommand<Unit, Unit> SearchCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ClearLookupCommand { get; set; }
 
-        protected bool _tabIsLoading;
-        public bool TabIsLoading
-        {
-            get => _tabIsLoading;
-            set => this.RaiseAndSetIfChanged(ref _tabIsLoading, value);
-        }
+        
 
         protected virtual async Task OnSearchCommand()
         {
@@ -139,22 +128,10 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
             ExportCommandIsExecuting = false;
         }
 
-        public bool TabIsLoaded { get; private set; } = false;
+        
 
         protected abstract Task _Search();
         protected abstract Task _Export();
-        protected abstract Task _Loaded();
-        public virtual async void Loaded()
-        {
-            if (TabIsLoaded) return;
-
-            TabIsLoading = true;
-
-            await _Loaded();
-
-            TabIsLoading = false;
-
-            TabIsLoaded = true;
-        }
+        
     }
 }

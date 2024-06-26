@@ -1,5 +1,8 @@
-﻿using ReactiveUI;
+﻿using Avalonia.Controls;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Saes.AvaloniaMvvmClient.Core.Enums;
+using Saes.AvaloniaMvvmClient.Helpers;
 using System;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -8,14 +11,16 @@ using static Grpc.Core.Metadata;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels;
 
-
-
 public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseableBase
     where TDto : class, new()
     where TDataRequest: class, new()
 
 {
-   
+    private int? _additionalInitialHashCode;
+
+    private int _dataRequestInitialHashCode;
+    protected bool FormDataChanged => (_dataRequest.GetHashCode() != _dataRequestInitialHashCode) || (_additionalInitialHashCode != null ? GetAdditionalHashCode() != _additionalInitialHashCode: false);
+
     private bool _formCommandIsExecuting;
     public bool FormCommandIsExecuting
     {
@@ -35,7 +40,7 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
     protected ViewModelFormBase()
     {
     
-        FormCommand = ReactiveCommand.CreateFromTask(OnFormCommand, this.WhenAnyValue(x => x.FormCommandIsExecuting, x => x.TabIsLoading, (x,y) => !x && !y));
+        FormCommand = ReactiveCommand.CreateFromTask(OnFormCommand, this.WhenAnyValue(x => x.FormCommandIsExecuting, x => x.FormIsLoading, (x,y) => !x && !y));
     }
     public ReactiveCommand<Unit, Unit> FormCommand { get; set; }
 
@@ -113,11 +118,12 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
     protected abstract Task _OnSee();
     protected abstract Task _OnAdd();
 
-    private bool _tabIsLoading;
-    public bool TabIsLoading
+    [Reactive]
+    public bool FormIsLoading { get; private set; }
+
+    protected virtual int? GetAdditionalHashCode()
     {
-        get => _tabIsLoading;
-        set => this.RaiseAndSetIfChanged(ref _tabIsLoading, value);
+        return null;
     }
 
     protected abstract void _ConfigureTitle();
@@ -125,7 +131,7 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
     protected abstract Task _Loaded();
     public virtual async void Loaded()
     {
-        TabIsLoading = true;
+        FormIsLoading = true;
 
         await _Loaded();
 
@@ -133,6 +139,23 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
 
         DataRequest = _ConfigureDataRequest(Dto);
 
-        TabIsLoading = false;
+        _dataRequestInitialHashCode = _dataRequest.GetHashCode();
+        _additionalInitialHashCode = GetAdditionalHashCode();
+
+        FormIsLoading = false;
+    }
+
+    protected override async Task OnClosingCommand(WindowClosingEventArgs closingEventArgs)
+    {
+        if(!IsForceClose && FormDataChanged)
+        {
+            closingEventArgs.Cancel = true;
+
+            var result = await MessageBoxHelper.Question("Предупреждение", "У вас есть не сохраненные изменения, в случае закрытия окна они пропадут. Вы уверены что хотите закрыть окно?", isWarning: true);
+            if(result)
+            {
+                Close();
+            }
+        }
     }
 }

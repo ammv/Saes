@@ -35,9 +35,11 @@ using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Organization;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.OrganizationContact;
 using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
 using Saes.AvaloniaMvvmClient.ViewModels.Office.Hardware;
+using Saes.AvaloniaMvvmClient.ViewModels.Other;
 using Saes.AvaloniaMvvmClient.ViewModels.Other.Address;
 using Saes.AvaloniaMvvmClient.ViewModels.Other.File;
 using Saes.AvaloniaMvvmClient.ViewModels.Person.ContactType;
+using Saes.AvaloniaMvvmClient.Views.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +56,7 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddSingleton<ISessionKeyService, FileSessionKeyService>();
             collection.AddSingleton<IUserService, UserService>();
             collection.AddSingleton<IDialogService, DialogService>();
+            collection.AddSingleton<IWindowStateService, WindowStateService>();
             collection.AddSingleton<IWindowTitleService, WindowTitleService>();
             //collection.AddSingleton<INavigationService, NavigationService>();
             collection.AddSingleton<INavigationServiceFactory, NavigationServiceFactory>();
@@ -73,10 +76,11 @@ namespace Saes.AvaloniaMvvmClient.Injections
 
         public static void AddMainViewModels(this IServiceCollection collection)
         {
+            collection.AddSingleton<TabStripViewModel>();
             collection.AddTransient<LoadingViewModel>();
             collection.AddTransient<MainViewModel>();
             collection.AddTransient<MainMenuViewModel>();
-                        collection.AddTransient<JournalInstanceForCPARecordListViewModel>();
+            collection.AddTransient<JournalInstanceForCPARecordListViewModel>();
 
         }
 
@@ -102,7 +106,7 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<KeyHolderTypeListViewModel>();
             collection.AddTransient<KeyHolderListViewModel>();
 
-            
+
             collection.AddTransient<JournalInstanceForCPARecordFormViewModel>();
             collection.AddTransient<JournalInstanceForCIHRecordFormViewModel>();
             collection.AddTransient<JournalTechnicalRecordFormViewModel>();
@@ -147,7 +151,7 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<AddressListViewModel>();
             collection.AddTransient<FileListViewModel>();
 
-            
+
         }
 
         public static void AddHumanResourcesViewModels(this IServiceCollection collection)

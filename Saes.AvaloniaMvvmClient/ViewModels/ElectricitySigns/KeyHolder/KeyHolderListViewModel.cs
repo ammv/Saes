@@ -30,10 +30,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
             _dialogService = dialogService;
             KeyHolderTypeCollection = new CollectionWithSelection<KeyHolderTypeDto>();
         }
-        public override async Task<bool> CloseAsync()
-        {
-            return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
-        }
 
         protected override async Task OnAddCommand()
         {

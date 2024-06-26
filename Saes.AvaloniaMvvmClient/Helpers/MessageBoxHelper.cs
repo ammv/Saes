@@ -20,7 +20,11 @@ namespace Saes.AvaloniaMvvmClient.Helpers
         private const WindowStartupLocation _windowStartupLocation = WindowStartupLocation.CenterOwner;
         private static MessageBoxStandardParams _GetMessageBoxStandardParams(string title, string text)
         {
-            return new MessageBoxStandardParams { MaxWidth = _messageBoxWidth, ContentTitle = title, ContentMessage = text, WindowStartupLocation = _windowStartupLocation };
+            return new MessageBoxStandardParams 
+            { 
+                MaxWidth = _messageBoxWidth,
+                ContentTitle = title, ContentMessage = text,
+                WindowStartupLocation = _windowStartupLocation };
         }
 
         private static async Task<ButtonResult> _ShowWindowDialogAsync(MessageBoxStandardParams p, Window window)
@@ -28,13 +32,13 @@ namespace Saes.AvaloniaMvvmClient.Helpers
             return await MessageBoxManager.GetMessageBoxStandard(p).ShowWindowDialogAsync(window);
         }
 
-        public static async Task<bool> Question(string title, string message, Window window = null)
+        public static async Task<bool> Question(string title, string message, Window window = null, bool isWarning = false)
         {
             window = window ?? WindowManager.Windows.First();
 
             var p = _GetMessageBoxStandardParams(title, message);
             p.ButtonDefinitions = ButtonEnum.YesNo;
-            p.Icon = Icon.Question;
+            p.Icon = isWarning ? Icon.Warning: Icon.Question;
 
             return await _ShowWindowDialogAsync(p, window) == ButtonResult.Yes;
         }

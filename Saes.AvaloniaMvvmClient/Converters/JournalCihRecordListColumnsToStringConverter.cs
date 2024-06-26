@@ -48,7 +48,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
 
                 return string.Join('\n', employees.Select(x => $"{x.MiddleName} {x.FirstName} {x.LastName}"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "Не удалось загрузить список установщиков";
             }
@@ -64,7 +64,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
 
                 return string.Join('\n', response.Data.Select(x => $"{x.HardwareDto.Name} ({x.HardwareDto.SerialNumber})"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "Не удалось загрузить список подключенных устройств";
             }

@@ -160,12 +160,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder
 
         protected override async Task _OnPreFormCommand()
         {
-            
+            await Task.CompletedTask;
         }
 
-        protected override Task _OnSee()
+        protected override async Task _OnSee()
         {
-            return Task.Delay(0);
+            await Task.CompletedTask;
         }
 
         protected override bool Validate()

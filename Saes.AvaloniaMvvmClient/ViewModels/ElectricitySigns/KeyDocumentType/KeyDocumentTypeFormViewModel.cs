@@ -115,12 +115,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType
 
         protected override async Task _OnPreFormCommand()
         {
-            
+            await Task.CompletedTask;
         }
 
-        protected override Task _OnSee()
+        protected override async Task _OnSee()
         {
-            return Task.Delay(0);
+            await Task.CompletedTask;
         }
     }
 }

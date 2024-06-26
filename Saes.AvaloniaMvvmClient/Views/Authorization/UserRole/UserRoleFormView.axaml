@@ -42,9 +42,9 @@
         <Image
             Height="80"
             anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-            IsVisible="{Binding TabIsLoading}" />
+            IsVisible="{Binding FormIsLoading}" />
 
-        <Grid IsVisible="{Binding !TabIsLoading}">
+        <Grid IsVisible="{Binding !FormIsLoading}">
 
             <StackPanel
                 HorizontalAlignment="Stretch"
@@ -88,7 +88,7 @@
                     HorizontalScrollBarVisibility="Auto"
                     IsEnabled="True"
                     IsReadOnly="True"
-                    IsVisible="{Binding !TabIsLoading}"
+                    IsVisible="{Binding !FormIsLoading}"
                     ItemsSource="{Binding RightGroupExCollection.Items}"
                     SelectedItem="{Binding RightGroupExCollection.Selected}"
                     VerticalScrollBarVisibility="Visible">

@@ -31,7 +31,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
                     return response.Data.FirstOrDefault()?.Login;
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "Ошибка при запросе";
                 }

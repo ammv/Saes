@@ -119,9 +119,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType
             
         }
 
-        protected override Task _OnSee()
+        protected override async Task _OnSee()
         {
-            return Task.Delay(0);
+            await Task.CompletedTask;
         }
     }
 }

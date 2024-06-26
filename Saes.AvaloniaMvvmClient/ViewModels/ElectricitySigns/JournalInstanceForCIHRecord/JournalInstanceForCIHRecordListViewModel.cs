@@ -43,10 +43,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceFor
 
             AddCommand = ReactiveCommand.CreateFromTask(OnAddCommand, canExecuteAddCommand);
         }
-        public override async Task<bool> CloseAsync()
-        {
-            return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
-        }
 
         protected override async Task OnAddCommand()
         {

@@ -30,34 +30,34 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other.File
             return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
         }
 
-        protected override Task OnAddCommand()
+        protected override async Task OnAddCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnCopyCommand()
+        protected override async Task OnCopyCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnDeleteCommand()
+        protected override async Task OnDeleteCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnEditCommand()
+        protected override async Task OnEditCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnSeeCommand()
+        protected override async Task OnSeeCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task _Export()
+        protected override async Task _Export()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
         protected override async Task _Loaded()

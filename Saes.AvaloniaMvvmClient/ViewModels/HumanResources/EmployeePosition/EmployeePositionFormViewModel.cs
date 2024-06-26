@@ -67,7 +67,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.HumanResources.EmployeePosition
 
         protected override async Task _Loaded()
         {
-
+            await Task.CompletedTask;
         }
 
         protected override async Task _OnAdd()
@@ -122,9 +122,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.HumanResources.EmployeePosition
             }
         }
 
-        protected override Task _OnSee()
+        protected override async Task _OnSee()
         {
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }

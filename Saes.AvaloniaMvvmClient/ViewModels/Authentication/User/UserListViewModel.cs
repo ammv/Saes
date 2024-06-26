@@ -38,11 +38,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
         [Reactive]
         public CollectionWithSelection<UserRoleDto> UserRoleCollection { get; set; }
 
-        public override async Task<bool> CloseAsync()
-        {
-            return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
-        }
-
         protected override async Task _Search()
         {
             var userServiceClient = new UserService.UserServiceClient(_grpcChannel);

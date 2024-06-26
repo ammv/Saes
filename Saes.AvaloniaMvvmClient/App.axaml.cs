@@ -17,7 +17,7 @@ namespace Saes.AvaloniaMvvmClient;
 
 public partial class App : Application
 {
-    public static ServiceProvider? ServiceProvider { get; private set; }
+    public static ServiceProvider ServiceProvider { get; private set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

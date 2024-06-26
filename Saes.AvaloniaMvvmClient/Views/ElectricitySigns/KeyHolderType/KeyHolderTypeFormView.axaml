@@ -3,6 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType"
     Title="{Binding Title}"
@@ -17,6 +19,11 @@
     <Window.Effect>
         <DropShadowEffect />
     </Window.Effect>
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
     <StackPanel
         Margin="8"
         Orientation="Vertical"

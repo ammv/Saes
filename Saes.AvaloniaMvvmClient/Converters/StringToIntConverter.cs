@@ -7,7 +7,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
 {
     public class StringToIntConverter : IValueConverter
     {
-        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is int intValue)
             {
@@ -17,7 +17,7 @@ namespace Saes.AvaloniaMvvmClient.Converters
             return string.Empty;
         }
 
-        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is string stringValue)
             {

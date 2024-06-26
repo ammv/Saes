@@ -7,10 +7,6 @@ using Saes.AvaloniaMvvmClient.ViewModels.Audit.LogAuthentication;
 using Saes.AvaloniaMvvmClient.ViewModels.Audit.ErrorLog;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication;
 using Saes.AvaloniaMvvmClient.ViewModels.Authentication.User;
-using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceCPAReceiver;
-using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHConnectedHardware;
-using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHDestructor;
-using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHInstaller;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHRecord;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCPARecord;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalTechnicalRecord;
@@ -18,7 +14,6 @@ using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType;
 using Saes.AvaloniaMvvmClient.ViewModels.Other;
-using Saes.AvaloniaMvvmClient.Views.ElectricitySigns.KeyDocumentType;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,9 +22,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.BusinessEntity;
-using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.BusinessEntityType;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Organization;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Employee;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.EmployeePosition;
@@ -57,6 +49,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
     {
         private readonly ISessionKeyService _sessionKeyService;
         private readonly IUserService _userService;
+        private readonly IWindowStateService _windowStateService;
 
         [Reactive]
         public ReactiveCommand<Unit, Unit> ExitCommand { get; set; }
@@ -87,23 +80,24 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             LoadMenu();
         }
 
-        public MainMenuViewModel(INavigationServiceFactory navigationServiceFactory, ISessionKeyService sessionKeyService, IUserService userService)
+        public MainMenuViewModel(TabStripViewModel tabStrip, INavigationServiceFactory navigationServiceFactory, ISessionKeyService sessionKeyService, IUserService userService, IWindowStateService windowStateService)
         {
+            TabStrip = tabStrip;
             NavigationService = navigationServiceFactory.Singleton;
             _sessionKeyService = sessionKeyService;
             _userService = userService;
+            _windowStateService = windowStateService;
         }
 
         public void Loaded()
         {
+            _windowStateService.State = Avalonia.Controls.WindowState.Maximized;
             LoadMenu();
         }
 
         private void LoadMenu()
         {
             ExitCommand = ReactiveCommand.CreateFromTask(OnExitCommand);
-
-            TabStrip = new TabStripViewModel(new ObservableCollection<TabStripItemViewModel>());
 
             Menu = new SideMenuViewModel(
                 new ObservableCollection<MenuItemViewModel>

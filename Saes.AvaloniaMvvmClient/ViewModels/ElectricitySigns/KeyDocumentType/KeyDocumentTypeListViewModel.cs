@@ -29,10 +29,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType
             _grpcChannel = grpcChannelFactory.CreateChannel();
             _dialogService = dialogService;
         }
-        public override async Task<bool> CloseAsync()
-        {
-            return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
-        }
 
         protected override async Task OnAddCommand()
         {

@@ -12,6 +12,21 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
 {
     public class TabStripViewModel: ViewModelBase
     {
+        public event EventHandler<TabStripItemViewModel> SelectedTabChanging;
+        public event EventHandler<TabStripItemViewModel> SelectedTabChanged;
+
+        public event EventHandler<int> SelectedIndexChanging;
+        public event EventHandler<int> SelectedIndexChanged;
+
+        //public event EventHandler<TabStripItemViewModel> TabAdding;
+        //public event EventHandler<TabStripItemViewModel> TabAdded;
+
+        public event EventHandler<TabStripItemViewModel> TabRemoving;
+        public event EventHandler<TabStripItemViewModel> TabRemoved;
+
+        //public event EventHandler<TabStripItemViewModel> TabClosing;
+        //public event EventHandler<TabStripItemViewModel> TabClosed;
+
         private ObservableCollection<TabStripItemViewModel> _tabs;
 
         public ObservableCollection<TabStripItemViewModel> Tabs
@@ -25,7 +40,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
         public TabStripItemViewModel SelectedTab
         {
             get { return _selectedTab; }
-            set => this.RaiseAndSetIfChanged(ref _selectedTab, value);
+            set
+            {
+                SelectedTabChanging?.Invoke(this, value);
+                this.RaiseAndSetIfChanged(ref _selectedTab, value);
+                SelectedTabChanged?.Invoke(this, _selectedTab);
+            } 
         }
 
         private int _selectedIndex;
@@ -33,7 +53,12 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
         public int SelectedIndex
         {
             get { return _selectedIndex; }
-            set => this.RaiseAndSetIfChanged(ref _selectedIndex, value);
+            set
+            {
+                SelectedIndexChanging?.Invoke(this, value);
+                this.RaiseAndSetIfChanged(ref _selectedIndex, value);
+                SelectedIndexChanged?.Invoke(this, _selectedIndex);
+            } 
         }
 
 
@@ -68,7 +93,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
 
         private void TabStripItem_Closed(object sender, EventArgs e)
         {
-            Tabs.Remove(sender as TabStripItemViewModel);
+            var vm = sender as TabStripItemViewModel;
+            TabRemoving?.Invoke(this, vm);
+            Tabs.Remove(vm);
+            TabRemoved?.Invoke(this, vm);
+
         }
     }
 }

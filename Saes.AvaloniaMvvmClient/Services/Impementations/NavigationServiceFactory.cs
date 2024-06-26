@@ -27,8 +27,7 @@ namespace Saes.AvaloniaMvvmClient.Services.Impementations
 
         public INavigationService Create()
         {
-            NavigationService service = CreateService();
-            return service;
+            return CreateService();
         }
 
         private NavigationService CreateService()

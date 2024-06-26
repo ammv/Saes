@@ -333,9 +333,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Organization
             MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
         }
 
-        protected override Task _OnSee()
+        protected override async Task _OnSee()
         {
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }

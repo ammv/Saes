@@ -244,13 +244,16 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
             var userRoleRightClient = new UserRoleRightService.UserRoleRightServiceClient(_grpcChannel);
             var removeRequest = new UserRoleRightBulkRequest();
 
-            removeRequest.Data.AddRange(
-            _rightExes
+            var disabledRights = _rightExes
                 .Where(x => !x.Enabled)
                 .Select(x => new UserRoleRightDataRequest
                 {
-                    UserRoleRightId = _userRoleRights.Single(y => y.RightId == x.Right.RightId).UserRoleRightId
-                }));
+                    UserRoleRightId = _userRoleRights.FirstOrDefault(y => y.RightId == x.Right.RightId)?.UserRoleRightId
+                })
+                .Where( x => x.UserRoleRightId != null)
+                .ToList();
+
+            removeRequest.Data.AddRange(disabledRights);
 
             MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на удаление прав пользователя"));
 

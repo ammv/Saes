@@ -31,7 +31,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
         }
         protected override bool Validate()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         [Reactive]
@@ -57,7 +57,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
             }
 
         }
-
         protected override void _ConfigureTitle()
         {
             switch (_currentMode)
@@ -86,7 +85,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
                 await MessageBoxHelper.Exception("Ошибка во время загрузки формы", ex.Message);
                 Close();
             }
-
         }
 
         private async Task _UserRoleCollectionLoad()
@@ -200,9 +198,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication.User
             }
         }
 
-        protected override Task _OnSee()
+        protected override async Task _OnSee()
         {
-            throw new NotImplementedException();
+            await Task.CompletedTask;
         }
     }
 }

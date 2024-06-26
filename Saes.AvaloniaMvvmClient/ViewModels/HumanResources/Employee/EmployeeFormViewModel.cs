@@ -177,9 +177,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Employee
             }
         }
 
-        protected override Task _OnSee()
+        protected override async Task _OnSee()
         {
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }

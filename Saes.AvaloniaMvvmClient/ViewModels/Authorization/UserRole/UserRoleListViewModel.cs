@@ -28,10 +28,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
             _grpcChannel = grpcChannelFactory.CreateChannel();
             _dialogService = dialogService;
         }
-        public override async Task<bool> CloseAsync()
-        {
-            return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
-        }
 
         protected override async Task OnAddCommand()
         {
@@ -42,14 +38,14 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
             await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task OnCopyCommand()
+        protected override async Task OnCopyCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
-        protected override Task OnDeleteCommand()
+        protected override async Task OnDeleteCommand()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
         protected override async Task OnEditCommand()
@@ -72,9 +68,9 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserRole
             await _dialogService.ShowDialog(vm);
         }
 
-        protected override Task _Export()
+        protected override async Task _Export()
         {
-            throw new NotImplementedException();
+            await MessageBoxHelper.NotImplementedError();
         }
 
         protected override async Task _Loaded()

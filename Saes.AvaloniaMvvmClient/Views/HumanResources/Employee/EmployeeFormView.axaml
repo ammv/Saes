@@ -40,10 +40,13 @@
         <Image
             Height="80"
             anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-            IsVisible="{Binding TabIsLoading}" />
+            IsVisible="{Binding FormIsLoading}" />
 
         <!--  1 Строка  -->
-        <StackPanel Orientation="Horizontal" Spacing="16">
+        <StackPanel
+            IsVisible="{Binding !FormIsLoading}"
+            Orientation="Horizontal"
+            Spacing="16">
             <StackPanel
                 Width="250"
                 HorizontalAlignment="Stretch"

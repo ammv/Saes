@@ -6,8 +6,6 @@ namespace Saes.AvaloniaMvvmClient.Views.HumanResources.Employee
     {
         public EmployeeListView()
         {
-            InitializeComponent();
-
         }
     }
 }

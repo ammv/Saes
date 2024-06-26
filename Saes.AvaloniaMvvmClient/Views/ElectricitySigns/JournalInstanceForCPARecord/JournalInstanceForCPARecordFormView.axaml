@@ -40,9 +40,9 @@
         <Image
             Height="80"
             anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-            IsVisible="{Binding TabIsLoading}" />
+            IsVisible="{Binding FormIsLoading}" />
 
-        <TabControl x:Name="tabControl" IsVisible="{Binding !TabIsLoading}">
+        <TabControl x:Name="tabControl" IsVisible="{Binding !FormIsLoading}">
             <TabItem Header="Общее">
                 <StackPanel
                     IsEnabled="{Binding CurrentMode, Converter={StaticResource FormModeToVisibilityConverter}}"

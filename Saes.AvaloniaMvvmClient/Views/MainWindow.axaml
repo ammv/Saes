@@ -21,6 +21,7 @@
     Icon="/Assets/Images/Logo/logo64x64.ico"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
+    WindowState="{Binding WindowStateService.State, Mode=TwoWay}"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">

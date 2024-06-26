@@ -25,13 +25,15 @@ public partial class MainWindow : Window
             var vm = DataContext as MainMenuViewModel;
         };
         Loaded += MainWindow_Loaded;
+        CenterWindow();
+
+       
     }
 
     private void MainWindow_Loaded(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        CenterWindow();
         var vm = DataContext as MainViewModel;
-        vm.NavigationServiceFactory.Created += (s, e) => e.Navigated += (s,e) => CenterWindow();
+        vm.NavigationServiceFactory.Created += (s, e) => e.Navigating += (s,e) => CenterWindow();
     }
 
     private void CenterWindow()

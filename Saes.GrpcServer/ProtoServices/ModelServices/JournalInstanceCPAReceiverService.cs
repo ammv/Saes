@@ -36,10 +36,10 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
             //    .Include(x => x.ReceivedFrom);
 
             var response = new JournalInstanceCPAReceiverLookupResponse();
+			
+			var entities = await query.ToListAsync();
 
-            var dtos = await query.ProjectToType<JournalInstanceCPAReceiverDto>(_mapper.Config).ToListAsync();
-
-            response.Data.AddRange(dtos);
+            response.Data.AddRange(entities.Select( x => x.Adapt<JournalInstanceCPAReceiverDto>(_mapper.Config)));
 
             return response;
         }
