@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using System.Diagnostics;
 
 namespace Saes.AvaloniaMvvmClient.Views.Home
 {
@@ -7,6 +8,11 @@ namespace Saes.AvaloniaMvvmClient.Views.Home
         public DashboardView()
         {
             InitializeComponent();
+        }
+
+        ~DashboardView()
+        {
+            Debug.WriteLine("DashboardView destructed");
         }
     }
 }

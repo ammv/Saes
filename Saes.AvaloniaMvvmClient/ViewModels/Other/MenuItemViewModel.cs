@@ -5,13 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.Other
 {
-    public class MenuItemViewModel: ViewModelBase
+    public class MenuItemViewModel: ViewModelBase, IDisposable
     {
 		private string _title;
 
@@ -86,6 +87,18 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
         private void Item_SubMenuItemClicked(object sender, EventArgs e)
         {
             OnMenuItemClicked(sender as  SubMenuItemViewModel);
+        }
+
+        public void Dispose()
+        {
+            foreach (var item in _items)
+            {
+                item.SubMenuItemClicked -= Item_SubMenuItemClicked;
+            }
+            Items.CollectionChanged -= Items_CollectionChanged;
+            Items = null;
+            Debug.WriteLine("MenuItemViewModel disposed");
+
         }
     }
 }

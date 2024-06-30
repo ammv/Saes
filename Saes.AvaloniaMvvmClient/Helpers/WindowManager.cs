@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Threading;
+using Saes.AvaloniaMvvmClient.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,11 @@ namespace Saes.AvaloniaMvvmClient.Helpers
                 await MessageBoxHelper.Exception(errorTitle, errorMessage);
             }
             await Close(selector);
+        }
+
+        public static Window GetByViewModel(ViewModelBase viewModelBase)
+        {
+            return _windows.FirstOrDefault(x => x.DataContext == viewModelBase);
         }
     }
 }

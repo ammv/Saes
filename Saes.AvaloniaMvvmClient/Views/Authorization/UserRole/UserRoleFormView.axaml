@@ -2,9 +2,9 @@
     x:Class="Saes.AvaloniaMvvmClient.Views.Authorization.UserRole.UserRoleFormView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:anim="using:AnimatedImage.Avalonia"
     xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -23,7 +23,7 @@
     </Window.Styles>
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">
-            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <StackPanel
@@ -39,10 +39,13 @@
             TextAlignment="Center"
             TextWrapping="Wrap" />
 
-        <Image
+        <gif:GifImage
+            Width="80"
             Height="80"
-            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-            IsVisible="{Binding FormIsLoading}" />
+            IsVisible="{Binding TabIsLoading}"
+            SourceUriRaw="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            Stretch="Uniform"
+            StretchDirection="Both" />
 
         <Grid IsVisible="{Binding !FormIsLoading}">
 

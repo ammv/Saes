@@ -1,81 +1,95 @@
-<UserControl x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalInstanceForCIHDestructor.JournalInstanceForCIHDestructorListView"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHDestructor"
-             Width="1440"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             x:DataType="vm:JournalInstanceForCIHDestructorListViewModel"
-             mc:Ignorable="d">
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalInstanceForCIHDestructor.JournalInstanceForCIHDestructorListView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalInstanceForCIHDestructor"
+    Width="1440"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:JournalInstanceForCIHDestructorListViewModel"
+    mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">
-            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,16,*">
         <Grid>
-            <StackPanel Margin=""
-                        Orientation="Horizontal"
-                        Spacing="16">
+            <StackPanel
+                Margin=""
+                Orientation="Horizontal"
+                Spacing="16">
 
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            Classes="TextField">
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="№ п/п" />
-                    <TextBox Text="{Binding Lookup.JournalInstanceForCIHDestructorId, Mode=TwoWay}" Classes="primary"/>
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="Название" />
-                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" Classes="primary"/>
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="№ п/п" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.JournalInstanceForCIHDestructorId, Mode=TwoWay}" />
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="Название" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.Name, Mode=TwoWay}" />
                 </StackPanel>
 
-                <Button VerticalAlignment="Bottom"
-                        Classes="primary"
-                        Command="{Binding SearchCommand}"
-                        Content="Поиск" />
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="primary"
+                    Command="{Binding SearchCommand}"
+                    Content="Поиск" />
             </StackPanel>
 
-            <StackPanel Margin=""
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal"
-                        Spacing="16">
-                <Button VerticalAlignment="Bottom"
-                        Classes="secondary"
-                        Command="{Binding AddCommand}"
-                        Content="Добавить" />
-                <Button VerticalAlignment="Bottom"
-                        Classes="secondary"
-                        Command="{Binding ExportCommand}"
-                        Content="Экспорт" />
+            <StackPanel
+                Margin=""
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="16">
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding AddCommand}"
+                    Content="Добавить" />
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ExportCommand}"
+                    Content="Экспорт" />
             </StackPanel>
         </Grid>
 
         <Grid Grid.Row="2">
 
-            <Image Height="80"
-                   anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-                   IsVisible="{Binding TabIsLoading}" />
+            <gif:GifImage
+                Width="80"
+                Height="80"
+                IsVisible="{Binding TabIsLoading}"
+                SourceUriRaw="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+                Stretch="Uniform"
+                StretchDirection="Both" />
 
-            <DataGrid BorderBrush="Gray"
-                      BorderThickness="1"
-                      CanUserReorderColumns="True"
-                      CanUserResizeColumns="True"
-                      CanUserSortColumns="False"
-                      GridLinesVisibility="All"
-                      HorizontalScrollBarVisibility="Auto"
-                      IsReadOnly="True"
-                      IsVisible="{Binding !TabIsLoading}"
-                      ItemsSource="{Binding Entities}"
-                      ColumnWidth="200"
-                      SelectedItem="{Binding SelectedEntity}">
+            <DataGrid
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="False"
+                ColumnWidth="200"
+                GridLinesVisibility="All"
+                HorizontalScrollBarVisibility="Auto"
+                IsReadOnly="True"
+                IsVisible="{Binding !TabIsLoading}"
+                ItemsSource="{Binding Entities}"
+                SelectedItem="{Binding SelectedEntity}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Command="{Binding SeeCommand}" Header="Посмотреть">
@@ -101,13 +115,15 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding JournalInstanceForCIHDestructorId}"
-                                        Header="№ п/п"
-                                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding JournalInstanceForCIHDestructorId}"
+                        Header="№ п/п"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn Binding="{Binding RecordId}" Header="№ п/п записи журнала" />
-                    <DataGridTextColumn Binding="{Binding DestructorId}"
-                                        Header="№ п/п пользователя производившего операцию"
-                                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding DestructorId}"
+                        Header="№ п/п пользователя производившего операцию"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

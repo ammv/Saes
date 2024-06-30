@@ -2,21 +2,20 @@
     x:Class="Saes.AvaloniaMvvmClient.Views.Person.ContactType.ContactTypeListView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
     xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Person.ContactType"
-    Width="1440"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="vm:ContactTypeListViewModel"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">
-            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
@@ -76,10 +75,13 @@
 
         <Grid Grid.Row="2">
 
-            <Image
+            <gif:GifImage
+                Width="80"
                 Height="80"
-                anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-                IsVisible="{Binding TabIsLoading}" />
+                IsVisible="{Binding TabIsLoading}"
+                SourceUriRaw="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+                Stretch="Uniform"
+                StretchDirection="Both" />
 
             <DataGrid
                 BorderBrush="Gray"
@@ -103,14 +105,7 @@
                         </MenuItem>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
-                <!--
-                    int32 ContactTypeId = 1;
-                    google.protobuf.Int32Value OrganizationID = 2;
-                    OrganizationDto OrganizationDto = 3;
-                    string Name = 4;
-                    string SerialNumber = 5;
-                    string Note = 6;
-                -->
+
                 <DataGrid.Columns>
                     <DataGridTextColumn
                         Binding="{Binding ContactTypeId}"

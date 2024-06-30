@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Saes.AvaloniaMvvmClient.Services.Impementations;
@@ -12,6 +13,7 @@ using Saes.Protos.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,6 +30,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
         [Reactive]
         public string LoadingStatus { get; set; }
 
+        public ReactiveCommand<Unit, Unit> LoadedCommand { get; private set; }
+
+        [Reactive]
+        public bool LoadingStarted { get; set; }
+
         public LoadingViewModel(INavigationServiceFactory navigationServiceFactory, ISessionKeyService sessionKeyService, IGrpcChannelFactory grpcChannelFactory, IUserService userService, IServiceProvider serviceProvider)
         {
             _navigationService = navigationServiceFactory.Singleton;
@@ -35,10 +42,15 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
             _sessionKeyService = sessionKeyService;
             _userService = userService;
             _serviceProvider = serviceProvider;
+
+            LoadingStarted = false;
+
+            LoadedCommand = ReactiveCommand.CreateFromTask(OnLoadedCommand, this.WhenAnyValue( x => x.LoadingStarted, x => !x));
         }
         
-        public async Task LoadedAsync()
+        private async Task OnLoadedCommand()
         {
+            LoadingStarted = true;
             LoadingStatus = "Попытка подключиться к серверу";
             // Выполнение асинхронной операции в фоновом потоке
             bool isConnected = await Task.Run(async () =>

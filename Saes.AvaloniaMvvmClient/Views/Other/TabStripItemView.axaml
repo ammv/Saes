@@ -3,6 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Avalonia.Xaml.Interactivity"
+    xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Other"
     d:DesignHeight="450"
@@ -37,6 +39,10 @@
             Content="X"
             FontSize="14"
             FontWeight="SemiBold" />
-
+        <i:Interaction.Behaviors>
+            <ia:EventTriggerBehavior EventName="PointerReleased" SourceObject="{Binding #grid}">
+                <ia:InvokeCommandAction Command="{Binding CloseCommand}" PassEventArgsToCommand="True" />
+            </ia:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
     </Grid>
 </UserControl>

@@ -1,8 +1,28 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Saes.AvaloniaMvvmClient.Views.Home.DashboardView">
-  Welcome to Avalonia!
+<UserControl
+    x:Class="Saes.AvaloniaMvvmClient.Views.Home.DashboardView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Home"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:DashboardViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:DashboardViewModel />
+    </Design.DataContext>
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Loaded">
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}"  />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <TextBlock
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        FontSize="64"
+        FontWeight="SemiBold"
+        Text="{Binding Hello}" />
 </UserControl>

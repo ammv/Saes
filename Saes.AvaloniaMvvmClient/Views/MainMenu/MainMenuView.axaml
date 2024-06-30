@@ -19,7 +19,7 @@
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">
-            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}"  />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Design.DataContext>
@@ -92,7 +92,13 @@
     </UserControl.DataTemplates>
     <Grid RowDefinitions="45,*,24">
         <Grid ColumnDefinitions="50, *">
-            <Image Source="avares://Saes.AvaloniaMvvmClient/Assets/Images/Logo/logo64x64.png" />
+            <Image Source="avares://Saes.AvaloniaMvvmClient/Assets/Images/Logo/logo64x64.png">
+                <i:Interaction.Behaviors>
+                    <ia:EventTriggerBehavior EventName="Tapped">
+                        <ia:InvokeCommandAction Command="{Binding OpenDashboardCommand}" />
+                    </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </Image>
             <TabStrip
                 Grid.Column="1"
                 Margin="6,0,0,0"

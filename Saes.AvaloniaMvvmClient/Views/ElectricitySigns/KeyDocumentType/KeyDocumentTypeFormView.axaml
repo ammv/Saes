@@ -21,7 +21,7 @@
     </Window.Effect>
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">
-            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}"  />
         </ia:EventTriggerBehavior>
         <ia:EventTriggerBehavior EventName="Closing">
             <ia:InvokeCommandAction Command="{Binding ClosingCommand}" PassEventArgsToCommand="True" />

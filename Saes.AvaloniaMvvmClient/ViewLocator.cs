@@ -15,16 +15,45 @@ using Microsoft.Extensions.DependencyInjection;
 using Saes.AvaloniaMvvmClient.Views;
 using Saes.AvaloniaMvvmClient.Views.Authentication;
 using Avalonia.LogicalTree;
+using Saes.AvaloniaMvvmClient.ViewModels.Other;
 
 namespace Saes.AvaloniaMvvmClient
 {
     public class ViewLocator : IDataTemplate
     {
-        private static List<Type> _exceptTypes = new List<Type> { typeof(MainWindow), typeof(AuthenticationMainView), typeof(FirstFactorAuthenticationView), typeof(SecondFactorAuthenticationView) }; 
+        private static List<Type> _exceptTypes = new List<Type> { typeof(MainWindow), typeof(AuthenticationMainView), typeof(FirstFactorAuthenticationView), typeof(SecondFactorAuthenticationView) };
+        private Dictionary<ViewModelTabBase, Control> _viewModelViewDict = null;
         public bool SupportsRecycling => false;
+
+        private void ConfigureViewDictironary()
+        {
+            if(_viewModelViewDict == null)
+            {
+                _viewModelViewDict = new();
+                var vm = App.ServiceProvider.GetService<TabStripViewModel>();
+                vm.TabRemoved += TabStripViewModel_TabRemoved;
+            }
+        }
+
+        private void TabStripViewModel_TabRemoved(object sender, TabStripItemViewModel e)
+        {
+            var tab = _viewModelViewDict[e.Content];
+            tab.DataContext = null;
+            _viewModelViewDict.Remove(e.Content);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
 
         public Control Build(object data)
         {
+            ConfigureViewDictironary();
+
+            if (data is ViewModelTabBase vm1 && _viewModelViewDict.TryGetValue(vm1, out var c))
+            {
+                return c;
+            }
+
             var name = data.GetType().FullName.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 
@@ -40,6 +69,12 @@ namespace Saes.AvaloniaMvvmClient
                     }
                     else if (control is UserControl userControl)
                     {
+                        // Saving tab
+                        if(data is ViewModelTabBase vm2)
+                        {
+                            _viewModelViewDict[vm2] = control;
+                        }
+                        
                         userControl.Loaded += Control_ConfigureRights_Loaded;
                     }
                 }

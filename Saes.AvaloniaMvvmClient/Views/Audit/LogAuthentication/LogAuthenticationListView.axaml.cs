@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using System.Diagnostics;
 
 namespace Saes.AvaloniaMvvmClient.Views.Audit.LogAuthentication
 {
@@ -8,6 +9,11 @@ namespace Saes.AvaloniaMvvmClient.Views.Audit.LogAuthentication
         {
             InitializeComponent();
 
+        }
+
+        ~LogAuthenticationListView()
+        {
+            Debug.WriteLine("LogAuthenticationListView destructed");
         }
     }
 }

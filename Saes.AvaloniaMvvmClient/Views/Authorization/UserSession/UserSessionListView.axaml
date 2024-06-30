@@ -2,21 +2,20 @@
     x:Class="Saes.AvaloniaMvvmClient.Views.Authorization.UserSession.UserSessionListView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
     xmlns:atp="using:Saes.AvaloniaMvvmClient.Core.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Authorization.UserSession"
-    Width="1440"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="vm:UserSessionListViewModel"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">
-            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
@@ -27,18 +26,27 @@
                 Orientation="Horizontal"
                 Spacing="16">
 
-                <!--<StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            Classes="TextField">
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="№ п/п" />
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="№ п/п" />
                     <TextBox Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="Название" />
+                </StackPanel>
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="Название" />
                     <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
-                </StackPanel>-->
+                </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
@@ -63,10 +71,13 @@
 
         <Grid Grid.Row="2">
 
-            <Image
+            <gif:GifImage
+                Width="80"
                 Height="80"
-                anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-                IsVisible="{Binding TabIsLoading}" />
+                IsVisible="{Binding TabIsLoading}"
+                SourceUriRaw="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+                Stretch="Uniform"
+                StretchDirection="Both" />
 
             <DataGrid
                 BorderBrush="Gray"

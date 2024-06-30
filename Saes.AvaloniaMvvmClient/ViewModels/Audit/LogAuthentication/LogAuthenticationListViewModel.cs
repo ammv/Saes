@@ -9,6 +9,7 @@ using Saes.Protos.ModelServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,7 +61,6 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Audit.LogAuthentication
         {
             await _Search();
         }
-
         protected override async Task _Search()
         {
             var client = new LogAuthenticationService.LogAuthenticationServiceClient(_grpcChannel);
@@ -77,6 +77,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Audit.LogAuthentication
             {
                 MessageBus.Current.SendMessage(StatusData.Error(ex));
             }
+        }
+
+        ~LogAuthenticationListViewModel()
+        {
+            Debug.WriteLine("LogAuthenticationListViewModel destructed");
         }
     }
 }

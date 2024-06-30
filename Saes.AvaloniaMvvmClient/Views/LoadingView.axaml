@@ -15,7 +15,7 @@
     <Grid RowDefinitions="Auto, 60, 20">
         <i:Interaction.Behaviors>
             <ia:EventTriggerBehavior EventName="Loaded">
-                <ia:CallMethodAction MethodName="LoadedAsync" TargetObject="{Binding}" />
+                <ia:InvokeCommandAction Command="{Binding LoadedCommand}"/>
             </ia:EventTriggerBehavior>
         </i:Interaction.Behaviors>
         <Image

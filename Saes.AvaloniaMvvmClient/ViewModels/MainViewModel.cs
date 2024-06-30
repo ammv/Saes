@@ -13,6 +13,7 @@ using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
 using Saes.AvaloniaMvvmClient.ViewModels.Other;
 using Saes.Protos.Auth;
 using System;
+using System.Reactive;
 using System.Reactive.Linq;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels;
@@ -29,6 +30,11 @@ public class MainViewModel : ViewModelBase
     public IWindowTitleService WindowTitleService { get; }
     public IWindowStateService WindowStateService { get; }
 
+    public ReactiveCommand<Unit, Unit> LoadedCommand { get; private set; }
+
+    [Reactive]
+    private bool LoadingStarted { get; set; }
+
     public MainViewModel(TabStripViewModel tabStripViewModel,INavigationServiceFactory navigationServiceFactory, IServiceProvider serviceProvider, IWindowTitleService windowTitleService, IWindowStateService windowStateService)
     {
         TabStripViewModel = tabStripViewModel;
@@ -36,10 +42,14 @@ public class MainViewModel : ViewModelBase
         _serviceProvider = serviceProvider;
         WindowTitleService = windowTitleService;
         WindowStateService = windowStateService;
+
+        LoadedCommand = ReactiveCommand.Create(OnLoadedCommand, this.WhenAnyValue(x => x.LoadingStarted, x => !x));
     }
 
-    public void Loaded()
+    private void OnLoadedCommand()
     {
+        if (LoadingStarted) return;
+        LoadingStarted = true;
         WindowStateService.State = WindowState.Normal;
         WindowTitleService.AddOrUpdate("appName", "Система учёта электронных подписей");
         WindowTitleService.TitleFormat = "{appName}";

@@ -38,6 +38,7 @@ public partial class App : Application
 
         collection.AddSingleton(excelExporterConfig);
 
+        collection.AddHomeViewModels();
         collection.AddCommonServices();
         collection.AddGrpcServices();
         collection.AddMainViewModels();

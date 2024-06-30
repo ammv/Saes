@@ -80,12 +80,16 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType
                 MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на добавление типа ключевого документа"));
                 var response = await service.AddAsync(DataRequest);
                 MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+                await MessageBoxVm.Success("Успешно", "Новый тип ключевого документа успешно добавлен!");
                 Callback(response.Data.FirstOrDefault());
 
             }
             catch (Exception ex)
             {
+
                 MessageBus.Current.SendMessage(StatusData.Error(ex));
+                await MessageBoxVm.Exception("Успешно", "Новый тип ключевого документа успешно добавлен!");
+
             }
         }
 
@@ -100,16 +104,22 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType
                 if (response.Result)
                 {
                     MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+                    await MessageBoxVm.Success("Успешно", "Тип ключевого документа успешно изменен!");
+
                 }
                 else
                 {
                     MessageBus.Current.SendMessage(StatusData.Error("Ошибка"));
+                    await MessageBoxVm.Exception("Ошибка", "Не удалось изменить тип ключевого документа");
+
                 }
 
             }
             catch (Exception ex)
             {
                 MessageBus.Current.SendMessage(StatusData.Error(ex));
+                await MessageBoxVm.Exception("Ошибка", $"Во время изменения типа ключевого документа возникла ошибка:\n{ex.Message}");
+
             }
         }
 

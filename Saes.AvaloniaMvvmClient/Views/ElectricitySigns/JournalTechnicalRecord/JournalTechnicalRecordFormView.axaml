@@ -2,8 +2,8 @@
     x:Class="Saes.AvaloniaMvvmClient.Views.ElectricitySigns.JournalTechnicalRecord.JournalTechnicalRecordFormView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:anim="using:AnimatedImage.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,7 +16,7 @@
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Loaded">
-            <ia:CallMethodAction MethodName="Loaded" TargetObject="{Binding}" />
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Window.Effect>
@@ -36,10 +36,13 @@
             TextAlignment="Center"
             TextWrapping="Wrap" />
 
-        <Image
+        <gif:GifImage
+            Width="80"
             Height="80"
-            anim:ImageBehavior.AnimatedSource="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
-            IsVisible="{Binding FormIsLoading}" />
+            IsVisible="{Binding TabIsLoading}"
+            SourceUriRaw="avares://Saes.AvaloniaMvvmClient/Assets/Gifs/loading.gif"
+            Stretch="Uniform"
+            StretchDirection="Both" />
 
         <TabControl x:Name="tabControl" IsVisible="{Binding !FormIsLoading}">
             <TabItem Header="Общее">

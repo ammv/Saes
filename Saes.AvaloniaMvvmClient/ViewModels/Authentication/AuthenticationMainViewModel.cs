@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Services.Interfaces;
 using Saes.AvaloniaMvvmClient.ViewModels.MainMenu;
 using Saes.Protos.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +23,10 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
         private readonly IWindowTitleService _windowTitleService;
         private readonly FirstFactorAuthenticationViewModel _firstFactorAuthenticationViewModel;
         private SecondFactorAuthenticationViewModel _secondFactorAuthenticationViewModel;
+
+        public ReactiveCommand<Unit, Unit> LoadedCommand { get; }
+        [Reactive]
+        private bool LoadingStarted { get; set; }
 
         [Reactive]
         public bool DialogMode { get; set; }
@@ -47,10 +53,15 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Authentication
             _userService = userService;
             _windowTitleService = windowTitleService;
 
+            LoadedCommand = ReactiveCommand.Create(OnLoadedCommand, this.WhenAnyValue( x => x.LoadingStarted, x => !x));
+
             DialogMode = false;
         }
-        public void Loaded()
+        public void OnLoadedCommand()
         {
+            if (LoadingStarted) return;
+            LoadingStarted = true;
+
             _windowTitleService.TitleFormat = "{appName}";
             NavigationService = _navigationServiceFactory.Create();
             _firstFactorAuthenticationViewModel.AuthCommand.Subscribe(FirstFactorCommandOnExecute);

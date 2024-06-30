@@ -27,6 +27,7 @@ using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.JournalTechnicalRecord
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyDocumentType;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolder;
 using Saes.AvaloniaMvvmClient.ViewModels.ElectricitySigns.KeyHolderType;
+using Saes.AvaloniaMvvmClient.ViewModels.Home;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.BusinessEntity;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.BusinessEntityType;
 using Saes.AvaloniaMvvmClient.ViewModels.HumanResources.Employee;
@@ -82,6 +83,11 @@ namespace Saes.AvaloniaMvvmClient.Injections
             collection.AddTransient<MainMenuViewModel>();
             collection.AddTransient<JournalInstanceForCPARecordListViewModel>();
 
+        }
+
+        public static void AddHomeViewModels(this IServiceCollection collection)
+        {
+            collection.AddTransient<DashboardViewModel>();
         }
 
         public static void AddAuthenticationViewModels(this IServiceCollection collection)

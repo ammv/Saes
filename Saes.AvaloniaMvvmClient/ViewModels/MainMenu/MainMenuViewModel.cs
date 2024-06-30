@@ -42,17 +42,23 @@ using Saes.AvaloniaMvvmClient.ViewModels.Audit.Log;
 using Saes.AvaloniaMvvmClient.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Saes.AvaloniaMvvmClient.Core.Attributes;
+using Saes.AvaloniaMvvmClient.ViewModels.Home;
+using System.Diagnostics;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
 {
-    public class MainMenuViewModel: ViewModelBase
+    public class MainMenuViewModel: ViewModelBase, IDisposable
     {
         private readonly ISessionKeyService _sessionKeyService;
         private readonly IUserService _userService;
         private readonly IWindowStateService _windowStateService;
+        private readonly IServiceProvider _serviceProvider;
 
         [Reactive]
         public ReactiveCommand<Unit, Unit> ExitCommand { get; set; }
+        [Reactive]
+        public ReactiveCommand<Unit, Unit> OpenDashboardCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> LoadedCommand { get; set; }
 
         [Reactive]
         public TabStripViewModel TabStrip { get; set; }
@@ -70,34 +76,44 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             if(result)
             {
                 _sessionKeyService.RemoveSessionKey();
+                Dispose();
                 NavigationService.NavigateTo(App.ServiceProvider.GetService<AuthenticationMainViewModel>());
             }
 
         }
+
+        [Reactive]
+        public bool LoadingStarted { get; set; }
 
         public MainMenuViewModel()
         {
             LoadMenu();
         }
 
-        public MainMenuViewModel(TabStripViewModel tabStrip, INavigationServiceFactory navigationServiceFactory, ISessionKeyService sessionKeyService, IUserService userService, IWindowStateService windowStateService)
+        public MainMenuViewModel(TabStripViewModel tabStrip, INavigationServiceFactory navigationServiceFactory, ISessionKeyService sessionKeyService, IUserService userService, IWindowStateService windowStateService, IServiceProvider serviceProvider)
         {
             TabStrip = tabStrip;
             NavigationService = navigationServiceFactory.Singleton;
             _sessionKeyService = sessionKeyService;
             _userService = userService;
             _windowStateService = windowStateService;
+            _serviceProvider = serviceProvider;
+
+            LoadedCommand = ReactiveCommand.CreateFromTask(OnLoadedCommand, this.WhenAnyValue( x => x.LoadingStarted, x => !x));
         }
 
-        public void Loaded()
+        public async Task OnLoadedCommand()
         {
             _windowStateService.State = Avalonia.Controls.WindowState.Maximized;
             LoadMenu();
+            await OpenDashboardCommand.Execute();
         }
 
         private void LoadMenu()
         {
             ExitCommand = ReactiveCommand.CreateFromTask(OnExitCommand);
+
+            OpenDashboardCommand = ReactiveCommand.Create(() => TabStrip.Tabs.Add(new TabStripItemViewModel { Content = _serviceProvider.GetService<DashboardViewModel>() }));
 
             Menu = new SideMenuViewModel(
                 new ObservableCollection<MenuItemViewModel>
@@ -239,6 +255,19 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.MainMenu
             {
                 Content = viewModelTabBase
             });
+        }
+
+        public void Dispose()
+        {
+            TabStrip.Tabs.Clear();
+            Menu.Dispose();
+            Menu = null;
+            Debug.WriteLine("MainMenuViewModel disposed");
+        }
+
+        ~MainMenuViewModel()
+        {
+            Debug.WriteLine("MainMenuViewModel destructed");
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
             {
                 SelectedTabChanging?.Invoke(this, value);
                 this.RaiseAndSetIfChanged(ref _selectedTab, value);
-                SelectedTabChanged?.Invoke(this, _selectedTab);
+                SelectedTabChanged?.Invoke(this, value);
             } 
         }
 
@@ -57,7 +57,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
             {
                 SelectedIndexChanging?.Invoke(this, value);
                 this.RaiseAndSetIfChanged(ref _selectedIndex, value);
-                SelectedIndexChanged?.Invoke(this, _selectedIndex);
+                SelectedIndexChanged?.Invoke(this, value);
             } 
         }
 

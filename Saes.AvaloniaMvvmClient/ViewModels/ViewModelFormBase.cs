@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Core.Enums;
 using Saes.AvaloniaMvvmClient.Helpers;
 using System;
@@ -11,16 +12,8 @@ using static Grpc.Core.Metadata;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels;
 
-public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseableBase
-    where TDto : class, new()
-    where TDataRequest: class, new()
-
+public abstract class ViewModelFormBase : ViewModelCloseableBase
 {
-    private int? _additionalInitialHashCode;
-
-    private int _dataRequestInitialHashCode;
-    protected bool FormDataChanged => (_dataRequest.GetHashCode() != _dataRequestInitialHashCode) || (_additionalInitialHashCode != null ? GetAdditionalHashCode() != _additionalInitialHashCode: false);
-
     private bool _formCommandIsExecuting;
     public bool FormCommandIsExecuting
     {
@@ -35,13 +28,16 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
         set => this.RaiseAndSetIfChanged(ref _title, value);
     }
 
+    [Reactive]
+    public bool FormIsLoading { get; protected set; }
+
     protected abstract bool Validate();
 
     protected ViewModelFormBase()
     {
-    
-        FormCommand = ReactiveCommand.CreateFromTask(OnFormCommand, this.WhenAnyValue(x => x.FormCommandIsExecuting, x => x.FormIsLoading, (x,y) => !x && !y));
+        FormCommand = ReactiveCommand.CreateFromTask(OnFormCommand, this.WhenAnyValue(x => x.FormCommandIsExecuting, x => x.FormIsLoading, (x, y) => !x && !y));
     }
+    public ReactiveCommand<Unit, Unit> LoadedCommand { get; set; }
     public ReactiveCommand<Unit, Unit> FormCommand { get; set; }
 
     protected async Task OnFormCommand()
@@ -50,7 +46,7 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
 
         await _OnPreFormCommand();
 
-        switch(_currentMode)
+        switch (_currentMode)
         {
             case FormMode.See:
                 await _OnSee();
@@ -63,10 +59,16 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
                 break;
         }
 
+        await _OnAfterFormCommand();
+
         FormCommandIsExecuting = false;
     }
 
     protected virtual Task _OnPreFormCommand()
+    {
+        return Task.CompletedTask;
+    }
+    protected virtual Task _OnAfterFormCommand()
     {
         return Task.CompletedTask;
     }
@@ -76,12 +78,56 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
     public FormMode CurrentMode
     {
         get => _currentMode;
-        set 
+        set
         {
             this.RaiseAndSetIfChanged(ref _currentMode, value);
             _ConfigureTitle();
         }
     }
+
+    protected abstract Task _OnEdit();
+    protected abstract Task _OnSee();
+    protected abstract Task _OnAdd();
+
+    protected abstract void _ConfigureTitle();
+
+
+    protected abstract Task _Loaded();
+}
+
+public abstract class ViewModelFormBase<TDto, TDataRequest> : ViewModelFormBase
+    where TDto : class, new()
+    where TDataRequest : class, new()
+
+{
+    protected virtual int? GetAdditionalHashCode()
+    {
+        return null;
+    }
+    protected ViewModelFormBase()
+    {
+        LoadedCommand = ReactiveCommand.CreateFromTask(OnLoadedCommand, this.WhenAnyValue(x => x.LoadingStarted, x => !x));
+        MessageBoxVm = new MessageBoxHelperVm<ViewModelFormBase<TDto, TDataRequest>>(this);
+    }
+    protected MessageBoxHelperVm<ViewModelFormBase<TDto, TDataRequest>> MessageBoxVm { get;  }
+    protected override async Task OnClosingCommand(WindowClosingEventArgs closingEventArgs)
+    {
+        if (!IsForceClose && FormDataChanged)
+        {
+            closingEventArgs.Cancel = true;
+
+            var result = await MessageBoxHelper.Question("Предупреждение", "У вас есть не сохраненные изменения, в случае закрытия окна они пропадут. Вы уверены что хотите закрыть окно?", WindowManager.GetByViewModel(this), true);
+            if (result)
+            {
+                Close();
+            }
+        }
+    }
+
+    private int? _additionalInitialHashCode;
+
+    private int _dataRequestInitialHashCode;
+    protected bool FormDataChanged => (_dataRequest.GetHashCode() != _dataRequestInitialHashCode) || (_additionalInitialHashCode != null ? GetAdditionalHashCode() != _additionalInitialHashCode : false);
 
     protected TDataRequest _dataRequest = new TDataRequest();
     public TDataRequest DataRequest
@@ -114,23 +160,18 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
         Dto = dto;
     }
 
-    protected abstract Task _OnEdit();
-    protected abstract Task _OnSee();
-    protected abstract Task _OnAdd();
-
-    [Reactive]
-    public bool FormIsLoading { get; private set; }
-
-    protected virtual int? GetAdditionalHashCode()
+    private bool _loadingStarted = false;
+    public bool LoadingStarted
     {
-        return null;
+        get => _loadingStarted;
+        set => this.RaiseAndSetIfChanged(ref _loadingStarted, value);
     }
 
-    protected abstract void _ConfigureTitle();
-
-    protected abstract Task _Loaded();
-    public virtual async void Loaded()
+    public virtual async Task OnLoadedCommand()
     {
+        if (_loadingStarted) return;
+        LoadingStarted = true;
+
         FormIsLoading = true;
 
         await _Loaded();
@@ -138,24 +179,19 @@ public abstract class ViewModelFormBase <TDto, TDataRequest> : ViewModelCloseabl
         // Я перенес сюда DataRequest из-за того что загружаемые данные перебивали привязки в DataRequest и его поля принимали значение Null
 
         DataRequest = _ConfigureDataRequest(Dto);
-
-        _dataRequestInitialHashCode = _dataRequest.GetHashCode();
-        _additionalInitialHashCode = GetAdditionalHashCode();
+        _CalculateHashCodes();
 
         FormIsLoading = false;
     }
 
-    protected override async Task OnClosingCommand(WindowClosingEventArgs closingEventArgs)
+    protected override async Task _OnAfterFormCommand()
     {
-        if(!IsForceClose && FormDataChanged)
-        {
-            closingEventArgs.Cancel = true;
+        await Task.Run(_CalculateHashCodes);
+    }
 
-            var result = await MessageBoxHelper.Question("Предупреждение", "У вас есть не сохраненные изменения, в случае закрытия окна они пропадут. Вы уверены что хотите закрыть окно?", isWarning: true);
-            if(result)
-            {
-                Close();
-            }
-        }
+    private void _CalculateHashCodes()
+    {
+        _dataRequestInitialHashCode = _dataRequest.GetHashCode();
+        _additionalInitialHashCode = GetAdditionalHashCode();
     }
 }

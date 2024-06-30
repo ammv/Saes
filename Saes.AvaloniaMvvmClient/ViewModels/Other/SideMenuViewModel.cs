@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Text;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Saes.AvaloniaMvvmClient.ViewModels.Other
 {
-    public class SideMenuViewModel: ViewModelBase
+    public class SideMenuViewModel: ViewModelBase, IDisposable
     {
         private ViewModelBase _content;
 
@@ -67,6 +68,7 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
                 case NotifyCollectionChangedAction.Remove:
                     var oldItem = e.OldItems[0] as MenuItemViewModel;
                     oldItem.MenuItemClicked -= NewItem_MenuItemClicked;
+                    oldItem.Dispose();
                     break;
             }
         }
@@ -78,6 +80,20 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Other
         private void OnSideMenuItemClicked(SubMenuItemViewModel subMenuItem)
         {
             SideMenuItemClicked?.Invoke(this, subMenuItem);
+        }
+
+        public void Dispose()
+        {
+            foreach (var item in _items)
+            {
+                item.MenuItemClicked -= NewItem_MenuItemClicked;
+                item.Dispose();
+            }
+            _items.CollectionChanged -= Items_CollectionChanged;
+            Items = null;
+            Content = null;
+            Debug.WriteLine("SideMenuViewModel disposed");
+
         }
     }
 }

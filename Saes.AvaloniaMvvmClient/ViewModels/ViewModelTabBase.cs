@@ -4,6 +4,7 @@ using Saes.AvaloniaMvvmClient.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,13 +23,20 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
             return await MessageBoxHelper.Question("Вопрос", $"Вы уверены, что хотите закрыть вкладку \"{TabTitle}\"");
         }
 
-        protected IObservable<bool> _tabIsLoadingObservable
+        protected ViewModelTabBase()
         {
-            get
-            {
-                return this.WhenAnyValue(x => x.TabIsLoading, x => !x);
-            }
+            LoadedCommand = ReactiveCommand.CreateFromTask(OnLoadedCommand, this.WhenAnyValue(x => x.LoadingStarted, x => !x));
         }
+
+        public ReactiveCommand<Unit, Unit> LoadedCommand { get; protected set; }
+
+        //protected IObservable<bool> _tabIsLoadingObservable
+        //{
+        //    get
+        //    {
+        //        return this.WhenAnyValue(x => x.TabIsLoading, x => !x);
+        //    }
+        //}
 
         protected bool _tabIsLoading;
         public bool TabIsLoading
@@ -37,20 +45,24 @@ namespace Saes.AvaloniaMvvmClient.ViewModels
             set => this.RaiseAndSetIfChanged(ref _tabIsLoading, value);
         }
 
-        public bool TabIsLoaded { get; private set; } = false;
+        private bool _loadingStarted = false;
+        public bool LoadingStarted
+        {
+            get => _loadingStarted;
+            set => this.RaiseAndSetIfChanged(ref _loadingStarted, value);
+        }
 
         protected abstract Task _Loaded();
-        public virtual async void Loaded()
+        public virtual async Task OnLoadedCommand()
         {
-            if (TabIsLoaded) return;
+            if (LoadingStarted) return;
+            LoadingStarted = true;
 
             TabIsLoading = true;
 
             await _Loaded();
 
-            TabIsLoading = false;
-
-            TabIsLoaded = true;
+            TabIsLoading = false;  
         }
     }
 }
