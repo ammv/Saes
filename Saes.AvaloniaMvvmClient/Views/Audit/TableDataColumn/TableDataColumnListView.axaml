@@ -34,7 +34,7 @@
                         Width="200"
                         FontSize="14"
                         Text="№ п/п" />
-                    <TextBox Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel
@@ -44,8 +44,8 @@
                     <TextBlock
                         Width="200"
                         FontSize="14"
-                        Text="Название" />
-                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                        Text="Название (Rus)" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.RusName, Mode=TwoWay}" />
                 </StackPanel>
 
                 <Button
@@ -53,6 +53,52 @@
                     Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    ToolTip.Tip="Фильтры">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_regular}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <WrapPanel Width="400" Classes="filter_panel">
+                                <StackPanel
+                                    Width="300"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Название (Eng)" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="ComboboxField">
+                                    <TextBlock FontSize="14" Text="Таблица" />
+                                    <ComboBox
+                                        Width="200"
+                                        Classes="primary"
+                                        DisplayMemberBinding="{Binding Name}"
+                                        ItemsSource="{Binding TableDataCollection.Items}"
+                                        SelectedItem="{Binding TableDataCollection.Selected}"
+                                        SelectedValue="{Binding Lookup.TableDataID}"
+                                        SelectedValueBinding="{Binding TableDataId}" />
+                                </StackPanel>
+                            </WrapPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ClearCommand}">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_dismiss_regular}" />
+                    </Button.Content>
+                </Button>
             </StackPanel>
 
             <StackPanel
@@ -112,7 +158,11 @@
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
                         Binding="{Binding RusName}"
-                        Header="Столбец"
+                        Header="Столбец (Rus)"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding Name}"
+                        Header="Столбец (Eng)"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                 </DataGrid.Columns>
             </DataGrid>

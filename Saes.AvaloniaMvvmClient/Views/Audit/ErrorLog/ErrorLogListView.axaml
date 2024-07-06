@@ -10,7 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Saes.AvaloniaMvvmClient.ViewModels.Audit.ErrorLog"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1000"
     x:DataType="vm:ErrorLogListViewModel"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
@@ -26,24 +26,90 @@
                 Orientation="Horizontal"
                 Spacing="16">
 
-                <!--<StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            Classes="TextField">
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="№ п/п" />
-                    <TextBox Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
-                    <TextBlock Width="200"
-                               FontSize="14"
-                               Text="Название" />
-                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
-                </StackPanel>-->
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="№ п/п" />
+                    <TextBox Text="{Binding Lookup.ErrorLogID, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Classes="TextField">
+                    <TextBlock
+                        Width="200"
+                        FontSize="14"
+                        Text="№ п/п сессии пользователя" />
+                    <TextBox Text="{Binding Lookup.UserSessionID, Mode=TwoWay}" />
+                </StackPanel>
 
                 <Button
                     VerticalAlignment="Bottom"
                     Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    ToolTip.Tip="Фильтры">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_regular}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <WrapPanel Width="325" Classes="filter_panel">
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Номер ошибки" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.ErrorNumber, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Номер состояния" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.ErrorState, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Номер строки" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.ErrorLine, Mode=TwoWay}" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Содержимое" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.ErrorMessage, Mode=TwoWay}" />
+                                </StackPanel>
+                            </WrapPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ClearCommand}">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_dismiss_regular}" />
+                    </Button.Content>
+                </Button>
             </StackPanel>
 
             <StackPanel

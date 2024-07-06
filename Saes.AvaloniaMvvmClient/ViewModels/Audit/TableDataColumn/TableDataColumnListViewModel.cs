@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Saes.AvaloniaMvvmClient.Core;
 using Saes.AvaloniaMvvmClient.Core.Attributes;
 using Saes.AvaloniaMvvmClient.Helpers;
@@ -24,8 +25,11 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Audit.TableDataColumn
         {
             TabTitle = "Данные столбцов таблиц";
             _grpcChannel = grpcChannelFactory.CreateChannel();
+            TableDataCollection = new();
         }
 
+        [Reactive]
+        public CollectionWithSelection<TableDataDto> TableDataCollection { get; private set; }
         protected override async Task OnAddCommand()
         {
             await MessageBoxHelper.NotImplementedError();
@@ -58,7 +62,24 @@ namespace Saes.AvaloniaMvvmClient.ViewModels.Audit.TableDataColumn
 
         protected override async Task _Loaded()
         {
-            await _Search();
+            try
+            {
+                await _Search();
+                var service = new TableDataService.TableDataServiceClient(_grpcChannel);
+                MessageBus.Current.SendMessage(StatusData.SendingGrpcRequest("Отправляется запрос на получение таблиц"));
+                var response = await service.SearchAsync(new TableDataLookup());
+                MessageBus.Current.SendMessage(StatusData.HandlingGrpcResponse("Обработка результатов"));
+                TableDataCollection.Items.Clear();
+                foreach (var item in response.Data)
+                {
+                    TableDataCollection.Items.Add(item);
+                }
+                MessageBus.Current.SendMessage(StatusData.Ok("Успешно"));
+            }
+            catch (Exception ex)
+            {
+                MessageBus.Current.SendMessage(StatusData.Error(ex));
+            }
         }
 
         protected override async Task _Search()

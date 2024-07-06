@@ -21,6 +21,7 @@ message LogChangeLookup
 	google.protobuf.Int32Value TableColumnDataId = 2;
 	google.protobuf.StringValue OldValue = 3;
 	google.protobuf.StringValue NewValue = 4;
+	google.protobuf.Int32Value TableDataId = 5;
 }
 
 // Comment

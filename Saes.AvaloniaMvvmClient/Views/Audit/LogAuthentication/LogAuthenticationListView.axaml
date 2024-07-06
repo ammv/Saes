@@ -55,6 +55,81 @@
                     Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    ToolTip.Tip="Фильтры">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_regular}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <WrapPanel Width="400" Classes="filter_panel">
+                                <CheckBox
+                                    Classes="primary"
+                                    Content="Результат входа по логину и паролю"
+                                    IsChecked="{Binding Lookup.FirstFactorResult, Mode=TwoWay}" />
+                                <CheckBox
+                                    Classes="primary"
+                                    Content="Результат входа по OTP паролю"
+                                    IsChecked="{Binding Lookup.SecondFactorResult, Mode=TwoWay}" />
+                                <StackPanel
+                                    Width="300"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Ответ сервиса аутенфикации" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.AuthServiceResponse, Mode=TwoWay}" />
+                                </StackPanel>
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="MAC" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.MAC, Mode=TwoWay}" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="IP" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.IP, Mode=TwoWay}" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Машина" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.MashineName, Mode=TwoWay}" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Имя пользователя машины" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.MashineUserName, Mode=TwoWay}" />
+                                </StackPanel>
+                            </WrapPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ClearCommand}">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_dismiss_regular}" />
+                    </Button.Content>
+                </Button>
             </StackPanel>
 
             <StackPanel

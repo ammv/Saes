@@ -34,6 +34,23 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
                 goto EndFilters;
             }
 
+            //if (request.TableDataId != null)
+            //{
+            //    var tableData = await _ctx.TableData.Include(x => x.TableColumnData).FirstOrDefaultAsync(x => x.TableDataId == request.TableDataId);
+            //    if (tableData == null)
+            //    {
+            //        throw new RpcException(new Status(StatusCode.NotFound, $"В запросе был указан идентификатор несуществующей таблицы: {request.TableDataId}"));
+            //    }
+
+            //    if (request.TableColumnDataId != null &&
+            //        !tableData.TableColumnData.Any(x => x.TableColumnDataId == request.TableColumnDataId))
+            //    {
+            //        throw new RpcException(new Status(StatusCode.NotFound, $"В запросе был указан идентификатор столбца не принадлажей указанной таблице: {request.TableColumnDataId}"));
+            //    }
+
+            //}
+            
+            query = request.TableDataId != null ? query.Where(x => x.TableColumnData.TableDataId == request.TableDataId) : query;
             query = request.TableColumnDataId != null ? query.Where(x => x.TableColumnDataId == request.TableColumnDataId) : query;
             query = request.OldValue != null ? query.Where(x => x.OldValue.Contains(request.OldValue)) : query;
             query = request.NewValue != null ? query.Where(x => x.NewValue.Contains(request.NewValue)) : query;

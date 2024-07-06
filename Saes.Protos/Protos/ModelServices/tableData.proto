@@ -13,6 +13,7 @@ package tableData;
 
 service TableDataService {
     rpc Search (TableDataLookup) returns (TableDataLookupResponse);
+    rpc SearchIncludeColumns (TableDataLookup) returns (TableDataLookupIncludeColumnsResponse);
 }
 
 message TableDataLookup
@@ -23,9 +24,21 @@ message TableDataLookup
 	google.protobuf.StringValue RusName = 4;
 }
 
+message TableDataLookupWithColumnsData
+{
+    models.TableDataDto table = 1;
+    repeated models.TableColumnDataDto tableColumns = 2;
+}
+
 
 // Comment
 message TableDataLookupResponse
 {
     repeated models.TableDataDto data = 1;
+}
+
+message TableDataLookupIncludeColumnsResponse
+{
+    repeated TableDataLookupWithColumnsData data = 1;
+
 }

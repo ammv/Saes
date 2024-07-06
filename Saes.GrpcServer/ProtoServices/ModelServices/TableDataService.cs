@@ -26,25 +26,53 @@ namespace Saes.GrpcServer.ProtoServices.ModelServices
 
         public override async Task<Protos.ModelServices.TableDataLookupResponse> Search(Protos.ModelServices.TableDataLookup request, ServerCallContext context)
         {
-            var query = _ctx.TableData.AsQueryable();
-
-            //query = query.Where(x => x.SysIsDeleted == false);
-
-            //query = request.BusinessEntityID != null ? query.Where(x => x.BusinessEntityId == request.BusinessEntityID) : query;
-            //query = request.ChiefAccountantFullName != null ? query.Where(x => x.ChiefAccountantFullName.Contains(request.ChiefAccountantFullName)) : query;
-            //query = request.FullName != null ? query.Where(x => x.FullName.Contains(request.FullName)) : query;
-            //query = request.INN != null ? query.Where(x => x.Inn.Contains(request.INN)) : query;
-            //query = request.ShortName != null ? query.Where(x => x.ShortName.Contains(request.ShortName)) : query;
-            //query = request.TableDataID != null ? query.Where(x => x.TableDataId == request.TableDataID) : query;
-
-            //query = query.Include(x => x.BusinessAddress)
-            //    .Include(x => x.BusinessEntity);
+            IQueryable<TableDatum> query = ProcessQuery(request);
 
             var response = new TableDataLookupResponse();
 
             var entities = await query.ToListAsync();
-			
-			response.Data.AddRange(entities.Select( x => x.Adapt<TableDataDto>(_mapper.Config)));
+
+            response.Data.AddRange(entities.Select(x => x.Adapt<TableDataDto>(_mapper.Config)));
+
+            return response;
+        }
+
+        private IQueryable<TableDatum> ProcessQuery(TableDataLookup request)
+        {
+            var query = _ctx.TableData.AsQueryable();
+
+            if (request.TableDataId != null)
+            {
+                query = query.Where(x => x.TableDataId == request.TableDataId);
+                goto EndFilters;
+            }
+
+            query = request.Name != null ? query.Where(x => x.Name.Contains(request.Name)) : query;
+            query = request.RusName != null ? query.Where(x => x.RusName.Contains(request.RusName)) : query;
+            query = request.SchemaName != null ? query.Where(x => x.SchemaName.Contains(request.SchemaName)) : query;
+
+            EndFilters:
+
+            query = query.Include(x => x.TableColumnData);
+            return query;
+        }
+
+        public override async Task<TableDataLookupIncludeColumnsResponse> SearchIncludeColumns(TableDataLookup request, ServerCallContext context)
+        {
+            IQueryable<TableDatum> query = ProcessQuery(request);
+
+            var response = new TableDataLookupIncludeColumnsResponse();
+
+            var entities = await query.ToListAsync();
+
+            foreach (var entity in entities)
+            {
+                var dto = entity.Adapt<TableDataDto>(_mapper.Config);
+                var tableDataLookupWithColumnsData = new TableDataLookupWithColumnsData();
+                tableDataLookupWithColumnsData.Table = dto;
+                tableDataLookupWithColumnsData.TableColumns.AddRange(entity.TableColumnData.Select(x => x.Adapt<TableColumnDataDto>(_mapper.Config)));
+                response.Data.Add(tableDataLookupWithColumnsData);
+            }
 
             return response;
         }

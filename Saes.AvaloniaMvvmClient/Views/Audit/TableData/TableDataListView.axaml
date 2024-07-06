@@ -34,7 +34,7 @@
                         Width="200"
                         FontSize="14"
                         Text="№ п/п" />
-                    <TextBox Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.KeyHolderId, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel
@@ -44,8 +44,8 @@
                     <TextBlock
                         Width="200"
                         FontSize="14"
-                        Text="Название" />
-                    <TextBox Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                        Text="Название RUS" />
+                    <TextBox Classes="primary" Text="{Binding Lookup.RusName, Mode=TwoWay}" />
                 </StackPanel>
 
                 <Button
@@ -53,6 +53,47 @@
                     Classes="primary"
                     Command="{Binding SearchCommand}"
                     Content="Поиск" />
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    ToolTip.Tip="Фильтры">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_regular}" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <WrapPanel Width="400" Classes="filter_panel">
+                                <StackPanel
+                                    Width="300"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Название Eng" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.Name, Mode=TwoWay}" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Classes="TextField">
+                                    <TextBlock FontSize="14" Text="Схема" />
+                                    <TextBox Classes="primary" Text="{Binding Lookup.SchemaName, Mode=TwoWay}" />
+                                </StackPanel>
+                            </WrapPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button
+                    VerticalAlignment="Bottom"
+                    Classes="secondary"
+                    Command="{Binding ClearCommand}">
+                    <Button.Content>
+                        <PathIcon Data="{StaticResource filter_dismiss_regular}" />
+                    </Button.Content>
+                </Button>
             </StackPanel>
 
             <StackPanel
@@ -107,8 +148,16 @@
                         Header="№ п/п"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                     <DataGridTextColumn
+                        Binding="{Binding Name}"
+                        Header="Название ENG"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
                         Binding="{Binding RusName}"
-                        Header="Название"
+                        Header="Название RUS"
+                        HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
+                    <DataGridTextColumn
+                        Binding="{Binding SchemaName}"
+                        Header="Название схемы"
                         HeaderTemplate="{StaticResource DataGridColumnHeaderWrappingTemplate}" />
                 </DataGrid.Columns>
             </DataGrid>
